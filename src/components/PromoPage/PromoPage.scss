@@ -51,12 +51,9 @@
   &__command {
     max-width: 680px;
     margin: 18px 0 0;
-    padding: 14px 16px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: #08090a;
-    color: var(--green);
-    white-space: pre-wrap;
   }
 
   &__proof {
@@ -295,16 +292,6 @@
 
 .install-card {
   justify-content: space-between;
-
-  code {
-    display: block;
-    overflow-wrap: anywhere;
-    padding: 11px 12px;
-    border-radius: 6px;
-    background: #070809;
-    color: var(--green);
-    font-size: 13px;
-  }
 }
 
 .project-links-card {

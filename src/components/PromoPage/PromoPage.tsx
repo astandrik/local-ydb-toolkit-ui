@@ -16,6 +16,7 @@ import {
   ASK_AI_HOME,
   ASK_AI_PRODUCT_NAME,
 } from "@/components/AskAI/ask-ai-content";
+import { CopyableCode } from "@/components/CopyableCode/CopyableCode";
 import { Button, Card, Container, Text } from "@/components/GravityUI/GravityUI";
 import { withBasePath } from "@/lib/base-path";
 import {
@@ -78,9 +79,10 @@ export function PromoPage() {
                 <ArrowRight />
               </Button>
             </div>
-            <pre className="hero__command">
-              <code>{LOCAL_YDB_PRODUCT.primaryCta.command}</code>
-            </pre>
+            <CopyableCode
+              className="hero__command"
+              value={LOCAL_YDB_PRODUCT.primaryCta.command}
+            />
             <div className="hero__proof" aria-label="Product highlights">
               {PROOF_POINTS.map((point) => (
                 <div key={point.label} className="proof-item">
@@ -182,7 +184,10 @@ export function PromoPage() {
                   <h3>{option.label}</h3>
                   <p>{option.description}</p>
                 </div>
-                <code>{option.command}</code>
+                <CopyableCode
+                  className="install-card__command"
+                  value={option.command}
+                />
               </Card>
             ))}
           </div>
