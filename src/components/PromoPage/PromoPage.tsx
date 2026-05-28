@@ -1,0 +1,266 @@
+import {
+  ArrowRight,
+  Check,
+  CloudCheck,
+  Code,
+  Database,
+  Gear,
+  Lock,
+  ShieldCheck,
+  Terminal,
+} from "@gravity-ui/icons";
+import Image from "next/image";
+
+import { AskAIPanel } from "@/components/AskAI/AskAIPanel";
+import {
+  ASK_AI_HOME,
+  ASK_AI_PRODUCT_NAME,
+} from "@/components/AskAI/ask-ai-content";
+import { Button, Card, Container, Text } from "@/components/GravityUI/GravityUI";
+import { withBasePath } from "@/lib/base-path";
+import {
+  AGENT_BOUNDARIES,
+  INSTALL_OPTIONS,
+  LOCAL_YDB_PRODUCT,
+  PROJECTS_USING_LOCAL_YDB,
+  PUBLIC_LINKS,
+  WORKFLOWS,
+  getAgentRoutingGuidance,
+} from "@/lib/product-data";
+
+import "./PromoPage.scss";
+
+const PROOF_POINTS = [
+  {
+    label: "MCP server",
+    value: "@astandrik/local-ydb-mcp",
+  },
+  {
+    label: "Execution model",
+    value: "plan first, confirm later",
+  },
+  {
+    label: "CI path",
+    value: "setup-local-ydb@v1",
+  },
+] as const;
+
+const WORKFLOW_ICONS = [Database, Gear, Code, Lock, ShieldCheck, CloudCheck];
+
+export function PromoPage() {
+  return (
+    <main>
+      <section className="hero-band">
+        <Container maxWidth="xl" gutters={5} className="hero">
+          <div className="hero__copy">
+            <p className="eyebrow">Agent-ready local YDB operations</p>
+            <Text as="h1" variant="display-4" className="hero__title">
+              local-ydb-toolkit
+            </Text>
+            <p className="hero__lead">{LOCAL_YDB_PRODUCT.summary}</p>
+            <div className="hero__actions">
+              <Button
+                view="action"
+                size="xl"
+                href={PUBLIC_LINKS.npm}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Terminal />
+                Use MCP server
+              </Button>
+              <Button
+                view="outlined"
+                size="xl"
+                href={withBasePath("/agents.md")}
+              >
+                Agent guide
+                <ArrowRight />
+              </Button>
+            </div>
+            <pre className="hero__command">
+              <code>{LOCAL_YDB_PRODUCT.primaryCta.command}</code>
+            </pre>
+            <div className="hero__proof" aria-label="Product highlights">
+              {PROOF_POINTS.map((point) => (
+                <div key={point.label} className="proof-item">
+                  <span>{point.label}</span>
+                  <strong>{point.value}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="hero__visual" aria-label="local-ydb-toolkit flow">
+            <div className="terminal-card">
+              <div className="terminal-card__bar">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className="terminal-card__body">
+                <div className="terminal-line">
+                  <span className="terminal-line__prompt">$</span>
+                  <span>local_ydb_status_report</span>
+                </div>
+                <div className="terminal-output">
+                  <span>inventory</span>
+                  <strong>read-only</strong>
+                </div>
+                <div className="terminal-output">
+                  <span>healthcheck</span>
+                  <strong>selfCheckResult</strong>
+                </div>
+                <div className="terminal-output terminal-output--warn">
+                  <span>mutation</span>
+                  <strong>plan returned</strong>
+                </div>
+                <div className="terminal-gate">
+                  <ShieldCheck />
+                  <span>confirm: true required for execution</span>
+                </div>
+              </div>
+            </div>
+            <div className="hero__logo-strip">
+              <Image
+                src={withBasePath("/assets/ydb-icon.svg")}
+                alt="YDB"
+                width={104}
+                height={32}
+                unoptimized
+              />
+              <span>Docker local-ydb target stays on your machine</span>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <Container maxWidth="xl" gutters={5} className="page-content">
+        <section className="ask-ai-section">
+          <AskAIPanel
+            productName={ASK_AI_PRODUCT_NAME}
+            label={ASK_AI_HOME.label}
+            helperText={ASK_AI_HOME.helperText}
+            prompt={ASK_AI_HOME.prompt}
+            page={ASK_AI_HOME.page}
+            promptVariant={ASK_AI_HOME.promptVariant}
+          />
+        </section>
+
+        <section className="section-grid" aria-labelledby="safety-title">
+          <div className="section-heading">
+            <p className="eyebrow">Safety model</p>
+            <h2 id="safety-title">Hosted discovery, local execution</h2>
+          </div>
+          <div className="boundary-grid">
+            <Card view="outlined" className="boundary-card">
+              <ShieldCheck className="boundary-card__icon" />
+              <h3>Remote promo MCP</h3>
+              <p>{AGENT_BOUNDARIES.remotePromoMcp}</p>
+            </Card>
+            <Card view="outlined" className="boundary-card">
+              <Terminal className="boundary-card__icon" />
+              <h3>Local stdio MCP</h3>
+              <p>{AGENT_BOUNDARIES.localOperations}</p>
+            </Card>
+            <Card view="outlined" className="boundary-card">
+              <Lock className="boundary-card__icon" />
+              <h3>Credentials stay local</h3>
+              <p>{AGENT_BOUNDARIES.credentials}</p>
+            </Card>
+          </div>
+        </section>
+
+        <section id="agent-access" className="section-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Agent access</p>
+            <h2>Install paths for different jobs</h2>
+          </div>
+          <div className="install-grid">
+            {INSTALL_OPTIONS.map((option) => (
+              <Card key={option.id} view="outlined" className="install-card">
+                <div>
+                  <h3>{option.label}</h3>
+                  <p>{option.description}</p>
+                </div>
+                <code>{option.command}</code>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section id="projects" className="section-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Examples</p>
+            <h2>Projects using local-ydb</h2>
+          </div>
+          <Card view="outlined" className="project-links-card">
+            <ul className="project-links">
+              {PROJECTS_USING_LOCAL_YDB.map((project) => (
+                <li key={project.href}>
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span>{project.label}</span>
+                    <ArrowRight />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </section>
+
+        <section id="workflows" className="section-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Coverage</p>
+            <h2>Workflow summaries agents can route to tools</h2>
+          </div>
+          <div className="workflow-grid">
+            {WORKFLOWS.map((workflow, index) => {
+              const Icon = WORKFLOW_ICONS[index] ?? Check;
+              return (
+                <Card key={workflow.id} view="outlined" className="workflow-card">
+                  <Icon className="workflow-card__icon" />
+                  <h3>{workflow.title}</h3>
+                  <p>{workflow.description}</p>
+                  <ul>
+                    {workflow.tools.slice(0, 3).map((tool) => (
+                      <li key={tool}>{tool}</li>
+                    ))}
+                  </ul>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="routing-band" aria-labelledby="routing-title">
+          <div>
+            <p className="eyebrow">Routing</p>
+            <h2 id="routing-title">Complementary to ydb/ydb-mcp</h2>
+            <p>{getAgentRoutingGuidance().split("\n\n")[0]}</p>
+            <p>{getAgentRoutingGuidance().split("\n\n")[1]}</p>
+          </div>
+          <div className="routing-band__links">
+            <Button
+              view="outlined"
+              size="l"
+              href={PUBLIC_LINKS.officialYdbMcp}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Official ydb/ydb-mcp
+              <ArrowRight />
+            </Button>
+            <Button view="outlined" size="l" href={withBasePath("/mcp.md")}>
+              MCP boundary
+              <ArrowRight />
+            </Button>
+          </div>
+        </section>
+      </Container>
+    </main>
+  );
+}
