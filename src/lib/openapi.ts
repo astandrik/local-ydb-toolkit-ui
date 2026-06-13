@@ -121,6 +121,195 @@ export function buildOpenApiSpec() {
           responses: { "200": textResponse("text/markdown") },
         },
       },
+      "/index.md": {
+        get: {
+          operationId: "getIndexMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown homepage",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/compare": {
+        get: {
+          operationId: "getComparePage",
+          tags: ["Discovery"],
+          summary: "Get comparison page",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/compare.md": {
+        get: {
+          operationId: "getCompareMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown comparison page",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides": {
+        get: {
+          operationId: "getGuidesIndexPage",
+          tags: ["Discovery"],
+          summary: "Get guides index page",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/index.md": {
+        get: {
+          operationId: "getGuidesIndexMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown guides index",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/local-ydb-mcp-vs-ydb-mcp": {
+        get: {
+          operationId: "getLocalYdbMcpVsYdbMcpGuide",
+          tags: ["Discovery"],
+          summary: "Get local-ydb-mcp vs ydb-mcp guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/local-ydb-mcp-vs-ydb-mcp.md": {
+        get: {
+          operationId: "getLocalYdbMcpVsYdbMcpGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown local-ydb-mcp vs ydb-mcp guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/diagnose-local-ydb-mcp": {
+        get: {
+          operationId: "getDiagnoseLocalYdbMcpGuide",
+          tags: ["Discovery"],
+          summary: "Get local-ydb diagnostics guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/diagnose-local-ydb-mcp.md": {
+        get: {
+          operationId: "getDiagnoseLocalYdbMcpGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown local-ydb diagnostics guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/ydb-schema-ddl-mcp": {
+        get: {
+          operationId: "getYdbSchemaDdlMcpGuide",
+          tags: ["Discovery"],
+          summary: "Get YDB schema DDL MCP guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/ydb-schema-ddl-mcp.md": {
+        get: {
+          operationId: "getYdbSchemaDdlMcpGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown YDB schema DDL MCP guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/best-tools-local-ydb-ai-agents": {
+        get: {
+          operationId: "getBestToolsLocalYdbAiAgentsGuide",
+          tags: ["Discovery"],
+          summary: "Get local YDB AI-agent tools roundup",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/best-tools-local-ydb-ai-agents.md": {
+        get: {
+          operationId: "getBestToolsLocalYdbAiAgentsGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown local YDB AI-agent tools roundup",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/local-database-deployment-automation": {
+        get: {
+          operationId: "getLocalDatabaseDeploymentAutomationGuide",
+          tags: ["Discovery"],
+          summary: "Get local database deployment automation guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/local-database-deployment-automation.md": {
+        get: {
+          operationId: "getLocalDatabaseDeploymentAutomationGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown local database deployment automation guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/guides/local-ydb-ci": {
+        get: {
+          operationId: "getLocalYdbCiGuide",
+          tags: ["Discovery"],
+          summary: "Get local YDB CI guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/local-ydb-ci.md": {
+        get: {
+          operationId: "getLocalYdbCiGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown local YDB CI guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/docs/api": {
+        get: {
+          operationId: "getApiDocsPage",
+          tags: ["Discovery"],
+          summary: "Get API docs page",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/docs/api.md": {
+        get: {
+          operationId: "getApiDocsMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown API docs",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
+      "/docs/webhooks": {
+        get: {
+          operationId: "getWebhooksPage",
+          tags: ["Discovery"],
+          summary: "Get webhooks status page",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/docs/webhooks.md": {
+        get: {
+          operationId: "getWebhooksMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown webhooks status",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
       "/openapi.json": {
         get: {
           operationId: "getOpenApi",
@@ -140,6 +329,17 @@ export function buildOpenApiSpec() {
           security: [],
           responses: {
             "200": jsonResponse("#/components/schemas/OpenApiDocument"),
+          },
+        },
+      },
+      "/.well-known/agent-card.json": {
+        get: {
+          operationId: "getA2aAgentCard",
+          tags: ["Discovery"],
+          summary: "Get A2A agent card",
+          security: [],
+          responses: {
+            "200": jsonResponse("#/components/schemas/AgentCard"),
           },
         },
       },
@@ -173,6 +373,7 @@ export function buildOpenApiSpec() {
     components: {
       schemas: {
         OpenApiDocument: { type: "object", additionalProperties: true },
+        AgentCard: { type: "object", additionalProperties: true },
         Product: { type: "object", additionalProperties: true },
         InstallOptions: {
           type: "object",

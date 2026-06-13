@@ -59,9 +59,29 @@ export function buildMcpServerCard() {
     ],
     resources: [
       {
+        title: "Homepage markdown",
+        url: toPublicUrl("/index.md"),
+        type: "text/markdown",
+      },
+      {
         title: "llms.txt",
         url: toPublicUrl("/llms.txt"),
         type: "text/plain",
+      },
+      {
+        title: "llms-full.txt",
+        url: toPublicUrl("/llms-full.txt"),
+        type: "text/plain",
+      },
+      {
+        title: "Directory and trust listings",
+        url: toPublicUrl("/developers.md#directory-and-trust-listings"),
+        type: "text/markdown",
+      },
+      {
+        title: "Auth guide",
+        url: toPublicUrl("/auth.md"),
+        type: "text/markdown",
       },
       {
         title: "OpenAPI JSON",

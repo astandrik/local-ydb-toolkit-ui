@@ -3,8 +3,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { toPublicUrl } from "@/lib/base-path";
 import {
   AGENT_BOUNDARIES,
+  GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_REGISTRY_LINKS,
   PUBLIC_LINKS,
   WORKFLOWS,
   getAgentRoutingGuidance,
@@ -66,13 +68,32 @@ const toolHandlers: Record<PromoToolName, () => PromoMcpToolResult> = {
       {
         links: {
           site: toPublicUrl("/"),
+          indexMarkdown: toPublicUrl("/index.md"),
           mcp: toPublicUrl("/mcp"),
           openapi: toPublicUrl("/openapi.json"),
           llms: toPublicUrl("/llms.txt"),
+          apiDocs: toPublicUrl("/docs/api"),
+          guides: toPublicUrl("/guides"),
+          guidesMarkdown: toPublicUrl("/guides/index.md"),
+          guidePages: GUIDE_LINKS.map(({ label, href, markdownHref }) => ({
+            label,
+            href: toPublicUrl(href),
+            markdownHref: toPublicUrl(markdownHref),
+          })),
+          webhooks: toPublicUrl("/docs/webhooks"),
+          agentCard: toPublicUrl("/.well-known/agent-card.json"),
           github: PUBLIC_LINKS.github,
           npm: PUBLIC_LINKS.npm,
           githubAction: PUBLIC_LINKS.githubAction,
           officialYdbMcp: PUBLIC_LINKS.officialYdbMcp,
+          mcpRegistries: MCP_REGISTRY_LINKS.map(
+            ({ label, href, category, status }) => ({
+              label,
+              href,
+              category,
+              status,
+            }),
+          ),
         },
       },
       "Stable public links for local-ydb-toolkit discovery and installation.",

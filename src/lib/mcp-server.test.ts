@@ -51,7 +51,25 @@ describe("read-only promo MCP tools", () => {
       site: "https://local-ydb-toolkit.ydb-qdrant.tech/",
       mcp: "https://local-ydb-toolkit.ydb-qdrant.tech/mcp",
       openapi: "https://local-ydb-toolkit.ydb-qdrant.tech/openapi.json",
+      guides: "https://local-ydb-toolkit.ydb-qdrant.tech/guides",
+      guidesMarkdown:
+        "https://local-ydb-toolkit.ydb-qdrant.tech/guides/index.md",
     });
+    expect(JSON.stringify(result.structuredContent.links)).toContain(
+      "/guides/ydb-schema-ddl-mcp.md",
+    );
+    expect(JSON.stringify(result.structuredContent.links)).toContain(
+      "Enterprise DNA",
+    );
+    expect(JSON.stringify(result.structuredContent.links)).toContain(
+      "Timeahead MCPScore",
+    );
+    expect(JSON.stringify(result.structuredContent.links)).not.toContain(
+      "claim available",
+    );
+    expect(JSON.stringify(result.structuredContent.links)).not.toContain(
+      "https://timeahead.in/mcp/claim/local-ydb-mcp",
+    );
 
     vi.unstubAllEnvs();
   });

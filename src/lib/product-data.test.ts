@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   AGENT_BOUNDARIES,
+  GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
   WORKFLOWS,
@@ -59,6 +61,55 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.targetSite).toBe(
       "https://local-ydb-toolkit.ydb-qdrant.tech",
     );
+    expect(PUBLIC_LINKS.glama).toContain("glama.ai/mcp/servers");
+    expect(PUBLIC_LINKS.curatedMcp).toContain("curatedmcp.com/marketplace");
+    expect(PUBLIC_LINKS.lobeHub).toContain("lobehub.com/mcp");
+    expect(PUBLIC_LINKS.officialMcpRegistry).toContain(
+      "registry.modelcontextprotocol.io",
+    );
+    expect(PUBLIC_LINKS.enterpriseDna).toContain("enterprisedna.co");
+    expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
+  });
+
+  it("lists MCP directory and trust entries without remote icon dependencies", () => {
+    expect(MCP_REGISTRY_LINKS.map((link) => link.id)).toEqual([
+      "official-mcp-registry",
+      "curated-mcp",
+      "glama",
+      "wmcp",
+      "mcp-sentinel",
+      "enterprise-dna",
+      "mcp-so",
+      "mcp-toplist",
+      "claude-code-marketplaces",
+      "lobehub",
+      "codeguilds",
+      "awesome-mcp",
+      "awesome-skills",
+      "skiln",
+      "policylayer",
+      "timeahead",
+    ]);
+    expect(MCP_REGISTRY_LINKS).toHaveLength(16);
+    expect(
+      MCP_REGISTRY_LINKS.every((link) => !("iconSrc" in link)),
+    ).toBe(true);
+    expect(
+      MCP_REGISTRY_LINKS.map((link) => [link.href, link.category, link.status]),
+    ).toContainEqual([
+      PUBLIC_LINKS.enterpriseDna,
+      "directory",
+      "listed",
+    ]);
+    expect(
+      MCP_REGISTRY_LINKS.map((link) => [link.href, link.category, link.status]),
+    ).toContainEqual([PUBLIC_LINKS.mcpSentinel, "audit", "audit page"]);
+    expect(MCP_REGISTRY_LINKS.at(-1)).toMatchObject({
+      href: PUBLIC_LINKS.timeaheadMcpScore,
+      category: "directory",
+      status: "listed",
+    });
+    expect(MCP_REGISTRY_LINKS.at(-1)).not.toHaveProperty("claimHref");
   });
 
   it("lists public projects using local-ydb", () => {
@@ -76,6 +127,23 @@ describe("local-ydb-toolkit product data", () => {
         label: "YDB Qdrant",
       },
     ]);
+  });
+
+  it("lists guide pages with HTML and markdown targets", () => {
+    expect(GUIDE_LINKS.map((guide) => guide.id)).toEqual([
+      "mcp-split",
+      "diagnostics",
+      "schema-ddl",
+      "ci",
+      "automation",
+      "tool-roundup",
+    ]);
+    expect(GUIDE_LINKS.every((guide) => guide.href.startsWith("/guides/"))).toBe(
+      true,
+    );
+    expect(GUIDE_LINKS.every((guide) => guide.markdownHref.endsWith(".md"))).toBe(
+      true,
+    );
   });
 
   it("tells agents when to use local-ydb-toolkit versus ydb/ydb-mcp", () => {

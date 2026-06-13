@@ -2,11 +2,22 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   buildAgentsMarkdown,
+  buildApiDocsMarkdown,
   buildAuthMarkdown,
+  buildBestToolsLocalYdbAiAgentsGuideMarkdown,
+  buildCompareMarkdown,
+  buildDiagnoseLocalYdbMcpGuideMarkdown,
   buildDevelopersMarkdown,
+  buildGuidesIndexMarkdown,
+  buildIndexMarkdown,
+  buildLocalDatabaseDeploymentAutomationGuideMarkdown,
+  buildLocalYdbMcpVsYdbMcpGuideMarkdown,
+  buildLocalYdbCiGuideMarkdown,
   buildLlmsFullText,
   buildLlmsText,
   buildMcpMarkdown,
+  buildWebhooksMarkdown,
+  buildYdbSchemaDdlMcpGuideMarkdown,
 } from "@/lib/agent-markdown";
 
 describe("agent-readable markdown", () => {
@@ -19,11 +30,24 @@ describe("agent-readable markdown", () => {
     const body = buildLlmsText();
 
     expect(body).toContain("# local-ydb-toolkit");
+    expect(body).toContain("## Product overview");
+    expect(body).toContain("## Use cases");
+    expect(body).toContain("[OpenAPI JSON]");
+    expect(body).toContain("[llms-full.txt]");
     expect(body).toContain("/openapi.json");
     expect(body).toContain("/mcp");
     expect(body).toContain("/agents.md");
+    expect(body).toContain("/docs/api");
+    expect(body).toContain("/docs/webhooks");
+    expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
     expect(body).toContain("confirm: true");
+    expect(body).toContain("## Directory and trust listings");
+    expect(body).toContain("[Enterprise DNA]");
+    expect(body).toContain("[MCP Sentinel]");
+    expect(body).toContain("[Timeahead MCPScore]");
+    expect(body).not.toContain("claim available");
+    expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
 
     vi.unstubAllEnvs();
   });
@@ -35,11 +59,21 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Use ydb/ydb-mcp");
     expect(body).toContain("plan-first");
     expect(body).toContain("remote promo MCP is read-only");
+    expect(body).toContain("[Auth guide]");
+    expect(body).toContain("[Guides index]");
+    expect(body).toContain("## Directory and trust listings");
+    expect(body).toContain("Timeahead MCPScore");
+    expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
+    expect(body).toContain("```json");
+    expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
+    expect(body).toContain("GET /docs/api");
   });
 
   it("documents agent access without implying remote operational mutation", () => {
     const body = buildAgentsMarkdown();
 
+    expect(body).toContain("## When to use local-ydb-toolkit");
+    expect(body).toContain("## Agent instructions");
     expect(body).toContain("get_product_overview");
     expect(body).toContain("get_install_options");
     expect(body).toContain("list_local_ydb_workflows");
@@ -54,6 +88,10 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/api/install-options");
     expect(body).toContain("/api/workflows");
     expect(body).toContain("/openapi.json");
+    expect(body).toContain("/docs/api");
+    expect(body).toContain("/docs/webhooks");
+    expect(body).toContain("## Directory and trust listings");
+    expect(body).toContain("PolicyLayer");
   });
 
   it("states auth boundaries for agents", () => {
@@ -62,6 +100,18 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Public promo read endpoints require no authentication");
     expect(body).toContain("local YDB credentials stay local");
     expect(body).toContain("OAuth is not part of v1");
+    expect(body).toContain("## Agent Authentication");
+    expect(body).toContain("## 1. Discover");
+    expect(body).toContain("## 2. Pick a method");
+    expect(body).toContain("## 3. Register");
+    expect(body).toContain("## 4. Claim");
+    expect(body).toContain("## 5. Use credential");
+    expect(body).toContain("## 6. Errors");
+    expect(body).toContain("## 7. Revocation");
+    expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
+    expect(body).toContain("configPath");
+    expect(body).toContain("rootPasswordFile");
+    expect(body).toContain("dynamicNodeAuthTokenFile");
   });
 
   it("states MCP safety boundaries", () => {
@@ -70,5 +120,51 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Read-only promo MCP");
     expect(body).toContain("Actual YDB operations stay in the local stdio MCP server");
     expect(body).toContain("confirm: true");
+  });
+
+  it("builds markdown twins for homepage and topical pages", () => {
+    const pages = [
+      buildIndexMarkdown(),
+      buildGuidesIndexMarkdown(),
+      buildCompareMarkdown(),
+      buildLocalYdbMcpVsYdbMcpGuideMarkdown(),
+      buildDiagnoseLocalYdbMcpGuideMarkdown(),
+      buildYdbSchemaDdlMcpGuideMarkdown(),
+      buildBestToolsLocalYdbAiAgentsGuideMarkdown(),
+      buildLocalDatabaseDeploymentAutomationGuideMarkdown(),
+      buildLocalYdbCiGuideMarkdown(),
+      buildApiDocsMarkdown(),
+      buildWebhooksMarkdown(),
+    ];
+
+    for (const body of pages) {
+      expect(body.trimStart()).toMatch(/^# /);
+      expect(body).toContain("local-ydb-toolkit");
+    }
+
+    expect(buildGuidesIndexMarkdown()).toContain(
+      "/guides/local-ydb-mcp-vs-ydb-mcp",
+    );
+    expect(buildCompareMarkdown()).toContain("Liquibase");
+    expect(buildLocalYdbMcpVsYdbMcpGuideMarkdown()).toContain(
+      "ydb-platform/ydb-mcp",
+    );
+    expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain(
+      "local_ydb_healthcheck",
+    );
+    expect(buildYdbSchemaDdlMcpGuideMarkdown()).toContain(
+      "local_ydb_generate_schema",
+    );
+    expect(buildBestToolsLocalYdbAiAgentsGuideMarkdown()).toContain(
+      "ghcr.io/ydb-platform/local-ydb",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "local database deployment automation",
+    );
+    expect(buildLocalYdbCiGuideMarkdown()).toContain(
+      "astandrik/setup-local-ydb@v1",
+    );
+    expect(buildApiDocsMarkdown()).toContain("GET /api/product");
+    expect(buildWebhooksMarkdown()).toContain("Webhooks are not supported in v1");
   });
 });

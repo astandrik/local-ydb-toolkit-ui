@@ -1,4 +1,5 @@
 import { handlePromoMcpRequest } from "@/lib/mcp-http";
+import { discoveryHeaders } from "@/lib/discovery-links";
 import { buildMcpRegistryServerMetadata } from "@/lib/mcp-registry";
 
 export const runtime = "nodejs";
@@ -6,9 +7,7 @@ export const dynamic = "force-dynamic";
 
 export function GET(): Response {
   return Response.json(buildMcpRegistryServerMetadata(), {
-    headers: {
-      "Cache-Control": "public, max-age=300, s-maxage=3600",
-    },
+    headers: discoveryHeaders("application/json"),
   });
 }
 

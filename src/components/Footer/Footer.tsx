@@ -23,11 +23,20 @@ export function Footer() {
           <a href={PUBLIC_LINKS.githubAction} className="footer__link">
             GitHub Action
           </a>
+          <Link href={withBasePath("/guides")} className="footer__link">
+            Guides
+          </Link>
           <Link href={withBasePath("/mcp.md")} className="footer__link">
             MCP guide
           </Link>
           <Link href={withBasePath("/auth.md")} className="footer__link">
             Auth notes
+          </Link>
+          <Link href={withBasePath("/docs/api")} className="footer__link">
+            API docs
+          </Link>
+          <Link href={withBasePath("/docs/webhooks")} className="footer__link">
+            Webhooks
           </Link>
         </div>
       </div>

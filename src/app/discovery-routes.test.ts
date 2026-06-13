@@ -31,7 +31,63 @@ describe("agent discovery routes", () => {
     {
       modulePath: "@/app/auth.md/route",
       contentType: "text/markdown; charset=utf-8",
-      expected: ["local YDB credentials stay local", "OAuth is not part of v1"],
+      expected: ["local YDB credentials stay local", "LOCAL_YDB_TOOLKIT_CONFIG"],
+    },
+    {
+      modulePath: "@/app/index.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["# local-ydb-toolkit", "Quickstart"],
+    },
+    {
+      modulePath: "@/app/compare.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["# Compare local-ydb-toolkit", "Liquibase"],
+    },
+    {
+      modulePath: "@/app/guides/index.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["# local-ydb-toolkit guides", "/guides/ydb-schema-ddl-mcp"],
+    },
+    {
+      modulePath: "@/app/guides/local-ydb-mcp-vs-ydb-mcp.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["local-ydb-mcp vs ydb-platform/ydb-mcp", "confirm: true"],
+    },
+    {
+      modulePath: "@/app/guides/diagnose-local-ydb-mcp.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["Diagnose local-ydb", "local_ydb_healthcheck"],
+    },
+    {
+      modulePath: "@/app/guides/ydb-schema-ddl-mcp.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["YDB table schema DDL", "local_ydb_generate_schema"],
+    },
+    {
+      modulePath: "@/app/guides/best-tools-local-ydb-ai-agents.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["Best tools for local YDB", "ghcr.io/ydb-platform/local-ydb"],
+    },
+    {
+      modulePath:
+        "@/app/guides/local-database-deployment-automation.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["local database deployment automation", "confirm: true"],
+    },
+    {
+      modulePath: "@/app/guides/local-ydb-ci.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["local YDB in CI", "astandrik/setup-local-ydb@v1"],
+    },
+    {
+      modulePath: "@/app/docs/api.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["# local-ydb-toolkit API docs", "GET /api/product"],
+    },
+    {
+      modulePath: "@/app/docs/webhooks.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["# local-ydb-toolkit webhooks", "not supported in v1"],
     },
   ])("serves $modulePath", async ({ modulePath, contentType, expected }) => {
     vi.resetModules();
@@ -46,6 +102,7 @@ describe("agent discovery routes", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe(contentType);
+    expect(response.headers.get("Link")).toContain("/index.md");
     for (const text of expected) {
       expect(body).toContain(text);
     }
@@ -78,6 +135,7 @@ describe("agent discovery routes", () => {
       "@/app/server.json/route",
       "@/app/.well-known/mcp/server.json/route",
       "@/app/.well-known/mcp/server-card.json/route",
+      "@/app/.well-known/agent-card.json/route",
     ];
 
     for (const modulePath of routeModules) {
@@ -87,8 +145,28 @@ describe("agent discovery routes", () => {
       const body = await response.json();
 
       expect(response.status).toBe(200);
+      expect(response.headers.get("Link")).toContain("/openapi.json");
       expect(body).toBeTruthy();
     }
+  });
+
+  it("serves an A2A agent card from the well-known route", async () => {
+    vi.stubEnv(
+      "NEXT_PUBLIC_APP_URL",
+      "https://local-ydb-toolkit.ydb-qdrant.tech",
+    );
+
+    const { GET } = await import("@/app/.well-known/agent-card.json/route");
+    const response = GET();
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("application/json");
+    expect(body.name).toBe("local-ydb-toolkit Promo Agent");
+    expect(body.skills).toHaveLength(3);
+    expect(JSON.stringify(body)).toContain("/mcp");
+
+    vi.unstubAllEnvs();
   });
 
   it("includes local-ydb project links in the product endpoint", async () => {
@@ -96,6 +174,14 @@ describe("agent discovery routes", () => {
     const response = GET();
     const body = await response.json();
 
+    expect(body.guideLinks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          href: "/guides/ydb-schema-ddl-mcp",
+          markdownHref: "/guides/ydb-schema-ddl-mcp.md",
+        }),
+      ]),
+    );
     expect(body.projectsUsingLocalYdb).toEqual([
       {
         href: "https://pets.ydb-qdrant.tech/",
@@ -110,6 +196,18 @@ describe("agent discovery routes", () => {
         label: "YDB Qdrant",
       },
     ]);
+    expect(body.mcpRegistryLinks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: "Enterprise DNA",
+          status: "listed",
+        }),
+        expect.objectContaining({
+          label: "Timeahead MCPScore",
+          status: "listed",
+        }),
+      ]),
+    );
   });
 });
 
@@ -122,9 +220,33 @@ describe("robots and sitemap", () => {
       : result.rules;
 
     expect(firstRule?.allow).toContain("/llms.txt");
+    expect(firstRule?.allow).toContain("/index.md");
+    expect(firstRule?.allow).toContain("/guides");
+    expect(firstRule?.allow).toContain("/guides/index.md");
     expect(firstRule?.allow).toContain("/mcp");
     expect(firstRule?.allow).toContain("/.well-known/mcp");
+    expect(firstRule?.allow).toContain("/.well-known/agent-card.json");
     expect(firstRule?.disallow).toContain("/api/private");
+
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
+    expect(rules).toContainEqual(
+      expect.objectContaining({
+        userAgent: "ChatGPT-User",
+        allow: expect.arrayContaining(["/"]),
+      }),
+    );
+    expect(rules).toContainEqual(
+      expect.objectContaining({
+        userAgent: "CCBot",
+        disallow: expect.arrayContaining(["/"]),
+      }),
+    );
+    expect(rules).toContainEqual(
+      expect.objectContaining({
+        userAgent: "ByteSpider",
+        disallow: expect.arrayContaining(["/"]),
+      }),
+    );
   });
 
   it("lists canonical promo and agent-readable routes", async () => {
@@ -145,6 +267,30 @@ describe("robots and sitemap", () => {
       "https://local-ydb-toolkit.ydb-qdrant.tech/openapi.json",
     );
     expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/mcp");
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/index.md");
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/compare");
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/compare.md",
+    );
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/guides");
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/guides/index.md",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/guides/local-ydb-mcp-vs-ydb-mcp",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/guides/ydb-schema-ddl-mcp.md",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/docs/api",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/docs/webhooks",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/.well-known/agent-card.json",
+    );
 
     vi.unstubAllEnvs();
   });

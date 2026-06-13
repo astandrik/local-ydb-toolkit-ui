@@ -1,4 +1,5 @@
 import { WORKFLOWS } from "@/lib/product-data";
+import { discoveryHeaders } from "@/lib/discovery-links";
 
 export const runtime = "nodejs";
 
@@ -8,9 +9,7 @@ export function GET(): Response {
       workflows: WORKFLOWS,
     },
     {
-      headers: {
-        "Cache-Control": "public, max-age=300, s-maxage=3600",
-      },
+      headers: discoveryHeaders("application/json"),
     },
   );
 }

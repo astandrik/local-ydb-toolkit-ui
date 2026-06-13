@@ -21,8 +21,10 @@ import { Button, Card, Container, Text } from "@/components/GravityUI/GravityUI"
 import { withBasePath } from "@/lib/base-path";
 import {
   AGENT_BOUNDARIES,
+  GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
   WORKFLOWS,
@@ -148,6 +150,44 @@ export function PromoPage() {
           />
         </section>
 
+        <section className="quickstart-band" aria-labelledby="quickstart-title">
+          <div>
+            <p className="eyebrow">Quickstart</p>
+            <h2 id="quickstart-title">Install the local MCP server where YDB runs</h2>
+            <p>
+              Use the hosted site for discovery and the local stdio MCP server
+              for Docker, SSH, config files, password files, and actual
+              local-ydb operations.
+            </p>
+            <CopyableCode
+              className="quickstart-band__command"
+              value={INSTALL_OPTIONS[0]?.command ?? ""}
+            />
+          </div>
+          <div className="quickstart-band__links">
+            <Button view="outlined" size="l" href={withBasePath("/docs/api")}>
+              API docs
+              <ArrowRight />
+            </Button>
+            <Button view="outlined" size="l" href={withBasePath("/auth.md")}>
+              Auth guide
+              <ArrowRight />
+            </Button>
+            <Button view="outlined" size="l" href={withBasePath("/compare")}>
+              Compare
+              <ArrowRight />
+            </Button>
+            <Button
+              view="outlined"
+              size="l"
+              href={withBasePath("/guides/local-ydb-ci")}
+            >
+              CI guide
+              <ArrowRight />
+            </Button>
+          </div>
+        </section>
+
         <section className="section-grid" aria-labelledby="safety-title">
           <div className="section-heading">
             <p className="eyebrow">Safety model</p>
@@ -189,6 +229,58 @@ export function PromoPage() {
                   value={option.command}
                 />
               </Card>
+            ))}
+          </div>
+        </section>
+
+        <section id="mcp-registries" className="section-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Directory and trust listings</p>
+            <h2>Public pages agents can cross-check</h2>
+          </div>
+          <div className="registry-grid">
+            {MCP_REGISTRY_LINKS.map((registry) => (
+              <a
+                key={registry.id}
+                href={registry.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="registry-card"
+              >
+                <span
+                  className={`registry-card__tag registry-card__tag--${registry.category}`}
+                >
+                  {registry.category}
+                </span>
+                <span className="registry-card__copy">
+                  <strong>{registry.label}</strong>
+                  <span>{registry.description}</span>
+                  <em>{registry.status}</em>
+                </span>
+                <ArrowRight className="registry-card__arrow" />
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section id="guides" className="section-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Guides</p>
+            <h2>Answer-first pages for agents and developers</h2>
+          </div>
+          <div className="guide-grid">
+            {GUIDE_LINKS.map((guide) => (
+              <a
+                key={guide.id}
+                href={withBasePath(guide.href)}
+                className="guide-card"
+              >
+                <span className="guide-card__copy">
+                  <strong>{guide.label}</strong>
+                  <span>{guide.description}</span>
+                </span>
+                <ArrowRight className="guide-card__arrow" />
+              </a>
             ))}
           </div>
         </section>

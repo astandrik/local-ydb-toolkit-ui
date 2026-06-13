@@ -8,6 +8,9 @@ import "./AppHeader.scss";
 const NAV_LINKS = [
   { href: "#workflows", label: "Workflows" },
   { href: "#agent-access", label: "Agent access" },
+  { href: withBasePath("/guides"), label: "Guides" },
+  { href: withBasePath("/docs/api"), label: "API docs" },
+  { href: withBasePath("/compare"), label: "Compare" },
   { href: withBasePath("/openapi.json"), label: "OpenAPI" },
   { href: withBasePath("/llms.txt"), label: "llms.txt" },
 ] as const;
