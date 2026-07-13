@@ -164,6 +164,26 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
+  it("keeps the official Registry note independent of a specific release", () => {
+    const officialRegistry = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "official-mcp-registry",
+    );
+
+    expect(officialRegistry?.note).toBe(
+      "Latest published metadata matches the npm package and repository identity.",
+    );
+  });
+
+  it("describes the Vibehackers listing as a stale external snapshot", () => {
+    const vibehackers = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "vibehackers",
+    );
+
+    expect(vibehackers?.note).toBe(
+      "The page still shows package 0.14.0, only 5 of 38 tools, and marks optional environment fields as required.",
+    );
+  });
+
   it("lists public projects using local-ydb", () => {
     expect(PROJECTS_USING_LOCAL_YDB).toEqual([
       {

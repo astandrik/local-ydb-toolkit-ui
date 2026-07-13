@@ -171,7 +171,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     description: "Model Context Protocol registry search for the published server name.",
     sourceType: "official",
     accuracy: "current",
-    note: "Active 0.14.0 metadata matches the npm package and repository identity.",
+    note: "Latest published metadata matches the npm package and repository identity.",
   }),
   reviewedRegistryLink({
     id: "curated-mcp",
@@ -402,7 +402,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     description: "Generated install and tool-discovery page for MCP clients.",
     sourceType: "automated",
     accuracy: "partial",
-    note: "Package 0.14.0 is current, but only 5 of 38 tools are shown and optional environment fields are marked required.",
+    note: "The page still shows package 0.14.0, only 5 of 38 tools, and marks optional environment fields as required.",
   }),
 ];
 
