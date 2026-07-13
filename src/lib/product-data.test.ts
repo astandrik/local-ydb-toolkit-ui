@@ -174,7 +174,7 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
-  it("describes the Vibehackers listing as a stale external snapshot", () => {
+  it("describes the outdated package metadata shown by Vibehackers", () => {
     const vibehackers = MCP_REGISTRY_LINKS.find(
       ({ id }) => id === "vibehackers",
     );
