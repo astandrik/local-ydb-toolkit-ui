@@ -64,6 +64,20 @@ describe("read-only promo MCP tools", () => {
     expect(JSON.stringify(result.structuredContent.links)).toContain(
       "Timeahead MCPScore",
     );
+    expect(result.structuredContent.links).toMatchObject({
+      mcpDirectorySnapshotWarning: expect.stringContaining(
+        "not security attestations",
+      ),
+      mcpRegistries: expect.arrayContaining([
+        expect.objectContaining({
+          label: "Official MCP Registry",
+          sourceType: "official",
+          accuracy: "current",
+          lastChecked: "2026-07-13",
+          note: expect.any(String),
+        }),
+      ]),
+    });
     expect(JSON.stringify(result.structuredContent.links)).not.toContain(
       "claim available",
     );

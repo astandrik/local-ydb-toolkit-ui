@@ -33,6 +33,15 @@ export type McpRegistryCategory =
   | "audit"
   | "governance";
 
+export type McpRegistrySourceType = "official" | "community" | "automated";
+
+export type McpRegistryAccuracy =
+  | "current"
+  | "partial"
+  | "stale"
+  | "misleading"
+  | "unverified";
+
 export type McpRegistryLink = {
   id:
     | "official-mcp-registry"
@@ -50,12 +59,22 @@ export type McpRegistryLink = {
     | "awesome-skills"
     | "skiln"
     | "policylayer"
-    | "timeahead";
+    | "timeahead"
+    | "pulse-mcp"
+    | "mcp-store"
+    | "unyly"
+    | "manifold"
+    | "forge"
+    | "vibehackers";
   label: string;
   href: string;
   category: McpRegistryCategory;
   status: string;
   description: string;
+  sourceType: McpRegistrySourceType;
+  accuracy: McpRegistryAccuracy;
+  lastChecked: string | null;
+  note: string;
   includeInSameAs?: boolean;
 };
 
@@ -106,6 +125,14 @@ export const PUBLIC_LINKS = {
   wmcp: "https://wmcp.sh/mcp/grade/npm%3A%40astandrik%2Flocal-ydb-mcp",
   policyLayer: "https://policylayer.com/tools/local-ydb",
   timeaheadMcpScore: "https://timeahead.in/mcp/local-ydb-mcp",
+  pulseMcp: "https://www.pulsemcp.com/servers/astandrik-local-ydb",
+  mcpStore: "https://mcpstore.co/server/69eeaea69b1bda315bbc5a63",
+  unyly: "https://unyly.org/mcp/astandrik-local-ydb-toolkit",
+  manifold:
+    "https://manifest.manifold.security/mcp-servers/mcp-registry/astandrik/local-ydb-mcp",
+  forge:
+    "https://forgeregistry.com/registry/io.github.astandrik%2Flocal-ydb-mcp",
+  vibehackers: "https://vibehackers.io/mcp/local-ydb-mcp",
 } as const;
 
 export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
@@ -123,135 +150,260 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
   },
 ];
 
+const MCP_REGISTRY_REVIEW_DATE = "2026-07-13";
+
+function reviewedRegistryLink(
+  link: Omit<McpRegistryLink, "lastChecked">,
+): McpRegistryLink {
+  return { ...link, lastChecked: MCP_REGISTRY_REVIEW_DATE };
+}
+
+export const MCP_DIRECTORY_SNAPSHOT_WARNING =
+  "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.";
+
 export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
-  {
+  reviewedRegistryLink({
     id: "official-mcp-registry",
     label: "Official MCP Registry",
     href: PUBLIC_LINKS.officialMcpRegistry,
     category: "registry",
     status: "official metadata",
     description: "Model Context Protocol registry search for the published server name.",
-  },
-  {
+    sourceType: "official",
+    accuracy: "current",
+    note: "Latest published metadata matches the npm package and repository identity.",
+  }),
+  reviewedRegistryLink({
     id: "curated-mcp",
     label: "CuratedMCP",
     href: PUBLIC_LINKS.curatedMcp,
     category: "trust",
     status: "verified listing",
     description: "Curated marketplace profile for the local YDB MCP server.",
-  },
-  {
+    sourceType: "community",
+    accuracy: "partial",
+    note: "Install metadata is current, but the profile has limited usage and review detail.",
+  }),
+  reviewedRegistryLink({
     id: "glama",
     label: "Glama",
     href: PUBLIC_LINKS.glama,
     category: "trust",
     status: "indexed score",
     description: "MCP server listing with score and discovery metadata.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "partial",
+    note: "The source and broad capabilities are current; individual tool guidance remains incomplete.",
+  }),
+  reviewedRegistryLink({
     id: "wmcp",
     label: "wmcp.sh",
     href: PUBLIC_LINKS.wmcp,
     category: "trust",
     status: "grade page",
     description: "Public grade page for the npm MCP package.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "stale",
+    note: "The grade is based on package 0.13.0 and incorrectly reports only one tool.",
+  }),
+  reviewedRegistryLink({
     id: "mcp-sentinel",
     label: "MCP Sentinel",
     href: PUBLIC_LINKS.mcpSentinel,
     category: "audit",
     status: "audit page",
     description: "Security-oriented directory entry for the MCP server.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "The page reports no findings but does not expose a reliable scan version or date.",
+  }),
+  reviewedRegistryLink({
     id: "enterprise-dna",
     label: "Enterprise DNA",
     href: PUBLIC_LINKS.enterpriseDna,
     category: "directory",
     status: "listed",
     description: "Enterprise DNA MCP directory page for local-ydb-toolkit.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "stale",
+    note: "The listing uses a 2026-05-28 source snapshot and outdated adoption metadata.",
+  }),
+  reviewedRegistryLink({
     id: "mcp-so",
     label: "MCP.so",
     href: PUBLIC_LINKS.mcpSo,
     category: "directory",
     status: "listed",
     description: "MCP.so server entry for the local-ydb-mcp package.",
-  },
-  {
+    sourceType: "community",
+    accuracy: "partial",
+    note: "The overview and install config are current, but the page detects no tools.",
+  }),
+  reviewedRegistryLink({
     id: "mcp-toplist",
     label: "MCP Toplist",
     href: PUBLIC_LINKS.mcpToplist,
     category: "directory",
     status: "listed",
     description: "MCP Toplist profile for the official server identifier.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "The directory tracks versions but reports internally inconsistent registry counts.",
+  }),
+  reviewedRegistryLink({
     id: "claude-code-marketplaces",
     label: "Claude Code Marketplaces",
     href: PUBLIC_LINKS.claudeCodeMarketplaces,
     category: "directory",
     status: "listed",
     description: "Claude-focused MCP marketplace entry for the server.",
-  },
-  {
+    sourceType: "community",
+    accuracy: "unverified",
+    note: "Directory-only page; package and tool metadata were not independently verified.",
+  }),
+  reviewedRegistryLink({
     id: "lobehub",
     label: "LobeHub",
     href: PUBLIC_LINKS.lobeHub,
     category: "directory",
     status: "listed",
     description: "LobeHub MCP directory entry for agent discovery.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "README-derived directory mirror without independent accuracy evidence.",
+  }),
+  reviewedRegistryLink({
     id: "codeguilds",
     label: "CodeGuilds",
     href: PUBLIC_LINKS.codeGuilds,
     category: "directory",
     status: "listed",
     description: "Package listing for local-ydb-toolkit developer discovery.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "Its download metric covers the directory channel rather than npm package usage.",
+  }),
+  reviewedRegistryLink({
     id: "awesome-mcp",
     label: "Awesome MCP Servers",
     href: PUBLIC_LINKS.awesomeMcpServers,
     category: "directory",
     status: "awesome list",
     description: "Awesome MCP Servers database category listing.",
-  },
-  {
+    sourceType: "community",
+    accuracy: "unverified",
+    note: "Community list entry with no independent runtime or security assessment.",
+  }),
+  reviewedRegistryLink({
     id: "awesome-skills",
     label: "Awesome Skills",
     href: PUBLIC_LINKS.awesomeSkills,
     category: "directory",
     status: "skill listing",
     description: "Codex skill directory page for the local-ydb skill.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "misleading",
+    note: "The page assigns an unrelated Writing and Editing category and awkward generated copy.",
+  }),
+  reviewedRegistryLink({
     id: "skiln",
     label: "Skiln",
     href: PUBLIC_LINKS.skiln,
     category: "directory",
     status: "listed",
     description: "MCP catalog entry for the io.github server name.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "Automated official-registry mirror with incomplete install rendering.",
+  }),
+  reviewedRegistryLink({
     id: "policylayer",
     label: "PolicyLayer",
     href: PUBLIC_LINKS.policyLayer,
     category: "governance",
     status: "policy catalog",
     description: "Policy and token-cost catalog page for the MCP server.",
-  },
-  {
+    sourceType: "automated",
+    accuracy: "partial",
+    note: "It sees 38 capabilities, but its risk grade is not a vulnerability finding and underrepresents plan-first confirmation.",
+  }),
+  reviewedRegistryLink({
     id: "timeahead",
     label: "Timeahead MCPScore",
     href: PUBLIC_LINKS.timeaheadMcpScore,
     category: "directory",
     status: "listed",
     description: "MCPScore directory listing for the local-ydb-mcp package.",
-  },
+    sourceType: "automated",
+    accuracy: "misleading",
+    note: "Package detection, downloads, and CI status conflict with current npm and GitHub data.",
+  }),
+  reviewedRegistryLink({
+    id: "pulse-mcp",
+    label: "PulseMCP",
+    href: PUBLIC_LINKS.pulseMcp,
+    category: "directory",
+    status: "usage snapshot",
+    description: "Community MCP directory with estimated traffic and npm activity.",
+    sourceType: "automated",
+    accuracy: "partial",
+    note: "Weekly npm activity matches the public API, while the GitHub star count is stale.",
+  }),
+  reviewedRegistryLink({
+    id: "mcp-store",
+    label: "MCP Store",
+    href: PUBLIC_LINKS.mcpStore,
+    category: "directory",
+    status: "listed",
+    description: "MCP Store directory entry for local-ydb-toolkit.",
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "The profile is mostly a README mirror and displays an unexplained authentication prompt.",
+  }),
+  reviewedRegistryLink({
+    id: "unyly",
+    label: "Unyly",
+    href: PUBLIC_LINKS.unyly,
+    category: "directory",
+    status: "listed",
+    description: "One-click installation directory entry for MCP clients.",
+    sourceType: "automated",
+    accuracy: "unverified",
+    note: "README-derived listing with unverified security and credential claims.",
+  }),
+  reviewedRegistryLink({
+    id: "manifold",
+    label: "Manifold Manifest",
+    href: PUBLIC_LINKS.manifold,
+    category: "audit",
+    status: "manifest scan",
+    description: "Automated manifest and tool-surface scan for the official Registry entry.",
+    sourceType: "automated",
+    accuracy: "partial",
+    note: "It sees 0.14.0 and 38 clean tools, but its missing 0.13.0 tag finding is stale.",
+  }),
+  reviewedRegistryLink({
+    id: "forge",
+    label: "Forge Registry",
+    href: PUBLIC_LINKS.forge,
+    category: "trust",
+    status: "registry scan",
+    description: "Automated supply-chain and package metadata profile.",
+    sourceType: "automated",
+    accuracy: "stale",
+    note: "The page is on 0.13.0 and reports incorrect license and tool-count metadata.",
+  }),
+  reviewedRegistryLink({
+    id: "vibehackers",
+    label: "Vibehackers",
+    href: PUBLIC_LINKS.vibehackers,
+    category: "directory",
+    status: "install guide",
+    description: "Generated install and tool-discovery page for MCP clients.",
+    sourceType: "automated",
+    accuracy: "partial",
+    note: "The page still shows package 0.14.0, only 5 of 38 tools, and marks optional environment fields as required.",
+  }),
 ];
 
 export const GUIDE_LINKS: GuideLink[] = [

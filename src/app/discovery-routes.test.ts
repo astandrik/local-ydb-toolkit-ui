@@ -200,13 +200,18 @@ describe("agent discovery routes", () => {
       expect.arrayContaining([
         expect.objectContaining({
           label: "Enterprise DNA",
-          status: "listed",
+          accuracy: "stale",
+          lastChecked: "2026-07-13",
         }),
         expect.objectContaining({
           label: "Timeahead MCPScore",
-          status: "listed",
+          sourceType: "automated",
+          accuracy: "misleading",
         }),
       ]),
+    );
+    expect(body.mcpDirectorySnapshotWarning).toContain(
+      "not security attestations",
     );
   });
 });
