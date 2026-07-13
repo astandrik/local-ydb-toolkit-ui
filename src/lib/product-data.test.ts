@@ -71,45 +71,97 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
   });
 
-  it("lists MCP directory and trust entries without remote icon dependencies", () => {
-    expect(MCP_REGISTRY_LINKS.map((link) => link.id)).toEqual([
-      "official-mcp-registry",
-      "curated-mcp",
-      "glama",
-      "wmcp",
-      "mcp-sentinel",
-      "enterprise-dna",
-      "mcp-so",
-      "mcp-toplist",
-      "claude-code-marketplaces",
-      "lobehub",
-      "codeguilds",
-      "awesome-mcp",
-      "awesome-skills",
-      "skiln",
-      "policylayer",
-      "timeahead",
-    ]);
-    expect(MCP_REGISTRY_LINKS).toHaveLength(16);
+  it("keeps unique directory ids and complete snapshot metadata", () => {
+    const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
+
+    expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every((link) => !("iconSrc" in link)),
     ).toBe(true);
     expect(
-      MCP_REGISTRY_LINKS.map((link) => [link.href, link.category, link.status]),
-    ).toContainEqual([
-      PUBLIC_LINKS.enterpriseDna,
-      "directory",
-      "listed",
-    ]);
-    expect(
-      MCP_REGISTRY_LINKS.map((link) => [link.href, link.category, link.status]),
-    ).toContainEqual([PUBLIC_LINKS.mcpSentinel, "audit", "audit page"]);
-    expect(MCP_REGISTRY_LINKS.at(-1)).toMatchObject({
-      href: PUBLIC_LINKS.timeaheadMcpScore,
-      category: "directory",
-      status: "listed",
+      MCP_REGISTRY_LINKS.every(
+        ({ href, sourceType, accuracy, lastChecked, note }) =>
+          href.startsWith("https://") &&
+          ["official", "community", "automated"].includes(sourceType) &&
+          ["current", "partial", "stale", "misleading", "unverified"].includes(
+            accuracy,
+          ) &&
+          (lastChecked === null || /^\d{4}-\d{2}-\d{2}$/.test(lastChecked)) &&
+          note.trim().length > 0,
+      ),
+    ).toBe(true);
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        "pulse-mcp",
+        "mcp-store",
+        "unyly",
+        "manifold",
+        "forge",
+        "vibehackers",
+      ]),
+    );
+  });
+
+  it("records the reviewed 2026-07-13 accuracy classifications", () => {
+    const accuracyById = Object.fromEntries(
+      MCP_REGISTRY_LINKS.map(({ id, accuracy }) => [id, accuracy]),
+    );
+
+    expect(accuracyById).toMatchObject({
+      "official-mcp-registry": "current",
+      glama: "partial",
+      "curated-mcp": "partial",
+      manifold: "partial",
+      "pulse-mcp": "partial",
+      "mcp-so": "partial",
+      vibehackers: "partial",
+      policylayer: "partial",
+      wmcp: "stale",
+      "enterprise-dna": "stale",
+      forge: "stale",
+      timeahead: "misleading",
+      "awesome-skills": "misleading",
+      "mcp-sentinel": "unverified",
     });
-    expect(MCP_REGISTRY_LINKS.at(-1)).not.toHaveProperty("claimHref");
+    expect(
+      MCP_REGISTRY_LINKS.every((link) => link.lastChecked === "2026-07-13"),
+    ).toBe(true);
+    const idsFor = (accuracy: string) =>
+      MCP_REGISTRY_LINKS.filter((link) => link.accuracy === accuracy)
+        .map((link) => link.id)
+        .sort();
+
+    expect(idsFor("current")).toEqual(["official-mcp-registry"]);
+    expect(idsFor("partial")).toEqual(
+      [
+        "curated-mcp",
+        "glama",
+        "manifold",
+        "mcp-so",
+        "policylayer",
+        "pulse-mcp",
+        "vibehackers",
+      ].sort(),
+    );
+    expect(idsFor("stale")).toEqual(
+      ["enterprise-dna", "forge", "wmcp"].sort(),
+    );
+    expect(idsFor("misleading")).toEqual(
+      ["awesome-skills", "timeahead"].sort(),
+    );
+    expect(idsFor("unverified")).toEqual(
+      [
+        "awesome-mcp",
+        "claude-code-marketplaces",
+        "codeguilds",
+        "lobehub",
+        "mcp-sentinel",
+        "mcp-store",
+        "mcp-toplist",
+        "skiln",
+        "unyly",
+      ].sort(),
+    );
   });
 
   it("lists public projects using local-ydb", () => {

@@ -46,6 +46,9 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("[Enterprise DNA]");
     expect(body).toContain("[MCP Sentinel]");
     expect(body).toContain("[Timeahead MCPScore]");
+    expect(body).toContain("source: automated; accuracy: misleading");
+    expect(body).toContain("last checked: 2026-07-13");
+    expect(body).toContain("not security attestations");
     expect(body).not.toContain("claim available");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
 
@@ -63,6 +66,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("[Guides index]");
     expect(body).toContain("## Directory and trust listings");
     expect(body).toContain("Timeahead MCPScore");
+    expect(body).toContain("not security attestations");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
     expect(body).toContain("```json");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
@@ -92,6 +96,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("## Directory and trust listings");
     expect(body).toContain("PolicyLayer");
+    expect(body).toContain("not security attestations");
   });
 
   it("states auth boundaries for agents", () => {

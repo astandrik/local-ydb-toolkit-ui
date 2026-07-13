@@ -5,6 +5,7 @@ import {
   GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_DIRECTORY_SNAPSHOT_WARNING,
   MCP_REGISTRY_LINKS,
   PUBLIC_LINKS,
   WORKFLOWS,
@@ -12,10 +13,12 @@ import {
 } from "@/lib/product-data";
 
 function formatDirectoryAndTrustListings(): string {
-  return MCP_REGISTRY_LINKS.map(
+  const listings = MCP_REGISTRY_LINKS.map(
     (link) =>
-      `- [${link.label}](${link.href}) - ${link.category}; ${link.status}. ${link.description}`,
+      `- [${link.label}](${link.href}) - ${link.category}; ${link.status}; source: ${link.sourceType}; accuracy: ${link.accuracy}; last checked: ${link.lastChecked ?? "not recorded"}. ${link.description} Note: ${link.note}`,
   ).join("\n");
+
+  return `${MCP_DIRECTORY_SNAPSHOT_WARNING}\n\n${listings}`;
 }
 
 export function markdownResponse(body: string): Response {

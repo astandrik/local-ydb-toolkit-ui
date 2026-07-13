@@ -24,6 +24,7 @@ import {
   GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_DIRECTORY_SNAPSHOT_WARNING,
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
@@ -237,6 +238,9 @@ export function PromoPage() {
           <div className="section-heading">
             <p className="eyebrow">Directory and trust listings</p>
             <h2>Public pages agents can cross-check</h2>
+            <p className="registry-disclaimer">
+              {MCP_DIRECTORY_SNAPSHOT_WARNING}
+            </p>
           </div>
           <div className="registry-grid">
             {MCP_REGISTRY_LINKS.map((registry) => (
@@ -256,6 +260,12 @@ export function PromoPage() {
                   <strong>{registry.label}</strong>
                   <span>{registry.description}</span>
                   <em>{registry.status}</em>
+                  <small className="registry-card__metadata">
+                    {registry.sourceType} source · {registry.accuracy} accuracy ·
+                    {" "}
+                    checked {registry.lastChecked ?? "not recorded"}
+                  </small>
+                  <small className="registry-card__note">{registry.note}</small>
                 </span>
                 <ArrowRight className="registry-card__arrow" />
               </a>

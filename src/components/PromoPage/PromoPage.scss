@@ -394,6 +394,14 @@
   }
 }
 
+.registry-disclaimer {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .registry-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -471,6 +479,22 @@
     font-style: normal;
     font-weight: 700;
     line-height: 1.35;
+  }
+
+  &__metadata,
+  &__note {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  &__metadata {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__note {
+    color: var(--muted-strong);
   }
 
   &__arrow {
