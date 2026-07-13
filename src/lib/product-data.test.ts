@@ -5,6 +5,7 @@ import {
   GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
+  MCP_DIRECTORY_SNAPSHOT_WARNING,
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
@@ -42,6 +43,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(AGENT_BOUNDARIES.localOperations).toContain("confirm: true");
     expect(AGENT_BOUNDARIES.localOperations).toContain("stdio MCP server");
     expect(AGENT_BOUNDARIES.remotePromoMcp).not.toContain("bootstrap");
+  });
+
+  it("scopes the snapshot disclaimer to third-party directory metrics", () => {
+    expect(MCP_DIRECTORY_SNAPSHOT_WARNING).toBe(
+      "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.",
+    );
   });
 
   it("captures workflow categories agents can route to the local stdio MCP", () => {

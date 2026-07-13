@@ -159,7 +159,7 @@ function reviewedRegistryLink(
 }
 
 export const MCP_DIRECTORY_SNAPSHOT_WARNING =
-  "Third-party scores, tool counts, and install metrics are external automated snapshots, not security attestations.";
+  "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.";
 
 export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
   reviewedRegistryLink({
