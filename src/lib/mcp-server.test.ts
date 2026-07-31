@@ -62,6 +62,9 @@ describe("read-only promo MCP tools", () => {
       "Enterprise DNA",
     );
     expect(JSON.stringify(result.structuredContent.links)).toContain(
+      "ModelScope MCP Plaza",
+    );
+    expect(JSON.stringify(result.structuredContent.links)).toContain(
       "Timeahead MCPScore",
     );
     expect(result.structuredContent.links).toMatchObject({
@@ -75,6 +78,13 @@ describe("read-only promo MCP tools", () => {
           accuracy: "current",
           lastChecked: "2026-07-13",
           note: expect.any(String),
+        }),
+        expect.objectContaining({
+          label: "ModelScope MCP Plaza",
+          sourceType: "community",
+          accuracy: "current",
+          lastChecked: "2026-07-31",
+          note: expect.stringContaining("npx stdio"),
         }),
       ]),
     });
