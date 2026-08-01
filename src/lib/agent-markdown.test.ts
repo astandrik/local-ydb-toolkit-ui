@@ -44,10 +44,12 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Directory and trust listings");
     expect(body).toContain("[Enterprise DNA]");
+    expect(body).toContain("[ModelScope MCP Plaza]");
     expect(body).toContain("[MCP Sentinel]");
     expect(body).toContain("[Timeahead MCPScore]");
     expect(body).toContain("source: automated; accuracy: misleading");
     expect(body).toContain("last checked: 2026-07-13");
+    expect(body).toContain("last checked: 2026-07-31");
     expect(body).toContain("not security attestations");
     expect(body).not.toContain("claim available");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");

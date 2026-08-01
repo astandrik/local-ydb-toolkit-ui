@@ -74,8 +74,29 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.officialMcpRegistry).toContain(
       "registry.modelcontextprotocol.io",
     );
+    expect(PUBLIC_LINKS.modelScope).toBe(
+      "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
+    );
     expect(PUBLIC_LINKS.enterpriseDna).toContain("enterprisedna.co");
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
+  });
+
+  it("publishes the verified ModelScope local stdio listing", () => {
+    const modelScope = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "modelscope",
+    );
+
+    expect(modelScope).toMatchObject({
+      label: "ModelScope MCP Plaza",
+      href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
+      category: "directory",
+      status: "active listing",
+      sourceType: "community",
+      accuracy: "current",
+      lastChecked: "2026-07-31",
+    });
+    expect(modelScope?.note).toContain("Local");
+    expect(modelScope?.note).toContain("npx stdio");
   });
 
   it("keeps unique directory ids and complete snapshot metadata", () => {
@@ -109,13 +130,14 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
-  it("records the reviewed 2026-07-13 accuracy classifications", () => {
+  it("records the reviewed accuracy classifications and freshness dates", () => {
     const accuracyById = Object.fromEntries(
       MCP_REGISTRY_LINKS.map(({ id, accuracy }) => [id, accuracy]),
     );
 
     expect(accuracyById).toMatchObject({
       "official-mcp-registry": "current",
+      modelscope: "current",
       glama: "partial",
       "curated-mcp": "partial",
       manifold: "partial",
@@ -131,14 +153,18 @@ describe("local-ydb-toolkit product data", () => {
       "mcp-sentinel": "unverified",
     });
     expect(
-      MCP_REGISTRY_LINKS.every((link) => link.lastChecked === "2026-07-13"),
+      MCP_REGISTRY_LINKS.filter(({ id }) => id !== "modelscope").every(
+        (link) => link.lastChecked === "2026-07-13",
+      ),
     ).toBe(true);
     const idsFor = (accuracy: string) =>
       MCP_REGISTRY_LINKS.filter((link) => link.accuracy === accuracy)
         .map((link) => link.id)
         .sort();
 
-    expect(idsFor("current")).toEqual(["official-mcp-registry"]);
+    expect(idsFor("current")).toEqual(
+      ["modelscope", "official-mcp-registry"].sort(),
+    );
     expect(idsFor("partial")).toEqual(
       [
         "curated-mcp",

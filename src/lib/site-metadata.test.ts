@@ -22,6 +22,9 @@ describe("site metadata", () => {
       "https://glama.ai/mcp/servers/astandrik/local-ydb-toolkit",
     );
     expect(jsonLd.sameAs).toContain(
+      "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
+    );
+    expect(jsonLd.sameAs).toContain(
       "https://enterprisedna.co/directories/mcp/astandrik-local-ydb-toolkit/",
     );
     expect(jsonLd.sameAs).toContain(

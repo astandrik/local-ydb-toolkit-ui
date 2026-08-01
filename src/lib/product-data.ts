@@ -45,6 +45,7 @@ export type McpRegistryAccuracy =
 export type McpRegistryLink = {
   id:
     | "official-mcp-registry"
+    | "modelscope"
     | "curated-mcp"
     | "glama"
     | "wmcp"
@@ -103,6 +104,8 @@ export const PUBLIC_LINKS = {
     "https://github.com/astandrik/local-ydb-toolkit/blob/main/server.json",
   officialMcpRegistry:
     "https://registry.modelcontextprotocol.io/?q=io.github.astandrik%2Flocal-ydb-mcp",
+  modelScope:
+    "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
   glama: "https://glama.ai/mcp/servers/astandrik/local-ydb-toolkit",
   curatedMcp:
     "https://www.curatedmcp.com/marketplace/local-ydb-unofficial-mcp-server",
@@ -173,6 +176,18 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "current",
     note: "Latest published metadata matches the npm package and repository identity.",
   }),
+  {
+    id: "modelscope",
+    label: "ModelScope MCP Plaza",
+    href: PUBLIC_LINKS.modelScope,
+    category: "directory",
+    status: "active listing",
+    description: "ModelScope marketplace entry for the local stdio MCP server.",
+    sourceType: "community",
+    accuracy: "current",
+    lastChecked: "2026-07-31",
+    note: "The public card identifies the server as Local, links the canonical GitHub repository, and exposes the npx stdio config without required environment variables.",
+  },
   reviewedRegistryLink({
     id: "curated-mcp",
     label: "CuratedMCP",
