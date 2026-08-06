@@ -5,7 +5,7 @@ import { GUIDE_LINKS } from "@/lib/product-data";
 export const metadata = {
   title: "local-ydb-toolkit guides",
   description:
-    "Guides for local-ydb MCP operations, diagnostics, schema DDL, CI setup, and AI-agent tooling choices.",
+    "Guides for local-ydb MCP operations, managed SQL, diagnostics, schema DDL, CI setup, and AI-agent tooling choices.",
 };
 
 export default function GuidesPage() {

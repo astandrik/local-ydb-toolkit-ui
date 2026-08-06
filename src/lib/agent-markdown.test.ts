@@ -13,6 +13,7 @@ import {
   buildLocalDatabaseDeploymentAutomationGuideMarkdown,
   buildLocalYdbMcpVsYdbMcpGuideMarkdown,
   buildLocalYdbCiGuideMarkdown,
+  buildLocalYdbSqlGuideMarkdown,
   buildLlmsFullText,
   buildLlmsText,
   buildMcpMarkdown,
@@ -41,6 +42,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
+    expect(body).toContain("0.15.2, 39 tools");
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Directory and trust listings");
     expect(body).toContain("[Enterprise DNA]");
@@ -62,6 +64,7 @@ describe("agent-readable markdown", () => {
 
     expect(body).toContain("Use local-ydb-toolkit");
     expect(body).toContain("Use ydb/ydb-mcp");
+    expect(body).toContain("local_ydb_sql");
     expect(body).toContain("plan-first");
     expect(body).toContain("remote promo MCP is read-only");
     expect(body).toContain("[Auth guide]");
@@ -135,6 +138,7 @@ describe("agent-readable markdown", () => {
       buildGuidesIndexMarkdown(),
       buildCompareMarkdown(),
       buildLocalYdbMcpVsYdbMcpGuideMarkdown(),
+      buildLocalYdbSqlGuideMarkdown(),
       buildDiagnoseLocalYdbMcpGuideMarkdown(),
       buildYdbSchemaDdlMcpGuideMarkdown(),
       buildBestToolsLocalYdbAiAgentsGuideMarkdown(),
@@ -156,6 +160,11 @@ describe("agent-readable markdown", () => {
     expect(buildLocalYdbMcpVsYdbMcpGuideMarkdown()).toContain(
       "ydb-platform/ydb-mcp",
     );
+    expect(buildLocalYdbSqlGuideMarkdown()).toContain("SnapshotRO");
+    expect(buildLocalYdbSqlGuideMarkdown()).toContain("plan and AST");
+    expect(buildLocalYdbSqlGuideMarkdown()).toContain("exactly one NoTx");
+    expect(buildLocalYdbSqlGuideMarkdown()).toContain("maxRows");
+    expect(buildLocalYdbSqlGuideMarkdown()).toContain("maxOutputBytes");
     expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain(
       "local_ydb_healthcheck",
     );
@@ -171,6 +180,12 @@ describe("agent-readable markdown", () => {
     expect(buildLocalYdbCiGuideMarkdown()).toContain(
       "astandrik/setup-local-ydb@v1",
     );
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("topology: root");
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("auth: true");
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("static-endpoint");
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("monitoring-url");
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("resolved-version");
+    expect(buildLocalYdbCiGuideMarkdown()).toContain("password value");
     expect(buildApiDocsMarkdown()).toContain("GET /api/product");
     expect(buildWebhooksMarkdown()).toContain("Webhooks are not supported in v1");
   });

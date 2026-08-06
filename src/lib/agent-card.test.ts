@@ -16,6 +16,7 @@ describe("A2A agent card", () => {
     expect(card.documentationUrl).toBe(
       "https://local-ydb-toolkit.ydb-qdrant.tech/agents.md",
     );
+    expect(card.version).toBe("1.1.0");
     expect(card.capabilities.streaming).toBe(false);
     expect(card.capabilities.pushNotifications).toBe(false);
     expect(card.security).toEqual([]);
@@ -29,6 +30,10 @@ describe("A2A agent card", () => {
     expect(card.resources.map((resource) => resource.title)).toContain(
       "Directory and trust listings",
     );
+    expect(card.resources.map((resource) => resource.title)).toContain(
+      "Managed local YDB SQL guide",
+    );
+    expect(JSON.stringify(card.skills)).toContain("managed-sql");
     expect(JSON.stringify(card)).toContain("read-only");
     expect(JSON.stringify(card)).not.toContain("remote bootstrap");
 

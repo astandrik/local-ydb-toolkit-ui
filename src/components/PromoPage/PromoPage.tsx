@@ -1,11 +1,13 @@
 import {
   ArrowRight,
-  Check,
   CloudCheck,
   Code,
   Database,
+  DatabaseMagnifier,
   Gear,
+  GearBranches,
   Lock,
+  NodesRight,
   ShieldCheck,
   Terminal,
 } from "@gravity-ui/icons";
@@ -28,16 +30,18 @@ import {
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
+  TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
+  type Workflow,
 } from "@/lib/product-data";
 
 import "./PromoPage.scss";
 
 const PROOF_POINTS = [
   {
-    label: "MCP server",
-    value: "@astandrik/local-ydb-mcp",
+    label: "MCP release",
+    value: `${TOOLKIT_RELEASE.version} · ${TOOLKIT_RELEASE.toolCount} tools`,
   },
   {
     label: "Execution model",
@@ -49,7 +53,17 @@ const PROOF_POINTS = [
   },
 ] as const;
 
-const WORKFLOW_ICONS = [Database, Gear, Code, Lock, ShieldCheck, CloudCheck];
+const WORKFLOW_ICONS: Record<Workflow["id"], typeof Database> = {
+  diagnostics: DatabaseMagnifier,
+  query: Code,
+  schema: Gear,
+  auth: Lock,
+  bootstrap: Database,
+  "dynamic-nodes": NodesRight,
+  storage: ShieldCheck,
+  backup: CloudCheck,
+  upgrade: GearBranches,
+};
 
 export function PromoPage() {
   return (
@@ -325,8 +339,8 @@ export function PromoPage() {
             <h2>Workflow summaries agents can route to tools</h2>
           </div>
           <div className="workflow-grid">
-            {WORKFLOWS.map((workflow, index) => {
-              const Icon = WORKFLOW_ICONS[index] ?? Check;
+            {WORKFLOWS.map((workflow) => {
+              const Icon = WORKFLOW_ICONS[workflow.id];
               return (
                 <Card key={workflow.id} view="outlined" className="workflow-card">
                   <Icon className="workflow-card__icon" />
@@ -347,8 +361,12 @@ export function PromoPage() {
           <div>
             <p className="eyebrow">Routing</p>
             <h2 id="routing-title">Complementary to ydb/ydb-mcp</h2>
-            <p>{getAgentRoutingGuidance().split("\n\n")[0]}</p>
-            <p>{getAgentRoutingGuidance().split("\n\n")[1]}</p>
+            {getAgentRoutingGuidance()
+              .split("\n\n")
+              .slice(0, 3)
+              .map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
           </div>
           <div className="routing-band__links">
             <Button

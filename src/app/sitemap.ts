@@ -19,6 +19,8 @@ const SITEMAP_PATHS = [
   "/guides/local-ydb-mcp-vs-ydb-mcp.md",
   "/guides/diagnose-local-ydb-mcp",
   "/guides/diagnose-local-ydb-mcp.md",
+  "/guides/local-ydb-sql",
+  "/guides/local-ydb-sql.md",
   "/guides/ydb-schema-ddl-mcp",
   "/guides/ydb-schema-ddl-mcp.md",
   "/guides/best-tools-local-ydb-ai-agents",

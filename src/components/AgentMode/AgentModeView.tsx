@@ -1,9 +1,12 @@
 import {
   AGENT_BOUNDARIES,
   INSTALL_OPTIONS,
+  TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
 } from "@/lib/product-data";
+
+import "./AgentModeView.scss";
 
 export function AgentModeView() {
   return (
@@ -14,6 +17,11 @@ export function AgentModeView() {
           Structured discovery view for AI agents. Use this page to find public
           endpoints, authentication boundaries, install snippets, and supported
           local-ydb workflows without parsing the marketing layout.
+        </p>
+        <p>
+          Reviewed toolkit snapshot: {TOOLKIT_RELEASE.package} {" "}
+          {TOOLKIT_RELEASE.version}, {TOOLKIT_RELEASE.toolCount} tools, checked {" "}
+          {TOOLKIT_RELEASE.checkedAt}.
         </p>
 
         <h2>Capabilities</h2>
@@ -34,6 +42,8 @@ export function AgentModeView() {
           <li>GET /auth.md</li>
           <li>GET /docs/api</li>
           <li>GET /docs/webhooks</li>
+          <li>GET /guides/local-ydb-sql</li>
+          <li>GET /guides/local-ydb-sql.md</li>
           <li>GET /api/product</li>
           <li>GET /api/install-options</li>
           <li>GET /api/workflows</li>
@@ -55,7 +65,9 @@ export function AgentModeView() {
         </p>
 
         <h2>Install</h2>
-        <pre>{INSTALL_OPTIONS[0]?.configSnippet}</pre>
+        <pre className="agent-mode__install">
+          {INSTALL_OPTIONS[0]?.configSnippet}
+        </pre>
 
         <h2>Safety</h2>
         <p>{AGENT_BOUNDARIES.remotePromoMcp}</p>

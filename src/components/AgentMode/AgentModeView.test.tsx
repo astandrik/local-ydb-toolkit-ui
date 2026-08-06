@@ -13,6 +13,10 @@ describe("homepage agent mode", () => {
     expect(html).toContain("Authentication");
     expect(html).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(html).toContain("confirm: true");
+    expect(html).toContain("0.15.2");
+    expect(html).toContain("39 tools");
+    expect(html).toContain("Managed SQL");
+    expect(html).toContain("/guides/local-ydb-sql.md");
     expect(html).not.toContain("hero-band");
   });
 

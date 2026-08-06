@@ -59,6 +59,11 @@ describe("agent discovery routes", () => {
       expected: ["Diagnose local-ydb", "local_ydb_healthcheck"],
     },
     {
+      modulePath: "@/app/guides/local-ydb-sql.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: ["managed SQL against local YDB", "SnapshotRO", "NoTx"],
+    },
+    {
       modulePath: "@/app/guides/ydb-schema-ddl-mcp.md/route",
       contentType: "text/markdown; charset=utf-8",
       expected: ["YDB table schema DDL", "local_ydb_generate_schema"],
@@ -174,11 +179,22 @@ describe("agent discovery routes", () => {
     const response = GET();
     const body = await response.json();
 
+    expect(body.toolkitRelease).toEqual({
+      package: "@astandrik/local-ydb-mcp",
+      version: "0.15.2",
+      toolCount: 39,
+      checkedAt: "2026-08-06",
+    });
+
     expect(body.guideLinks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           href: "/guides/ydb-schema-ddl-mcp",
           markdownHref: "/guides/ydb-schema-ddl-mcp.md",
+        }),
+        expect.objectContaining({
+          href: "/guides/local-ydb-sql",
+          markdownHref: "/guides/local-ydb-sql.md",
         }),
       ]),
     );
@@ -286,6 +302,12 @@ describe("robots and sitemap", () => {
     );
     expect(urls).toContain(
       "https://local-ydb-toolkit.ydb-qdrant.tech/guides/ydb-schema-ddl-mcp.md",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/guides/local-ydb-sql",
+    );
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/guides/local-ydb-sql.md",
     );
     expect(urls).toContain(
       "https://local-ydb-toolkit.ydb-qdrant.tech/docs/api",
