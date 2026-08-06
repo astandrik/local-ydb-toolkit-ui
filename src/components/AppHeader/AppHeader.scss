@@ -78,6 +78,17 @@
       background: var(--surface-hover);
       color: var(--fg);
     }
+
+    &--featured {
+      border: 1px solid rgba(130, 200, 255, 0.34);
+      background: rgba(19, 137, 238, 0.16);
+      color: var(--fg);
+      font-weight: 600;
+
+      &:hover {
+        background: rgba(19, 137, 238, 0.28);
+      }
+    }
   }
 
   @media (max-width: 720px) {

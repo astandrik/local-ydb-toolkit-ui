@@ -5,15 +5,26 @@ import { withBasePath } from "@/lib/base-path";
 
 import "./AppHeader.scss";
 
-const NAV_LINKS = [
+type NavLink = {
+  href: string;
+  label: string;
+  featured?: boolean;
+};
+
+const NAV_LINKS: readonly NavLink[] = [
   { href: "#workflows", label: "Workflows" },
   { href: "#agent-access", label: "Agent access" },
   { href: withBasePath("/guides"), label: "Guides" },
+  {
+    href: withBasePath("/guides/local-ydb-sql"),
+    label: "SQL guide",
+    featured: true,
+  },
   { href: withBasePath("/docs/api"), label: "API docs" },
   { href: withBasePath("/compare"), label: "Compare" },
   { href: withBasePath("/openapi.json"), label: "OpenAPI" },
   { href: withBasePath("/llms.txt"), label: "llms.txt" },
-] as const;
+];
 
 export function AppHeader() {
   return (
@@ -30,7 +41,15 @@ export function AppHeader() {
         </Link>
         <div className="app-header__links">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="app-header__link">
+            <Link
+              key={link.href}
+              href={link.href}
+              className={
+                link.featured
+                  ? "app-header__link app-header__link--featured"
+                  : "app-header__link"
+              }
+            >
               {link.label}
             </Link>
           ))}
