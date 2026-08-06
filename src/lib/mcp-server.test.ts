@@ -9,7 +9,14 @@ describe("read-only promo MCP tools", () => {
     expect(result.structuredContent.product).toMatchObject({
       name: "local-ydb-toolkit",
     });
+    expect(result.structuredContent.toolkitRelease).toEqual({
+      package: "@astandrik/local-ydb-mcp",
+      version: "0.15.2",
+      toolCount: 39,
+      checkedAt: "2026-08-06",
+    });
     expect(result.content[0]?.text).toContain("Docker-based local-ydb");
+    expect(result.content[0]?.text).toContain("0.15.2 with 39 tools");
   });
 
   it("returns install options for MCP, Codex skill, and GitHub Action", async () => {
@@ -26,9 +33,18 @@ describe("read-only promo MCP tools", () => {
 
   it("lists workflows without exposing operational execution", async () => {
     const result = await callPromoToolForTest("list_local_ydb_workflows", {});
+    const workflows = result.structuredContent.workflows as Array<{
+      id: string;
+      tools: string[];
+    }>;
+    const tools = workflows.flatMap((workflow) => workflow.tools);
 
     expect(JSON.stringify(result.structuredContent)).toContain("diagnostics");
     expect(JSON.stringify(result.structuredContent)).toContain("schema");
+    expect(workflows.map((workflow) => workflow.id)).toContain("query");
+    expect(tools).toHaveLength(39);
+    expect(new Set(tools)).toHaveProperty("size", 39);
+    expect(tools).toContain("local_ydb_sql");
     expect(result.content[0]?.text).toContain("read-only summary");
   });
 

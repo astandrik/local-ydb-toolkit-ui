@@ -6,6 +6,7 @@ import {
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
+  TOOLKIT_RELEASE,
 } from "@/lib/product-data";
 import { discoveryHeaders } from "@/lib/discovery-links";
 
@@ -15,6 +16,7 @@ export function GET(): Response {
   return Response.json(
     {
       product: LOCAL_YDB_PRODUCT,
+      toolkitRelease: TOOLKIT_RELEASE,
       boundaries: AGENT_BOUNDARIES,
       guideLinks: GUIDE_LINKS,
       projectsUsingLocalYdb: PROJECTS_USING_LOCAL_YDB,

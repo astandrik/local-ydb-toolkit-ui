@@ -16,6 +16,7 @@ export const SITE_KEYWORDS = [
   "Model Context Protocol",
   "Codex skill",
   "GitHub Action",
+  "managed YQL",
   "agent-ready",
   "Docker",
 ];
@@ -55,6 +56,10 @@ export function getAgentResourceAlternateTypes(): NonNullable<
       {
         title: "Diagnose local-ydb with MCP tools",
         url: withBasePath("/guides/diagnose-local-ydb-mcp.md"),
+      },
+      {
+        title: "Managed local YDB SQL guide",
+        url: withBasePath("/guides/local-ydb-sql.md"),
       },
       {
         title: "YDB schema DDL MCP guide",

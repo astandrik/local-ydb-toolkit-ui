@@ -7,7 +7,7 @@ export const MCP_SERVER_NAME =
 export const MCP_SERVER_TITLE = "local-ydb-toolkit Promo";
 export const MCP_SERVER_DESCRIPTION =
   "Read-only product discovery, install guidance, workflow summaries, and routing help for local-ydb-toolkit.";
-export const MCP_SERVER_VERSION = "1.0.0";
+export const MCP_SERVER_VERSION = "1.1.0";
 
 export function buildMcpRegistryServerMetadata() {
   return {
@@ -81,6 +81,11 @@ export function buildMcpServerCard() {
       {
         title: "Auth guide",
         url: toPublicUrl("/auth.md"),
+        type: "text/markdown",
+      },
+      {
+        title: "Managed local YDB SQL guide",
+        url: toPublicUrl("/guides/local-ydb-sql.md"),
         type: "text/markdown",
       },
       {

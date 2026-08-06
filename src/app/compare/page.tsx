@@ -26,6 +26,7 @@ export default function ComparePage() {
           items: [
             "Disposable local YDB environments for development and CI.",
             "Agent-safe local-ydb diagnostics before mutation.",
+            "Managed YQL against the selected configured local-ydb profile.",
             "YDB table DDL generation and validation for local deployments.",
             "Auth hardening, dump listing, path-level dump/restore, storage placement, and image upgrades.",
           ],
@@ -35,12 +36,13 @@ export default function ComparePage() {
           items: [
             "Enterprise schema approval workflows across many database engines.",
             "Release orchestration that does not need local-ydb container lifecycle control.",
-            "General SQL exploration against an already running YDB endpoint.",
+            "General SQL exploration against arbitrary YDB endpoints outside the configured local-ydb lifecycle context.",
           ],
         },
       ]}
       links={[
         { href: withBasePath("/guides/local-database-deployment-automation"), label: "Automation guide" },
+        { href: withBasePath("/guides/local-ydb-sql"), label: "Managed SQL guide" },
         { href: withBasePath("/docs/api"), label: "API docs" },
         { href: withBasePath("/compare.md"), label: "Markdown version" },
       ]}

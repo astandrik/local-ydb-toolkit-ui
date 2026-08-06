@@ -10,7 +10,9 @@ export type InstallOption = {
 export type Workflow = {
   id:
     | "diagnostics"
+    | "query"
     | "bootstrap"
+    | "dynamic-nodes"
     | "schema"
     | "auth"
     | "storage"
@@ -83,6 +85,7 @@ export type GuideLink = {
   id:
     | "mcp-split"
     | "diagnostics"
+    | "sql"
     | "schema-ddl"
     | "ci"
     | "automation"
@@ -439,6 +442,14 @@ export const GUIDE_LINKS: GuideLink[] = [
       "Start with read-only status and healthcheck tools, then route by issue type.",
   },
   {
+    id: "sql",
+    label: "Run managed SQL against local YDB",
+    href: "/guides/local-ydb-sql",
+    markdownHref: "/guides/local-ydb-sql.md",
+    description:
+      "Use query, explain, and confirmed execute modes against the selected configured local-ydb profile.",
+  },
+  {
     id: "schema-ddl",
     label: "Generate YDB table schema DDL safely",
     href: "/guides/ydb-schema-ddl-mcp",
@@ -452,7 +463,7 @@ export const GUIDE_LINKS: GuideLink[] = [
     href: "/guides/local-ydb-ci",
     markdownHref: "/guides/local-ydb-ci.md",
     description:
-      "Use astandrik/setup-local-ydb for GitHub Actions jobs that need disposable YDB tenants.",
+      "Use astandrik/setup-local-ydb for tenant, root-only, and auth-enabled GitHub Actions jobs.",
   },
   {
     id: "automation",
@@ -476,9 +487,9 @@ export const LOCAL_YDB_PRODUCT = {
   name: "local-ydb-toolkit",
   title: "local-ydb-toolkit - agent operations for local YDB",
   summary:
-    "Docker-based local-ydb operations for AI agents, with plan-first MCP tools, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
+    "Docker-based local-ydb operations for AI agents, with plan-first lifecycle tools, managed SQL, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
   description:
-    "local-ydb-toolkit helps agents inspect, bootstrap, diagnose, harden, migrate, and upgrade local-ydb deployments without turning operational changes into blind shell scripts.",
+    "local-ydb-toolkit helps agents inspect, query, bootstrap, diagnose, harden, migrate, and upgrade configured local-ydb deployments without turning operational changes into blind shell scripts.",
   primaryCta: {
     label: "Use the MCP server",
     command: "npx @astandrik/local-ydb-mcp@latest",
@@ -491,6 +502,13 @@ export const LOCAL_YDB_PRODUCT = {
     "Node.js stdio MCP",
     "GitHub Actions CI",
   ],
+} as const;
+
+export const TOOLKIT_RELEASE = {
+  package: "@astandrik/local-ydb-mcp",
+  version: "0.15.2",
+  toolCount: 39,
+  checkedAt: "2026-08-06",
 } as const;
 
 export const AGENT_BOUNDARIES = {
@@ -538,15 +556,16 @@ export const INSTALL_OPTIONS: InstallOption[] = [
   {
     id: "github-action",
     label: "GitHub Action",
-    audience: "CI jobs that need an ephemeral local YDB tenant.",
+    audience: "CI jobs that need an ephemeral tenant or root-only local YDB.",
     command: "uses: astandrik/setup-local-ydb@v1",
     configSnippet: `- uses: astandrik/setup-local-ydb@v1
   id: ydb
   with:
     version: 26.1.1.6
+    topology: tenant
     tenant: /local/test`,
     description:
-      "Bootstrap disposable local-ydb in GitHub Actions and export endpoint/database variables for later steps.",
+      "Bootstrap tenant, root-only, or auth-enabled local-ydb in GitHub Actions and export connection metadata for later steps.",
   },
 ];
 
@@ -555,23 +574,25 @@ export const WORKFLOWS: Workflow[] = [
     id: "diagnostics",
     title: "Diagnostics",
     description:
-      "Inventory containers, inspect tenant status, run YDB healthcheck, read logs, and route follow-up checks by issue type.",
+      "Inventory Docker state, inspect database and tenant health, read logs, and route focused node, scheme, or GraphShard checks.",
     tools: [
-      "local_ydb_status_report",
+      "local_ydb_inventory",
+      "local_ydb_database_status",
       "local_ydb_healthcheck",
       "local_ydb_container_logs",
+      "local_ydb_status_report",
+      "local_ydb_tenant_check",
+      "local_ydb_scheme",
+      "local_ydb_nodes_check",
+      "local_ydb_graphshard_check",
     ],
   },
   {
-    id: "bootstrap",
-    title: "Bootstrap",
+    id: "query",
+    title: "Managed SQL",
     description:
-      "Start a root /local database or a tenant-oriented topology when GraphShard, storage workflows, or dynamic nodes are required.",
-    tools: [
-      "local_ydb_check_prerequisites",
-      "local_ydb_bootstrap_root_database",
-      "local_ydb_bootstrap",
-    ],
+      "Run bounded YQL against the selected configured local-ydb profile: SnapshotRO query, non-executing explain, or plan-first confirmed execution.",
+    tools: ["local_ydb_sql"],
   },
   {
     id: "schema",
@@ -584,21 +605,49 @@ export const WORKFLOWS: Workflow[] = [
     id: "auth",
     title: "Auth hardening",
     description:
-      "Prepare native auth config, write dynamic-node auth artifacts, apply hardening, and verify anonymous access is closed.",
+      "Inspect permissions, verify auth posture, prepare and apply native auth, and rotate the root password through reviewed plans.",
     tools: [
+      "local_ydb_permissions",
+      "local_ydb_auth_check",
       "local_ydb_prepare_auth_config",
       "local_ydb_write_dynamic_auth_config",
       "local_ydb_apply_auth_hardening",
-      "local_ydb_auth_check",
+      "local_ydb_set_root_password",
+    ],
+  },
+  {
+    id: "bootstrap",
+    title: "Bootstrap and lifecycle",
+    description:
+      "Check prerequisites, create root or tenant topologies, start dynamic nodes, and use reviewed restart or teardown plans.",
+    tools: [
+      "local_ydb_check_prerequisites",
+      "local_ydb_bootstrap_root_database",
+      "local_ydb_bootstrap",
+      "local_ydb_destroy_stack",
+      "local_ydb_restart_stack",
+      "local_ydb_create_tenant",
+      "local_ydb_start_dynamic_node",
+    ],
+  },
+  {
+    id: "dynamic-nodes",
+    title: "Dynamic nodes",
+    description:
+      "Add or remove tenant dynamic nodes one at a time with registration or disappearance verification.",
+    tools: [
+      "local_ydb_add_dynamic_nodes",
+      "local_ydb_remove_dynamic_nodes",
     ],
   },
   {
     id: "storage",
     title: "Storage",
     description:
-      "Inspect storage pool placement, add groups, reduce groups by dump/rebuild/restore, and clean leftovers only after review.",
+      "Inspect storage placement and leftovers, add or reduce groups, and clean exact reviewed targets only after verification.",
     tools: [
       "local_ydb_storage_placement",
+      "local_ydb_storage_leftovers",
       "local_ydb_add_storage_groups",
       "local_ydb_reduce_storage_groups",
       "local_ydb_cleanup_storage",
@@ -623,6 +672,7 @@ export const WORKFLOWS: Workflow[] = [
     tools: [
       "local_ydb_list_versions",
       "local_ydb_pull_image",
+      "local_ydb_pull_status",
       "local_ydb_upgrade_version",
     ],
   },
@@ -630,8 +680,9 @@ export const WORKFLOWS: Workflow[] = [
 
 export function getAgentRoutingGuidance(): string {
   return [
-    "Use local-ydb-toolkit when the user needs to operate Docker-based local-ydb environments: prerequisite checks, bootstrap, diagnostics, schema DDL generation/validation/application, auth hardening, storage workflows, dump listing, path-level dump/restore, or version upgrades.",
-    "Use ydb/ydb-mcp when the user already has a reachable YDB endpoint and needs general database-level work such as ad hoc SQL queries, query explanations, directory listing, or path inspection.",
+    "Use local-ydb-toolkit when the user needs to operate Docker-based local-ydb environments: prerequisite checks, bootstrap, diagnostics, managed SQL, schema DDL generation/validation/application, auth hardening, storage workflows, dump listing, path-level dump/restore, or version upgrades.",
+    "Use local_ydb_sql for bounded managed YQL against the selected configured local-ydb profile: query is SnapshotRO, explain returns plan/AST without execution, and execute stays plan-first until confirm: true.",
+    "Use ydb/ydb-mcp when the user has an arbitrary reachable YDB endpoint and needs general database-level SQL, directory listing, path inspection, or query-oriented exploration outside the configured local-ydb lifecycle context.",
     "Use the remote promo MCP only for product discovery, install snippets, workflow summaries, and routing guidance. It does not execute local-ydb operations.",
     "For actual local operations, connect the local stdio MCP server with @astandrik/local-ydb-mcp@latest and keep private config paths and credentials local.",
   ].join("\n\n");

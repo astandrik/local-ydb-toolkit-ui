@@ -9,6 +9,7 @@ import {
   MCP_DIRECTORY_SNAPSHOT_WARNING,
   MCP_REGISTRY_LINKS,
   PUBLIC_LINKS,
+  TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
 } from "@/lib/product-data";
@@ -39,9 +40,10 @@ const toolHandlers: Record<PromoToolName, () => PromoMcpToolResult> = {
     toolResult(
       {
         product: LOCAL_YDB_PRODUCT,
+        toolkitRelease: TOOLKIT_RELEASE,
         boundaries: AGENT_BOUNDARIES,
       },
-      `${LOCAL_YDB_PRODUCT.summary}\n\n${AGENT_BOUNDARIES.remotePromoMcp}`,
+      `${LOCAL_YDB_PRODUCT.summary}\n\nReviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.version} with ${TOOLKIT_RELEASE.toolCount} tools, checked ${TOOLKIT_RELEASE.checkedAt}.\n\n${AGENT_BOUNDARIES.remotePromoMcp}`,
     ),
   get_install_options: () =>
     toolResult(
@@ -137,7 +139,7 @@ export function createPromoMcpServer(): McpServer {
     server,
     "list_local_ydb_workflows",
     "List local-ydb workflows",
-    "Return workflow categories and representative local stdio MCP tools.",
+    "Return workflow categories and the complete local stdio MCP tool inventory.",
   );
   registerReadOnlyTool(
     server,

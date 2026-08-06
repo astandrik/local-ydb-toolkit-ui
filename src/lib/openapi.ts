@@ -1,4 +1,5 @@
 import { getPublicOrigin } from "@/lib/base-path";
+import { MCP_SERVER_VERSION } from "@/lib/mcp-registry";
 
 const jsonResponse = (schema: string) => ({
   description: "JSON response.",
@@ -23,7 +24,7 @@ export function buildOpenApiSpec() {
     openapi: "3.1.0",
     info: {
       title: "local-ydb-toolkit API",
-      version: "1.0.0",
+      version: MCP_SERVER_VERSION,
       description:
         "Static public contract for local-ydb-toolkit discovery, docs, install options, workflow summaries, and the read-only promo MCP. This API does not expose local-ydb operational mutations.",
       contact: {
@@ -202,6 +203,24 @@ export function buildOpenApiSpec() {
           responses: { "200": textResponse("text/markdown") },
         },
       },
+      "/guides/local-ydb-sql": {
+        get: {
+          operationId: "getLocalYdbSqlGuide",
+          tags: ["Discovery"],
+          summary: "Get managed local YDB SQL guide",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/guides/local-ydb-sql.md": {
+        get: {
+          operationId: "getLocalYdbSqlGuideMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown managed local YDB SQL guide",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
       "/guides/ydb-schema-ddl-mcp": {
         get: {
           operationId: "getYdbSchemaDdlMcpGuide",
@@ -374,7 +393,25 @@ export function buildOpenApiSpec() {
       schemas: {
         OpenApiDocument: { type: "object", additionalProperties: true },
         AgentCard: { type: "object", additionalProperties: true },
-        Product: { type: "object", additionalProperties: true },
+        Product: {
+          type: "object",
+          required: ["product", "toolkitRelease"],
+          properties: {
+            product: { type: "object", additionalProperties: true },
+            toolkitRelease: {
+              type: "object",
+              required: ["package", "version", "toolCount", "checkedAt"],
+              properties: {
+                package: { type: "string" },
+                version: { type: "string" },
+                toolCount: { type: "integer", minimum: 1 },
+                checkedAt: { type: "string", format: "date" },
+              },
+              additionalProperties: false,
+            },
+          },
+          additionalProperties: true,
+        },
         InstallOptions: {
           type: "object",
           properties: {
@@ -389,7 +426,33 @@ export function buildOpenApiSpec() {
           properties: {
             workflows: {
               type: "array",
-              items: { type: "object", additionalProperties: true },
+              items: {
+                type: "object",
+                required: ["id", "title", "description", "tools"],
+                properties: {
+                  id: {
+                    type: "string",
+                    enum: [
+                      "diagnostics",
+                      "query",
+                      "schema",
+                      "auth",
+                      "bootstrap",
+                      "dynamic-nodes",
+                      "storage",
+                      "backup",
+                      "upgrade",
+                    ],
+                  },
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  tools: {
+                    type: "array",
+                    items: { type: "string", pattern: "^local_ydb_" },
+                  },
+                },
+                additionalProperties: false,
+              },
             },
           },
         },

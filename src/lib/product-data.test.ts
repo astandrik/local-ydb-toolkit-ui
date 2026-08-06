@@ -9,9 +9,52 @@ import {
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
+  TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
 } from "@/lib/product-data";
+
+const TOOLKIT_0_15_2_TOOLS = [
+  "local_ydb_inventory",
+  "local_ydb_database_status",
+  "local_ydb_healthcheck",
+  "local_ydb_container_logs",
+  "local_ydb_status_report",
+  "local_ydb_tenant_check",
+  "local_ydb_scheme",
+  "local_ydb_generate_schema",
+  "local_ydb_apply_schema",
+  "local_ydb_sql",
+  "local_ydb_permissions",
+  "local_ydb_nodes_check",
+  "local_ydb_graphshard_check",
+  "local_ydb_auth_check",
+  "local_ydb_storage_placement",
+  "local_ydb_add_storage_groups",
+  "local_ydb_reduce_storage_groups",
+  "local_ydb_storage_leftovers",
+  "local_ydb_list_versions",
+  "local_ydb_pull_image",
+  "local_ydb_pull_status",
+  "local_ydb_destroy_stack",
+  "local_ydb_bootstrap_root_database",
+  "local_ydb_bootstrap",
+  "local_ydb_check_prerequisites",
+  "local_ydb_create_tenant",
+  "local_ydb_start_dynamic_node",
+  "local_ydb_add_dynamic_nodes",
+  "local_ydb_remove_dynamic_nodes",
+  "local_ydb_restart_stack",
+  "local_ydb_upgrade_version",
+  "local_ydb_list_dumps",
+  "local_ydb_dump_tenant",
+  "local_ydb_restore_tenant",
+  "local_ydb_prepare_auth_config",
+  "local_ydb_write_dynamic_auth_config",
+  "local_ydb_apply_auth_hardening",
+  "local_ydb_set_root_password",
+  "local_ydb_cleanup_storage",
+] as const;
 
 describe("local-ydb-toolkit product data", () => {
   it("positions local-ydb-toolkit as a focused agent operations toolkit", () => {
@@ -21,6 +64,15 @@ describe("local-ydb-toolkit product data", () => {
     );
     expect(LOCAL_YDB_PRODUCT.summary).toContain("Docker-based local-ydb");
     expect(LOCAL_YDB_PRODUCT.summary).toContain("plan-first");
+  });
+
+  it("publishes the reviewed toolkit release snapshot", () => {
+    expect(TOOLKIT_RELEASE).toEqual({
+      package: "@astandrik/local-ydb-mcp",
+      version: "0.15.2",
+      toolCount: 39,
+      checkedAt: "2026-08-06",
+    });
   });
 
   it("keeps install options split by audience and channel", () => {
@@ -36,6 +88,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(INSTALL_OPTIONS[2]?.command).toContain(
       "astandrik/setup-local-ydb@v1",
     );
+    expect(INSTALL_OPTIONS[2]?.configSnippet).toContain("topology: tenant");
   });
 
   it("states the remote promo MCP boundary and actual local execution boundary", () => {
@@ -52,10 +105,24 @@ describe("local-ydb-toolkit product data", () => {
   });
 
   it("captures workflow categories agents can route to the local stdio MCP", () => {
-    expect(WORKFLOWS.map((workflow) => workflow.id)).toContain("diagnostics");
-    expect(WORKFLOWS.map((workflow) => workflow.id)).toContain("schema");
-    expect(WORKFLOWS.map((workflow) => workflow.id)).toContain("auth");
-    expect(WORKFLOWS.map((workflow) => workflow.id)).toContain("upgrade");
+    expect(WORKFLOWS.map((workflow) => workflow.id)).toEqual([
+      "diagnostics",
+      "query",
+      "schema",
+      "auth",
+      "bootstrap",
+      "dynamic-nodes",
+      "storage",
+      "backup",
+      "upgrade",
+    ]);
+  });
+
+  it("covers every local-ydb-toolkit 0.15.2 tool exactly once", () => {
+    const workflowTools = WORKFLOWS.flatMap((workflow) => workflow.tools);
+
+    expect(new Set(workflowTools).size).toBe(workflowTools.length);
+    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_15_2_TOOLS].sort());
   });
 
   it("keeps public links stable for humans and agents", () => {
@@ -238,6 +305,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(GUIDE_LINKS.map((guide) => guide.id)).toEqual([
       "mcp-split",
       "diagnostics",
+      "sql",
       "schema-ddl",
       "ci",
       "automation",
@@ -257,6 +325,8 @@ describe("local-ydb-toolkit product data", () => {
     expect(guidance).toContain("Use local-ydb-toolkit");
     expect(guidance).toContain("Use ydb/ydb-mcp");
     expect(guidance).toContain("Docker-based local-ydb environments");
-    expect(guidance).toContain("ad hoc SQL queries");
+    expect(guidance).toContain("Use local_ydb_sql");
+    expect(guidance).toContain("selected configured local-ydb profile");
+    expect(guidance).toContain("arbitrary reachable YDB endpoint");
   });
 });

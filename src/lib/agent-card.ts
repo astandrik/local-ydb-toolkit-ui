@@ -60,9 +60,18 @@ export function buildA2aAgentCard() {
         name: "Workflow Routing",
         description:
           "Route users between local-ydb-toolkit, the hosted read-only promo MCP, and ydb/ydb-mcp based on whether they need operations, discovery, or database-level queries.",
-        tags: ["routing", "diagnostics", "schema", "auth", "storage"],
+        tags: [
+          "routing",
+          "diagnostics",
+          "managed-sql",
+          "lifecycle",
+          "schema",
+          "auth",
+          "storage",
+        ],
         examples: [
           "Should I use local-ydb-toolkit or ydb/ydb-mcp for this task?",
+          "How do I run SnapshotRO YQL against my configured local-ydb profile?",
           "Which local_ydb_* workflow handles auth hardening?",
         ],
         inputModes: ["application/json", "text/plain"],
@@ -93,6 +102,11 @@ export function buildA2aAgentCard() {
       {
         title: "Auth guide",
         url: toPublicUrl("/auth.md"),
+        type: "text/markdown",
+      },
+      {
+        title: "Managed local YDB SQL guide",
+        url: toPublicUrl("/guides/local-ydb-sql.md"),
         type: "text/markdown",
       },
     ],

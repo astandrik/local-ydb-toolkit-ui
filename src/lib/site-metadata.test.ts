@@ -52,6 +52,10 @@ describe("site metadata", () => {
           title: "YDB schema DDL MCP guide",
           url: "/guides/ydb-schema-ddl-mcp.md",
         },
+        {
+          title: "Managed local YDB SQL guide",
+          url: "/guides/local-ydb-sql.md",
+        },
       ]),
     );
   });
