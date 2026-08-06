@@ -19,8 +19,8 @@ export function AgentModeView() {
           local-ydb workflows without parsing the marketing layout.
         </p>
         <p>
-          Reviewed toolkit snapshot: {TOOLKIT_RELEASE.package} {" "}
-          {TOOLKIT_RELEASE.version}, {TOOLKIT_RELEASE.toolCount} tools, checked {" "}
+          Reviewed toolkit snapshot: {TOOLKIT_RELEASE.package}{" "}
+          {TOOLKIT_RELEASE.version}, {TOOLKIT_RELEASE.toolCount} tools, checked{" "}
           {TOOLKIT_RELEASE.checkedAt}.
         </p>
 

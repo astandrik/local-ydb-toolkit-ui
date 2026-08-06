@@ -15,6 +15,9 @@ describe("homepage agent mode", () => {
     expect(html).toContain("confirm: true");
     expect(html).toContain("0.15.2");
     expect(html).toContain("39 tools");
+    expect(html).toContain(
+      "Reviewed toolkit snapshot: @astandrik/local-ydb-mcp 0.15.2, 39 tools, checked 2026-08-06.",
+    );
     expect(html).toContain("Managed SQL");
     expect(html).toContain("/guides/local-ydb-sql.md");
     expect(html).not.toContain("hero-band");
