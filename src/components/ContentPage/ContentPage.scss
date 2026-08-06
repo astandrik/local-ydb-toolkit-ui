@@ -6,8 +6,7 @@
 .content-page__hero {
   align-items: center;
   display: grid;
-  gap: 32px;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0 auto;
   max-width: 1120px;
   padding: 72px 24px 40px;
@@ -37,13 +36,6 @@
   letter-spacing: 0 !important;
   margin: 0 0 14px !important;
   text-transform: uppercase;
-}
-
-.content-page__logo {
-  background: var(--g-color-base-generic);
-  border: 1px solid var(--g-color-line-generic);
-  border-radius: 8px;
-  padding: 14px;
 }
 
 .content-page__body {
@@ -108,11 +100,6 @@
 
 @media (max-width: 720px) {
   .content-page__hero {
-    grid-template-columns: 1fr;
     padding-top: 48px;
-  }
-
-  .content-page__logo {
-    justify-self: start;
   }
 }
