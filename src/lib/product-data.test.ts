@@ -144,6 +144,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.modelScope).toBe(
       "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
     );
+    expect(PUBLIC_LINKS.gilde).toBe(
+      "https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json",
+    );
+    expect(PUBLIC_LINKS.mcpIndex).toBe(
+      "https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp",
+    );
     expect(PUBLIC_LINKS.enterpriseDna).toContain("enterprisedna.co");
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
   });
@@ -164,6 +170,38 @@ describe("local-ydb-toolkit product data", () => {
     });
     expect(modelScope?.note).toContain("Local");
     expect(modelScope?.note).toContain("npx stdio");
+  });
+
+  it("publishes the reviewed Gilde and mcpindex.ai directory snapshots", () => {
+    const gilde = MCP_REGISTRY_LINKS.find(({ id }) => id === "gilde");
+    const mcpindex = MCP_REGISTRY_LINKS.find(({ id }) => id === "mcpindex");
+
+    expect(gilde).toEqual({
+      id: "gilde",
+      label: "Gilde",
+      href: PUBLIC_LINKS.gilde,
+      category: "directory",
+      status: "versioned catalog record",
+      description:
+        "Automated Gilde community toolset record imported from the Official MCP Registry.",
+      sourceType: "automated",
+      accuracy: "partial",
+      lastChecked: "2026-08-11",
+      note: "Identity, package, 0.15.2 release time, tarball SHA-256, entrypoint, and environment hints match the published package. The version manifest exposes no tool definitions, and the rendered catalog has no stable per-item deep link.",
+    });
+    expect(mcpindex).toEqual({
+      id: "mcpindex",
+      label: "mcpindex.ai",
+      href: PUBLIC_LINKS.mcpIndex,
+      category: "directory",
+      status: "registry and drift snapshot",
+      description:
+        "Automated registry, install-metadata, and drift-monitoring page for Local YDB MCP.",
+      sourceType: "automated",
+      accuracy: "partial",
+      lastChecked: "2026-08-11",
+      note: "The 0.15.2 package, repository, website, npx installs, and environment fields are current. Its quality score measures listing maturity; the PARTIAL verdict is description-only, and the current-crawl no-drift observation is not a security finding.",
+    });
   });
 
   it("keeps unique directory ids and complete snapshot metadata", () => {
@@ -193,6 +231,8 @@ describe("local-ydb-toolkit product data", () => {
         "manifold",
         "forge",
         "vibehackers",
+        "gilde",
+        "mcpindex",
       ]),
     );
   });
@@ -205,6 +245,8 @@ describe("local-ydb-toolkit product data", () => {
     expect(accuracyById).toMatchObject({
       "official-mcp-registry": "current",
       modelscope: "current",
+      gilde: "partial",
+      mcpindex: "partial",
       glama: "partial",
       "curated-mcp": "partial",
       manifold: "partial",
@@ -220,10 +262,21 @@ describe("local-ydb-toolkit product data", () => {
       "mcp-sentinel": "unverified",
     });
     expect(
-      MCP_REGISTRY_LINKS.filter(({ id }) => id !== "modelscope").every(
-        (link) => link.lastChecked === "2026-07-13",
-      ),
+      MCP_REGISTRY_LINKS.filter(
+        ({ id }) => !["modelscope", "gilde", "mcpindex"].includes(id),
+      ).every((link) => link.lastChecked === "2026-07-13"),
     ).toBe(true);
+    expect(
+      Object.fromEntries(
+        MCP_REGISTRY_LINKS.filter(({ id }) =>
+          ["modelscope", "gilde", "mcpindex"].includes(id),
+        ).map(({ id, lastChecked }) => [id, lastChecked]),
+      ),
+    ).toEqual({
+      modelscope: "2026-07-31",
+      gilde: "2026-08-11",
+      mcpindex: "2026-08-11",
+    });
     const idsFor = (accuracy: string) =>
       MCP_REGISTRY_LINKS.filter((link) => link.accuracy === accuracy)
         .map((link) => link.id)
@@ -235,9 +288,11 @@ describe("local-ydb-toolkit product data", () => {
     expect(idsFor("partial")).toEqual(
       [
         "curated-mcp",
+        "gilde",
         "glama",
         "manifold",
         "mcp-so",
+        "mcpindex",
         "policylayer",
         "pulse-mcp",
         "vibehackers",
