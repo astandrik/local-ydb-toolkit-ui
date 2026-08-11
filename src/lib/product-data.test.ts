@@ -172,7 +172,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(modelScope?.note).toContain("npx stdio");
   });
 
-  it("publishes the verified Gilde and mcpindex.ai directory snapshots", () => {
+  it("publishes the reviewed Gilde and mcpindex.ai directory snapshots", () => {
     const gilde = MCP_REGISTRY_LINKS.find(({ id }) => id === "gilde");
     const mcpindex = MCP_REGISTRY_LINKS.find(({ id }) => id === "mcpindex");
 
