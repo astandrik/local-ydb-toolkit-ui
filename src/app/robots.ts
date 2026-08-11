@@ -9,6 +9,8 @@ const PUBLIC_ALLOW_PATHS = [
   "/llms-full.txt",
   "/agents.md",
   "/developers.md",
+  "/listings",
+  "/listings.md",
   "/mcp.md",
   "/auth.md",
   "/compare",

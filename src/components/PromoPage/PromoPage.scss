@@ -389,8 +389,8 @@
 }
 
 .registry-grid {
-  @media (min-width: 960px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  @media (min-width: 760px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -402,106 +402,14 @@
   line-height: 1.55;
 }
 
-.registry-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 10px 12px;
-  min-width: 0;
-  min-height: 100%;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--fg);
-  text-decoration: none;
+.registry-actions {
+  display: flex;
+  flex-wrap: wrap;
 
-  &:hover {
-    border-color: rgba(35, 153, 255, 0.5);
-    background: rgba(35, 153, 255, 0.1);
-  }
-
-  &__tag {
-    justify-self: start;
-    max-width: 100%;
-    padding: 4px 7px;
-    border: 1px solid rgba(129, 214, 255, 0.28);
-    border-radius: 6px;
-    background: rgba(35, 153, 255, 0.12);
-    color: var(--blue);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    line-height: 1.2;
-    text-transform: uppercase;
-    overflow-wrap: anywhere;
-  }
-
-  &__tag--trust {
-    border-color: rgba(115, 217, 131, 0.28);
-    background: rgba(115, 217, 131, 0.1);
-    color: var(--green);
-  }
-
-  &__tag--audit {
-    border-color: rgba(255, 189, 74, 0.3);
-    background: rgba(255, 189, 74, 0.1);
-    color: #ffbd4a;
-  }
-
-  &__tag--governance {
-    border-color: rgba(187, 154, 255, 0.3);
-    background: rgba(187, 154, 255, 0.12);
-    color: #c9b4ff;
-  }
-
-  &__copy {
-    display: grid;
-    gap: 4px;
-    grid-column: 1 / -1;
-    min-width: 0;
-  }
-
-  &__copy strong {
-    color: var(--fg);
-    font-size: 15px;
-  }
-
-  &__copy span {
-    color: var(--muted-strong);
-    font-size: 13px;
-    line-height: 1.45;
-  }
-
-  &__copy em {
-    color: var(--muted);
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 1.35;
-  }
-
-  &__metadata,
-  &__note {
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.4;
-  }
-
-  &__metadata {
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  &__note {
-    color: var(--muted-strong);
-  }
-
-  &__arrow {
-    width: 16px;
-    height: 16px;
-    justify-self: end;
-    color: var(--blue);
+  .g-button__text {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 

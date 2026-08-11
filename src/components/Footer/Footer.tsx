@@ -26,6 +26,9 @@ export function Footer() {
           <Link href={withBasePath("/guides")} className="footer__link">
             Guides
           </Link>
+          <Link href={withBasePath("/listings")} className="footer__link">
+            External listings
+          </Link>
           <Link href={withBasePath("/mcp.md")} className="footer__link">
             MCP guide
           </Link>

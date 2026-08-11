@@ -24,6 +24,8 @@ describe("OpenAPI spec", () => {
     expect(spec.paths).toHaveProperty("/index.md");
     expect(spec.paths).toHaveProperty("/compare");
     expect(spec.paths).toHaveProperty("/compare.md");
+    expect(spec.paths).toHaveProperty("/listings");
+    expect(spec.paths).toHaveProperty("/listings.md");
     expect(spec.paths).toHaveProperty("/guides");
     expect(spec.paths).toHaveProperty("/guides/index.md");
     expect(spec.paths).toHaveProperty("/guides/local-ydb-mcp-vs-ydb-mcp");
@@ -51,6 +53,37 @@ describe("OpenAPI spec", () => {
     expect(spec.components.schemas.Product.required).toContain(
       "toolkitRelease",
     );
+    expect(spec.components.schemas.Product.required).toEqual(
+      expect.arrayContaining([
+        "mcpDirectorySnapshotWarning",
+        "mcpListingContext",
+        "mcpRegistryLinks",
+      ]),
+    );
+    expect(spec.components.schemas.ExternalListing.required).toEqual(
+      expect.arrayContaining([
+        "category",
+        "sourceType",
+        "accuracy",
+        "status",
+        "note",
+        "purpose",
+        "userValue",
+        "confirmedClaims",
+        "limitations",
+        "featured",
+        "includeInSameAs",
+      ]),
+    );
+    expect(
+      spec.components.schemas.ExternalListing.properties.purpose.enum,
+    ).toEqual([
+      "identity",
+      "installation-discovery",
+      "version-metadata",
+      "change-monitoring",
+      "independent-analysis",
+    ]);
     expect(spec.components.schemas.Workflows.properties.workflows.items.properties.id.enum).toContain(
       "dynamic-nodes",
     );

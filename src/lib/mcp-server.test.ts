@@ -70,6 +70,9 @@ describe("read-only promo MCP tools", () => {
       guides: "https://local-ydb-toolkit.ydb-qdrant.tech/guides",
       guidesMarkdown:
         "https://local-ydb-toolkit.ydb-qdrant.tech/guides/index.md",
+      listings: "https://local-ydb-toolkit.ydb-qdrant.tech/listings",
+      listingsMarkdown:
+        "https://local-ydb-toolkit.ydb-qdrant.tech/listings.md",
     });
     expect(JSON.stringify(result.structuredContent.links)).toContain(
       "/guides/ydb-schema-ddl-mcp.md",
@@ -87,20 +90,31 @@ describe("read-only promo MCP tools", () => {
       mcpDirectorySnapshotWarning: expect.stringContaining(
         "not security attestations",
       ),
+      mcpListingContext: expect.stringContaining(
+        "Directory inclusion is not an endorsement",
+      ),
       mcpRegistries: expect.arrayContaining([
         expect.objectContaining({
+          id: "official-mcp-registry",
           label: "Official MCP Registry",
           sourceType: "official",
           accuracy: "current",
-          lastChecked: "2026-07-13",
+          purpose: "identity",
+          featured: true,
+          includeInSameAs: true,
+          confirmedClaims: expect.any(Array),
+          limitations: expect.any(Array),
+          lastChecked: "2026-08-11",
           note: expect.any(String),
         }),
         expect.objectContaining({
           label: "ModelScope MCP Plaza",
           sourceType: "community",
-          accuracy: "current",
-          lastChecked: "2026-07-31",
-          note: expect.stringContaining("npx stdio"),
+          accuracy: "partial",
+          lastChecked: "2026-08-11",
+          limitations: expect.arrayContaining([
+            expect.stringContaining("empty tools list"),
+          ]),
         }),
       ]),
     });

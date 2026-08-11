@@ -5,7 +5,8 @@ import {
   GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
-  MCP_DIRECTORY_SNAPSHOT_WARNING,
+  MCP_LISTING_CONTEXT,
+  MCP_LISTING_PURPOSES,
   MCP_REGISTRY_LINKS,
   PUBLIC_LINKS,
   TOOLKIT_RELEASE,
@@ -13,13 +14,45 @@ import {
   getAgentRoutingGuidance,
 } from "@/lib/product-data";
 
-function formatDirectoryAndTrustListings(): string {
-  const listings = MCP_REGISTRY_LINKS.map(
+function formatFeaturedListings(): string {
+  const listings = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
     (link) =>
-      `- [${link.label}](${link.href}) - ${link.category}; ${link.status}; source: ${link.sourceType}; accuracy: ${link.accuracy}; last checked: ${link.lastChecked ?? "not recorded"}. ${link.description} Note: ${link.note}`,
+      `- [${link.label}](${link.href}) - Useful for: ${link.userValue} Confirmed: ${link.confirmedClaims.join(" ")} Limitations: ${link.limitations.join(" ")} Checked: ${link.lastChecked ?? "date not recorded"}.`,
   ).join("\n");
 
-  return `${MCP_DIRECTORY_SNAPSHOT_WARNING}\n\n${listings}`;
+  return `${MCP_LISTING_CONTEXT}\n\n${listings}\n\n[View all listings and verification notes](${toPublicUrl("/listings.md")}).`;
+}
+
+export function buildListingsMarkdown(): string {
+  const groups = MCP_LISTING_PURPOSES.map((purpose) => {
+    const listings = MCP_REGISTRY_LINKS.filter(
+      (listing) => listing.purpose === purpose.id,
+    )
+      .map(
+        (listing) => `### [${listing.label}](${listing.href})
+
+- Useful for: ${listing.userValue}
+- Confirmed: ${listing.confirmedClaims.join(" ")}
+- Limitations: ${listing.limitations.join(" ")}
+- Checked: ${listing.lastChecked ?? "date not recorded"}`,
+      )
+      .join("\n\n");
+
+    return `## ${purpose.label}
+
+${purpose.description}
+
+${listings}`;
+  }).join("\n\n");
+
+  return `# External listings and verification notes
+
+${MCP_LISTING_CONTEXT}
+
+Primary metadata should be checked against the canonical repository, npm package, and Official MCP Registry. Volatile scores, ranks, stars, installs, and traffic estimates are intentionally not copied here.
+
+${groups}
+`;
 }
 
 export function markdownResponse(body: string): Response {
@@ -62,9 +95,9 @@ Current reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.
 - [GitHub repository](${PUBLIC_LINKS.github})
 - [Project website](${PUBLIC_LINKS.targetSite})
 
-## Directory and trust listings
+## Featured external listings
 
-${formatDirectoryAndTrustListings()}
+${formatFeaturedListings()}
 
 ## Agent resources
 
@@ -72,6 +105,7 @@ ${formatDirectoryAndTrustListings()}
 - [llms-full.txt](${toPublicUrl("/llms-full.txt")})
 - [Agents guide](${toPublicUrl("/agents.md")})
 - [Developer resources](${toPublicUrl("/developers.md")})
+- [All external listings](${toPublicUrl("/listings.md")})
 - [API docs](${toPublicUrl("/docs/api")})
 - [Webhooks status](${toPublicUrl("/docs/webhooks")})
 - [MCP guide](${toPublicUrl("/mcp.md")})
@@ -123,9 +157,9 @@ Reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.version}
 - [OpenAPI JSON](${toPublicUrl("/openapi.json")})
 - [A2A Agent Card](${toPublicUrl("/.well-known/agent-card.json")})
 
-## Directory and trust listings
+## Featured external listings
 
-${formatDirectoryAndTrustListings()}
+${formatFeaturedListings()}
 
 ## Install options
 
@@ -250,6 +284,7 @@ Developer resources for local-ydb-toolkit are intentionally public and predictab
 - [MCP metadata](${toPublicUrl("/server.json")})
 - [Well-known MCP](${toPublicUrl("/.well-known/mcp")})
 - [A2A Agent Card](${toPublicUrl("/.well-known/agent-card.json")})
+- [All external listings](${toPublicUrl("/listings.md")})
 
 ## Source
 
@@ -258,9 +293,9 @@ Developer resources for local-ydb-toolkit are intentionally public and predictab
 - [GitHub Action](${PUBLIC_LINKS.githubAction})
 - [Project website](${PUBLIC_LINKS.targetSite})
 
-## Directory and trust listings
+## Featured external listings
 
-${formatDirectoryAndTrustListings()}
+${formatFeaturedListings()}
 `;
 }
 
@@ -375,9 +410,9 @@ local-ydb-toolkit is focused on local database deployment automation for Docker-
 - [CI guide](${toPublicUrl("/guides/local-ydb-ci")})
 - [Managed SQL guide](${toPublicUrl("/guides/local-ydb-sql")})
 
-## Directory and trust listings
+## Featured external listings
 
-${formatDirectoryAndTrustListings()}
+${formatFeaturedListings()}
 
 ## Capabilities
 

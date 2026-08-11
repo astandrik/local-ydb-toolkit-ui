@@ -46,6 +46,7 @@ export function getAgentResourceAlternateTypes(): NonNullable<
       { title: "Homepage markdown", url: withBasePath("/index.md") },
       { title: "Agent guide", url: withBasePath("/agents.md") },
       { title: "Developer guide", url: withBasePath("/developers.md") },
+      { title: "External listings", url: withBasePath("/listings.md") },
       { title: "MCP guide", url: withBasePath("/mcp.md") },
       { title: "Auth notes", url: withBasePath("/auth.md") },
       { title: "Guides index", url: withBasePath("/guides/index.md") },
@@ -88,9 +89,9 @@ export function getWebsiteJsonLd() {
       PUBLIC_LINKS.github,
       PUBLIC_LINKS.npm,
       PUBLIC_LINKS.githubAction,
-      ...MCP_REGISTRY_LINKS.filter(
-        (link) => link.includeInSameAs !== false,
-      ).map((link) => link.href),
+      ...MCP_REGISTRY_LINKS.filter((link) => link.includeInSameAs).map(
+        (link) => link.href,
+      ),
     ])),
   };
 }

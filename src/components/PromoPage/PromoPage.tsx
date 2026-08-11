@@ -19,6 +19,7 @@ import {
   ASK_AI_PRODUCT_NAME,
 } from "@/components/AskAI/ask-ai-content";
 import { CopyableCode } from "@/components/CopyableCode/CopyableCode";
+import { ExternalListingCard } from "@/components/ExternalListings/ExternalListingCard";
 import { Button, Card, Container, Text } from "@/components/GravityUI/GravityUI";
 import { withBasePath } from "@/lib/base-path";
 import {
@@ -26,7 +27,7 @@ import {
   GUIDE_LINKS,
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
-  MCP_DIRECTORY_SNAPSHOT_WARNING,
+  MCP_LISTING_CONTEXT,
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
@@ -66,6 +67,10 @@ const WORKFLOW_ICONS: Record<Workflow["id"], typeof Database> = {
 };
 
 export function PromoPage() {
+  const featuredListings = MCP_REGISTRY_LINKS.filter(
+    (listing) => listing.featured,
+  );
+
   return (
     <main>
       <section className="hero-band">
@@ -250,40 +255,20 @@ export function PromoPage() {
 
         <section id="mcp-registries" className="section-grid">
           <div className="section-heading">
-            <p className="eyebrow">Directory and trust listings</p>
-            <h2>Public pages agents can cross-check</h2>
-            <p className="registry-disclaimer">
-              {MCP_DIRECTORY_SNAPSHOT_WARNING}
-            </p>
+            <p className="eyebrow">External listings</p>
+            <h2>Verify package identity and metadata</h2>
+            <p className="registry-disclaimer">{MCP_LISTING_CONTEXT}</p>
           </div>
           <div className="registry-grid">
-            {MCP_REGISTRY_LINKS.map((registry) => (
-              <a
-                key={registry.id}
-                href={registry.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="registry-card"
-              >
-                <span
-                  className={`registry-card__tag registry-card__tag--${registry.category}`}
-                >
-                  {registry.category}
-                </span>
-                <span className="registry-card__copy">
-                  <strong>{registry.label}</strong>
-                  <span>{registry.description}</span>
-                  <em>{registry.status}</em>
-                  <small className="registry-card__metadata">
-                    {registry.sourceType} source · {registry.accuracy} accuracy ·
-                    {" "}
-                    checked {registry.lastChecked ?? "not recorded"}
-                  </small>
-                  <small className="registry-card__note">{registry.note}</small>
-                </span>
-                <ArrowRight className="registry-card__arrow" />
-              </a>
+            {featuredListings.map((listing) => (
+              <ExternalListingCard key={listing.id} listing={listing} />
             ))}
+          </div>
+          <div className="registry-actions">
+            <Button view="outlined" size="l" href={withBasePath("/listings")}>
+              View all listings and verification notes
+              <ArrowRight />
+            </Button>
           </div>
         </section>
 
