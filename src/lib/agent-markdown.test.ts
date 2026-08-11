@@ -47,11 +47,20 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Directory and trust listings");
     expect(body).toContain("[Enterprise DNA]");
     expect(body).toContain("[ModelScope MCP Plaza]");
+    expect(body).toContain(
+      "[Gilde](https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json)",
+    );
+    expect(body).toContain(
+      "[mcpindex.ai](https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp)",
+    );
     expect(body).toContain("[MCP Sentinel]");
     expect(body).toContain("[Timeahead MCPScore]");
     expect(body).toContain("source: automated; accuracy: misleading");
     expect(body).toContain("last checked: 2026-07-13");
     expect(body).toContain("last checked: 2026-07-31");
+    expect(body).toContain("last checked: 2026-08-11");
+    expect(body).toContain("version manifest exposes no tool definitions");
+    expect(body).toContain("not a security finding");
     expect(body).toContain("not security attestations");
     expect(body).not.toContain("claim available");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");

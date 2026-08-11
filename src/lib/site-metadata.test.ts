@@ -25,6 +25,12 @@ describe("site metadata", () => {
       "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
     );
     expect(jsonLd.sameAs).toContain(
+      "https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json",
+    );
+    expect(jsonLd.sameAs).toContain(
+      "https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp",
+    );
+    expect(jsonLd.sameAs).toContain(
       "https://enterprisedna.co/directories/mcp/astandrik-local-ydb-toolkit/",
     );
     expect(jsonLd.sameAs).toContain(

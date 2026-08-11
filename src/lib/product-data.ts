@@ -48,6 +48,8 @@ export type McpRegistryLink = {
   id:
     | "official-mcp-registry"
     | "modelscope"
+    | "gilde"
+    | "mcpindex"
     | "curated-mcp"
     | "glama"
     | "wmcp"
@@ -109,6 +111,10 @@ export const PUBLIC_LINKS = {
     "https://registry.modelcontextprotocol.io/?q=io.github.astandrik%2Flocal-ydb-mcp",
   modelScope:
     "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
+  gilde:
+    "https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json",
+  mcpIndex:
+    "https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp",
   glama: "https://glama.ai/mcp/servers/astandrik/local-ydb-toolkit",
   curatedMcp:
     "https://www.curatedmcp.com/marketplace/local-ydb-unofficial-mcp-server",
@@ -190,6 +196,32 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "current",
     lastChecked: "2026-07-31",
     note: "The public card identifies the server as Local, links the canonical GitHub repository, and exposes the npx stdio config without required environment variables.",
+  },
+  {
+    id: "gilde",
+    label: "Gilde",
+    href: PUBLIC_LINKS.gilde,
+    category: "directory",
+    status: "versioned catalog record",
+    description:
+      "Automated Gilde community toolset record imported from the Official MCP Registry.",
+    sourceType: "automated",
+    accuracy: "partial",
+    lastChecked: "2026-08-11",
+    note: "Identity, package, 0.15.2 release time, tarball SHA-256, entrypoint, and environment hints match the published package. The version manifest exposes no tool definitions, and the rendered catalog has no stable per-item deep link.",
+  },
+  {
+    id: "mcpindex",
+    label: "mcpindex.ai",
+    href: PUBLIC_LINKS.mcpIndex,
+    category: "directory",
+    status: "registry and drift snapshot",
+    description:
+      "Automated registry, install-metadata, and drift-monitoring page for Local YDB MCP.",
+    sourceType: "automated",
+    accuracy: "partial",
+    lastChecked: "2026-08-11",
+    note: "The 0.15.2 package, repository, website, npx installs, and environment fields are current. Its quality score measures listing maturity; the PARTIAL verdict is description-only, and the current-crawl no-drift observation is not a security finding.",
   },
   reviewedRegistryLink({
     id: "curated-mcp",
