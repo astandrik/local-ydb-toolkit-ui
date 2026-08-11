@@ -6,6 +6,8 @@ import {
   INSTALL_OPTIONS,
   LOCAL_YDB_PRODUCT,
   MCP_DIRECTORY_SNAPSHOT_WARNING,
+  MCP_LISTING_CONTEXT,
+  MCP_LISTING_PURPOSES,
   MCP_REGISTRY_LINKS,
   PROJECTS_USING_LOCAL_YDB,
   PUBLIC_LINKS,
@@ -102,6 +104,9 @@ describe("local-ydb-toolkit product data", () => {
     expect(MCP_DIRECTORY_SNAPSHOT_WARNING).toBe(
       "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.",
     );
+    expect(MCP_LISTING_CONTEXT).toBe(
+      "Use these third-party pages to confirm the canonical repository, npm package, current version, or installation metadata. Directory inclusion is not an endorsement or security audit.",
+    );
   });
 
   it("captures workflow categories agents can route to the local stdio MCP", () => {
@@ -150,77 +155,93 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.mcpIndex).toBe(
       "https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp",
     );
+    expect(PUBLIC_LINKS.awesomeMcpServers).toBe(
+      "https://github.com/punkpeye/awesome-mcp-servers#databases",
+    );
     expect(PUBLIC_LINKS.enterpriseDna).toContain("enterprisedna.co");
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
   });
 
-  it("publishes the verified ModelScope local stdio listing", () => {
-    const modelScope = MCP_REGISTRY_LINKS.find(
-      ({ id }) => id === "modelscope",
+  it("publishes the four featured listings with audited value and limitations", () => {
+    const official = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "official-mcp-registry",
     );
-
-    expect(modelScope).toMatchObject({
-      label: "ModelScope MCP Plaza",
-      href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
-      category: "directory",
-      status: "active listing",
-      sourceType: "community",
-      accuracy: "current",
-      lastChecked: "2026-07-31",
-    });
-    expect(modelScope?.note).toContain("Local");
-    expect(modelScope?.note).toContain("npx stdio");
-  });
-
-  it("publishes the reviewed Gilde and mcpindex.ai directory snapshots", () => {
+    const modelScope = MCP_REGISTRY_LINKS.find(({ id }) => id === "modelscope");
     const gilde = MCP_REGISTRY_LINKS.find(({ id }) => id === "gilde");
     const mcpindex = MCP_REGISTRY_LINKS.find(({ id }) => id === "mcpindex");
 
-    expect(gilde).toEqual({
-      id: "gilde",
-      label: "Gilde",
+    expect(official).toMatchObject({
+      href: PUBLIC_LINKS.officialMcpRegistry,
+      purpose: "identity",
+      featured: true,
+      includeInSameAs: true,
+      lastChecked: "2026-08-11",
+    });
+    expect(modelScope).toMatchObject({
+      href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
+      purpose: "installation-discovery",
+      accuracy: "partial",
+      featured: true,
+      includeInSameAs: true,
+      lastChecked: "2026-08-11",
+    });
+    expect(modelScope?.confirmedClaims.join(" ")).toContain(
+      "@astandrik/local-ydb-mcp@latest",
+    );
+    expect(modelScope?.limitations.join(" ")).toContain("empty tools list");
+    expect(gilde).toMatchObject({
       href: PUBLIC_LINKS.gilde,
-      category: "directory",
-      status: "versioned catalog record",
-      description:
-        "Automated Gilde community toolset record imported from the Official MCP Registry.",
-      sourceType: "automated",
+      purpose: "version-metadata",
       accuracy: "partial",
+      featured: true,
+      includeInSameAs: true,
       lastChecked: "2026-08-11",
-      note: "Identity, package, 0.15.2 release time, tarball SHA-256, entrypoint, and environment hints match the published package. The version manifest exposes no tool definitions, and the rendered catalog has no stable per-item deep link.",
     });
-    expect(mcpindex).toEqual({
-      id: "mcpindex",
-      label: "mcpindex.ai",
+    expect(gilde?.confirmedClaims.join(" ")).toContain("tarball SHA-256");
+    expect(mcpindex).toMatchObject({
       href: PUBLIC_LINKS.mcpIndex,
-      category: "directory",
-      status: "registry and drift snapshot",
-      description:
-        "Automated registry, install-metadata, and drift-monitoring page for Local YDB MCP.",
-      sourceType: "automated",
+      purpose: "change-monitoring",
       accuracy: "partial",
+      featured: true,
+      includeInSameAs: true,
       lastChecked: "2026-08-11",
-      note: "The 0.15.2 package, repository, website, npx installs, and environment fields are current. Its quality score measures listing maturity; the PARTIAL verdict is description-only, and the current-crawl no-drift observation is not a security finding.",
     });
+    expect(mcpindex?.limitations.join(" ")).toContain("not security findings");
   });
 
-  it("keeps unique directory ids and complete snapshot metadata", () => {
+  it("keeps all 25 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
+    expect(ids).toHaveLength(25);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
-      MCP_REGISTRY_LINKS.every((link) => !("iconSrc" in link)),
-    ).toBe(true);
-    expect(
       MCP_REGISTRY_LINKS.every(
-        ({ href, sourceType, accuracy, lastChecked, note }) =>
+        ({
+          href,
+          category,
+          status,
+          sourceType,
+          accuracy,
+          lastChecked,
+          note,
+          purpose,
+          userValue,
+          confirmedClaims,
+          limitations,
+        }) =>
           href.startsWith("https://") &&
+          category.length > 0 &&
+          status.length > 0 &&
           ["official", "community", "automated"].includes(sourceType) &&
           ["current", "partial", "stale", "misleading", "unverified"].includes(
             accuracy,
           ) &&
-          (lastChecked === null || /^\d{4}-\d{2}-\d{2}$/.test(lastChecked)) &&
-          note.trim().length > 0,
+          lastChecked === "2026-08-11" &&
+          note.trim().length > 0 &&
+          MCP_LISTING_PURPOSES.some((item) => item.id === purpose) &&
+          userValue.trim().length > 0 &&
+          confirmedClaims.length > 0 &&
+          limitations.length > 0,
       ),
     ).toBe(true);
     expect(ids).toEqual(
@@ -237,106 +258,81 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
-  it("records the reviewed accuracy classifications and freshness dates", () => {
-    const accuracyById = Object.fromEntries(
-      MCP_REGISTRY_LINKS.map(({ id, accuracy }) => [id, accuracy]),
+  it("assigns the requested purpose groups and exactly four sameAs listings", () => {
+    const idsFor = (purpose: (typeof MCP_LISTING_PURPOSES)[number]["id"]) =>
+      MCP_REGISTRY_LINKS.filter((link) => link.purpose === purpose).map(
+        (link) => link.id,
+      );
+
+    expect(idsFor("identity")).toEqual(["official-mcp-registry"]);
+    expect(idsFor("installation-discovery")).toEqual([
+      "modelscope",
+      "curated-mcp",
+      "mcp-so",
+      "claude-code-marketplaces",
+      "lobehub",
+      "awesome-mcp",
+      "awesome-skills",
+      "mcp-store",
+      "unyly",
+      "vibehackers",
+    ]);
+    expect(idsFor("version-metadata")).toEqual([
+      "gilde",
+      "wmcp",
+      "enterprise-dna",
+      "mcp-toplist",
+      "codeguilds",
+      "skiln",
+      "timeahead",
+      "pulse-mcp",
+    ]);
+    expect(idsFor("change-monitoring")).toEqual(["mcpindex"]);
+    expect(idsFor("independent-analysis")).toEqual([
+      "glama",
+      "mcp-sentinel",
+      "policylayer",
+      "manifold",
+      "forge",
+    ]);
+
+    const featured = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
+      (link) => link.id,
+    );
+    const sameAs = MCP_REGISTRY_LINKS.filter(
+      (link) => link.includeInSameAs,
+    ).map((link) => link.id);
+
+    expect(featured).toEqual([
+      "official-mcp-registry",
+      "modelscope",
+      "gilde",
+      "mcpindex",
+    ]);
+    expect(sameAs).toEqual(featured);
+  });
+
+  it("retains the current Awesome MCP Servers community entry", () => {
+    const awesomeMcp = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "awesome-mcp",
     );
 
-    expect(accuracyById).toMatchObject({
-      "official-mcp-registry": "current",
-      modelscope: "current",
-      gilde: "partial",
-      mcpindex: "partial",
-      glama: "partial",
-      "curated-mcp": "partial",
-      manifold: "partial",
-      "pulse-mcp": "partial",
-      "mcp-so": "partial",
-      vibehackers: "partial",
-      policylayer: "partial",
-      wmcp: "stale",
-      "enterprise-dna": "stale",
-      forge: "stale",
-      timeahead: "misleading",
-      "awesome-skills": "misleading",
-      "mcp-sentinel": "unverified",
+    expect(awesomeMcp).toMatchObject({
+      label: "Awesome MCP Servers",
+      href: PUBLIC_LINKS.awesomeMcpServers,
+      accuracy: "current",
+      purpose: "installation-discovery",
+      lastChecked: "2026-08-11",
     });
-    expect(
-      MCP_REGISTRY_LINKS.filter(
-        ({ id }) => !["modelscope", "gilde", "mcpindex"].includes(id),
-      ).every((link) => link.lastChecked === "2026-07-13"),
-    ).toBe(true);
-    expect(
-      Object.fromEntries(
-        MCP_REGISTRY_LINKS.filter(({ id }) =>
-          ["modelscope", "gilde", "mcpindex"].includes(id),
-        ).map(({ id, lastChecked }) => [id, lastChecked]),
-      ),
-    ).toEqual({
-      modelscope: "2026-07-31",
-      gilde: "2026-08-11",
-      mcpindex: "2026-08-11",
-    });
-    const idsFor = (accuracy: string) =>
-      MCP_REGISTRY_LINKS.filter((link) => link.accuracy === accuracy)
-        .map((link) => link.id)
-        .sort();
-
-    expect(idsFor("current")).toEqual(
-      ["modelscope", "official-mcp-registry"].sort(),
-    );
-    expect(idsFor("partial")).toEqual(
-      [
-        "curated-mcp",
-        "gilde",
-        "glama",
-        "manifold",
-        "mcp-so",
-        "mcpindex",
-        "policylayer",
-        "pulse-mcp",
-        "vibehackers",
-      ].sort(),
-    );
-    expect(idsFor("stale")).toEqual(
-      ["enterprise-dna", "forge", "wmcp"].sort(),
-    );
-    expect(idsFor("misleading")).toEqual(
-      ["awesome-skills", "timeahead"].sort(),
-    );
-    expect(idsFor("unverified")).toEqual(
-      [
-        "awesome-mcp",
-        "claude-code-marketplaces",
-        "codeguilds",
-        "lobehub",
-        "mcp-sentinel",
-        "mcp-store",
-        "mcp-toplist",
-        "skiln",
-        "unyly",
-      ].sort(),
+    expect(awesomeMcp?.confirmedClaims.join(" ")).toContain(
+      "canonical upstream README contains the Local YDB entry",
     );
   });
 
-  it("keeps the official Registry note independent of a specific release", () => {
-    const officialRegistry = MCP_REGISTRY_LINKS.find(
-      ({ id }) => id === "official-mcp-registry",
-    );
+  it("does not freeze volatile numeric directory scores", () => {
+    const serialized = JSON.stringify(MCP_REGISTRY_LINKS);
 
-    expect(officialRegistry?.note).toBe(
-      "Latest published metadata matches the npm package and repository identity.",
-    );
-  });
-
-  it("describes the outdated package metadata shown by Vibehackers", () => {
-    const vibehackers = MCP_REGISTRY_LINKS.find(
-      ({ id }) => id === "vibehackers",
-    );
-
-    expect(vibehackers?.note).toBe(
-      "The page still shows package 0.14.0, only 5 of 38 tools, and marks optional environment fields as required.",
-    );
+    expect(serialized).not.toMatch(/95\/100|76\/100|55\/100/);
   });
 
   it("lists public projects using local-ydb", () => {

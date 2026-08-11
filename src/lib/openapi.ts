@@ -104,6 +104,24 @@ export function buildOpenApiSpec() {
           responses: { "200": textResponse("text/markdown") },
         },
       },
+      "/listings": {
+        get: {
+          operationId: "getExternalListingsPage",
+          tags: ["Discovery"],
+          summary: "Get external listing verification notes",
+          security: [],
+          responses: { "200": textResponse("text/html") },
+        },
+      },
+      "/listings.md": {
+        get: {
+          operationId: "getExternalListingsMarkdown",
+          tags: ["Discovery"],
+          summary: "Get markdown external listing verification notes",
+          security: [],
+          responses: { "200": textResponse("text/markdown") },
+        },
+      },
       "/mcp.md": {
         get: {
           operationId: "getMcpMarkdown",
@@ -393,9 +411,81 @@ export function buildOpenApiSpec() {
       schemas: {
         OpenApiDocument: { type: "object", additionalProperties: true },
         AgentCard: { type: "object", additionalProperties: true },
+        ExternalListing: {
+          type: "object",
+          required: [
+            "id",
+            "label",
+            "href",
+            "category",
+            "status",
+            "description",
+            "sourceType",
+            "accuracy",
+            "lastChecked",
+            "note",
+            "purpose",
+            "userValue",
+            "confirmedClaims",
+            "limitations",
+            "featured",
+            "includeInSameAs",
+          ],
+          properties: {
+            id: { type: "string" },
+            label: { type: "string" },
+            href: { type: "string", format: "uri" },
+            category: {
+              type: "string",
+              enum: ["registry", "directory", "trust", "audit", "governance"],
+            },
+            status: { type: "string" },
+            description: { type: "string" },
+            sourceType: {
+              type: "string",
+              enum: ["official", "community", "automated"],
+            },
+            accuracy: {
+              type: "string",
+              enum: ["current", "partial", "stale", "misleading", "unverified"],
+            },
+            lastChecked: { type: ["string", "null"], format: "date" },
+            note: { type: "string" },
+            purpose: {
+              type: "string",
+              enum: [
+                "identity",
+                "installation-discovery",
+                "version-metadata",
+                "change-monitoring",
+                "independent-analysis",
+              ],
+            },
+            userValue: { type: "string" },
+            confirmedClaims: {
+              type: "array",
+              minItems: 1,
+              items: { type: "string" },
+            },
+            limitations: {
+              type: "array",
+              minItems: 1,
+              items: { type: "string" },
+            },
+            featured: { type: "boolean" },
+            includeInSameAs: { type: "boolean" },
+          },
+          additionalProperties: false,
+        },
         Product: {
           type: "object",
-          required: ["product", "toolkitRelease"],
+          required: [
+            "product",
+            "toolkitRelease",
+            "mcpDirectorySnapshotWarning",
+            "mcpListingContext",
+            "mcpRegistryLinks",
+          ],
           properties: {
             product: { type: "object", additionalProperties: true },
             toolkitRelease: {
@@ -408,6 +498,12 @@ export function buildOpenApiSpec() {
                 checkedAt: { type: "string", format: "date" },
               },
               additionalProperties: false,
+            },
+            mcpDirectorySnapshotWarning: { type: "string" },
+            mcpListingContext: { type: "string" },
+            mcpRegistryLinks: {
+              type: "array",
+              items: { $ref: "#/components/schemas/ExternalListing" },
             },
           },
           additionalProperties: true,

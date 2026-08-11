@@ -74,8 +74,8 @@ export function buildMcpServerCard() {
         type: "text/plain",
       },
       {
-        title: "Directory and trust listings",
-        url: toPublicUrl("/developers.md#directory-and-trust-listings"),
+        title: "Featured external listings",
+        url: toPublicUrl("/developers.md#featured-external-listings"),
         type: "text/markdown",
       },
       {

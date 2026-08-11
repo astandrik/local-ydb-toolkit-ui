@@ -23,6 +23,8 @@ describe("primary navigation", () => {
     const sqlGuideClasses =
       sqlGuideAttributes.match(/\bclass="([^"]*)"/)?.[1].split(/\s+/) ?? [];
 
+    expect(html).toContain(`href="${withBasePath("/#workflows")}"`);
+    expect(html).toContain(`href="${withBasePath("/#agent-access")}"`);
     expect(html).toContain(`href="${withBasePath("/guides")}"`);
     expect(sqlGuideAttributes).toContain(
       `href="${withBasePath("/guides/local-ydb-sql")}"`,

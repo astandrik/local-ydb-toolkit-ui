@@ -90,8 +90,8 @@ export function buildA2aAgentCard() {
         type: "text/plain",
       },
       {
-        title: "Directory and trust listings",
-        url: toPublicUrl("/developers.md#directory-and-trust-listings"),
+        title: "External listing verification notes",
+        url: toPublicUrl("/listings.md"),
         type: "text/markdown",
       },
       {

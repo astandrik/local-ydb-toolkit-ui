@@ -28,7 +28,12 @@ describe("A2A agent card", () => {
       "workflow-routing",
     ]);
     expect(card.resources.map((resource) => resource.title)).toContain(
-      "Directory and trust listings",
+      "External listing verification notes",
+    );
+    expect(card.resources).toContainEqual(
+      expect.objectContaining({
+        url: "https://local-ydb-toolkit.ydb-qdrant.tech/listings.md",
+      }),
     );
     expect(card.resources.map((resource) => resource.title)).toContain(
       "Managed local YDB SQL guide",

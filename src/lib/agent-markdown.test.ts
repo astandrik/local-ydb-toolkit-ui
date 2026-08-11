@@ -14,12 +14,14 @@ import {
   buildLocalYdbMcpVsYdbMcpGuideMarkdown,
   buildLocalYdbCiGuideMarkdown,
   buildLocalYdbSqlGuideMarkdown,
+  buildListingsMarkdown,
   buildLlmsFullText,
   buildLlmsText,
   buildMcpMarkdown,
   buildWebhooksMarkdown,
   buildYdbSchemaDdlMcpGuideMarkdown,
 } from "@/lib/agent-markdown";
+import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
 
 describe("agent-readable markdown", () => {
   it("publishes concise llms.txt discovery with canonical agent routes", () => {
@@ -44,8 +46,8 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
     expect(body).toContain("0.15.2, 39 tools");
     expect(body).toContain("confirm: true");
-    expect(body).toContain("## Directory and trust listings");
-    expect(body).toContain("[Enterprise DNA]");
+    expect(body).toContain("## Featured external listings");
+    expect(body).not.toContain("[Enterprise DNA]");
     expect(body).toContain("[ModelScope MCP Plaza]");
     expect(body).toContain(
       "[Gilde](https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json)",
@@ -53,15 +55,16 @@ describe("agent-readable markdown", () => {
     expect(body).toContain(
       "[mcpindex.ai](https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp)",
     );
-    expect(body).toContain("[MCP Sentinel]");
-    expect(body).toContain("[Timeahead MCPScore]");
-    expect(body).toContain("source: automated; accuracy: misleading");
-    expect(body).toContain("last checked: 2026-07-13");
-    expect(body).toContain("last checked: 2026-07-31");
-    expect(body).toContain("last checked: 2026-08-11");
-    expect(body).toContain("version manifest exposes no tool definitions");
-    expect(body).toContain("not a security finding");
-    expect(body).toContain("not security attestations");
+    expect(body).not.toContain("[MCP Sentinel]");
+    expect(body).not.toContain("[Timeahead MCPScore]");
+    expect(body).toContain("Useful for:");
+    expect(body).toContain("Confirmed:");
+    expect(body).toContain("Limitations:");
+    expect(body).toContain("Checked: 2026-08-11");
+    expect(body).toContain("empty tools array");
+    expect(body).toContain("not security findings");
+    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("/listings.md");
     expect(body).not.toContain("claim available");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
 
@@ -78,9 +81,10 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("remote promo MCP is read-only");
     expect(body).toContain("[Auth guide]");
     expect(body).toContain("[Guides index]");
-    expect(body).toContain("## Directory and trust listings");
-    expect(body).toContain("Timeahead MCPScore");
-    expect(body).toContain("not security attestations");
+    expect(body).toContain("## Featured external listings");
+    expect(body).not.toContain("Timeahead MCPScore");
+    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("/listings.md");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
     expect(body).toContain("```json");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
@@ -108,9 +112,51 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/openapi.json");
     expect(body).toContain("/docs/api");
     expect(body).toContain("/docs/webhooks");
-    expect(body).toContain("## Directory and trust listings");
-    expect(body).toContain("PolicyLayer");
-    expect(body).toContain("not security attestations");
+    expect(body).toContain("## Featured external listings");
+    expect(body).not.toContain("PolicyLayer");
+    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("/listings.md");
+  });
+
+  it("publishes every audited listing exactly once in the full markdown catalog", () => {
+    const body = buildListingsMarkdown();
+
+    expect(body).toContain("# External listings and verification notes");
+    expect(body).toContain("## Identity");
+    expect(body).toContain("## Installation discovery");
+    expect(body).toContain("## Version metadata");
+    expect(body).toContain("## Change monitoring");
+    expect(body).toContain("## Independent analysis");
+    expect(body.match(/^### \[/gm)).toHaveLength(25);
+    for (const listing of MCP_REGISTRY_LINKS) {
+      expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
+        2,
+      );
+    }
+    expect(body).not.toContain("automated source");
+    expect(body).not.toContain("unverified accuracy");
+  });
+
+  it("keeps compact discovery pages limited to the four featured listings", () => {
+    const pages = [
+      buildLlmsText(),
+      buildLlmsFullText(),
+      buildIndexMarkdown(),
+      buildDevelopersMarkdown(),
+    ];
+
+    for (const body of pages) {
+      for (const listing of MCP_REGISTRY_LINKS) {
+        const markdownLink = `[${listing.label}](${listing.href})`;
+
+        if (listing.featured) {
+          expect(body).toContain(markdownLink);
+        } else {
+          expect(body).not.toContain(markdownLink);
+        }
+      }
+      expect(body).toContain("/listings.md");
+    }
   });
 
   it("states auth boundaries for agents", () => {

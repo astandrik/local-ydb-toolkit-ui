@@ -24,6 +24,15 @@ describe("agent discovery routes", () => {
       expected: ["/api/product", "/openapi.json"],
     },
     {
+      modulePath: "@/app/listings.md/route",
+      contentType: "text/markdown; charset=utf-8",
+      expected: [
+        "# External listings and verification notes",
+        "## Independent analysis",
+        "### [Awesome MCP Servers]",
+      ],
+    },
+    {
       modulePath: "@/app/mcp.md/route",
       contentType: "text/markdown; charset=utf-8",
       expected: ["Read-only promo MCP", "confirm: true"],
@@ -217,17 +226,24 @@ describe("agent discovery routes", () => {
         expect.objectContaining({
           label: "Enterprise DNA",
           accuracy: "stale",
-          lastChecked: "2026-07-13",
+          purpose: "version-metadata",
+          lastChecked: "2026-08-11",
         }),
         expect.objectContaining({
           label: "Timeahead MCPScore",
           sourceType: "automated",
           accuracy: "misleading",
+          limitations: expect.any(Array),
         }),
       ]),
     );
+    expect(body.mcpRegistryLinks).toHaveLength(25);
+    expect(body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured)).toHaveLength(4);
     expect(body.mcpDirectorySnapshotWarning).toContain(
       "not security attestations",
+    );
+    expect(body.mcpListingContext).toContain(
+      "Directory inclusion is not an endorsement",
     );
   });
 });
@@ -244,6 +260,8 @@ describe("robots and sitemap", () => {
     expect(firstRule?.allow).toContain("/index.md");
     expect(firstRule?.allow).toContain("/guides");
     expect(firstRule?.allow).toContain("/guides/index.md");
+    expect(firstRule?.allow).toContain("/listings");
+    expect(firstRule?.allow).toContain("/listings.md");
     expect(firstRule?.allow).toContain("/mcp");
     expect(firstRule?.allow).toContain("/.well-known/mcp");
     expect(firstRule?.allow).toContain("/.well-known/agent-card.json");
@@ -294,6 +312,10 @@ describe("robots and sitemap", () => {
       "https://local-ydb-toolkit.ydb-qdrant.tech/compare.md",
     );
     expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/guides");
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/listings");
+    expect(urls).toContain(
+      "https://local-ydb-toolkit.ydb-qdrant.tech/listings.md",
+    );
     expect(urls).toContain(
       "https://local-ydb-toolkit.ydb-qdrant.tech/guides/index.md",
     );

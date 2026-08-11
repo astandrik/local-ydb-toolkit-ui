@@ -1,0 +1,86 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import type { ElementType, ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
+
+import ListingsPage from "@/app/listings/page";
+import { PromoPage } from "@/components/PromoPage/PromoPage";
+import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
+
+vi.mock("@/components/AskAI/AskAIPanel", () => ({
+  AskAIPanel: () => <div data-testid="ask-ai" />,
+}));
+
+vi.mock("@/components/CopyableCode/CopyableCode", () => ({
+  CopyableCode: ({ value }: { value: string }) => <code>{value}</code>,
+}));
+
+vi.mock("@/components/GravityUI/GravityUI", () => ({
+  Button: ({ children, href }: { children: ReactNode; href?: string }) =>
+    href ? <a href={href}>{children}</a> : <button>{children}</button>,
+  Card: ({ children, className }: { children: ReactNode; className?: string }) => (
+    <div className={className}>{children}</div>
+  ),
+  Container: ({
+    as: Component = "div",
+    children,
+    className,
+  }: {
+    as?: ElementType;
+    children: ReactNode;
+    className?: string;
+  }) => <Component className={className}>{children}</Component>,
+  Text: ({
+    as: Component = "span",
+    children,
+    className,
+  }: {
+    as?: ElementType;
+    children: ReactNode;
+    className?: string;
+  }) => <Component className={className}>{children}</Component>,
+}));
+
+describe("external listing pages", () => {
+  it("renders exactly four useful featured cards and the full-catalog CTA", () => {
+    const html = renderToStaticMarkup(<PromoPage />);
+
+    expect(html.match(/data-listing-id=/g)).toHaveLength(4);
+    for (const label of [
+      "Official MCP Registry",
+      "ModelScope MCP Plaza",
+      "Gilde",
+      "mcpindex.ai",
+    ]) {
+      expect(html).toContain(`>${label}</h3>`);
+    }
+    expect(html).not.toContain(">Enterprise DNA</h3>");
+    expect(html).toContain("Useful for");
+    expect(html).toContain("Confirmed");
+    expect(html).toContain("Limitations");
+    expect(html).toContain('href="/listings"');
+    expect(html).toContain("View all listings and verification notes");
+    expect(html).not.toContain("unverified accuracy");
+    expect(html).not.toContain("automated source");
+  });
+
+  it("renders every retained listing exactly once in five purpose groups", () => {
+    const html = renderToStaticMarkup(<ListingsPage />);
+
+    expect(html.match(/data-listing-id=/g)).toHaveLength(25);
+    for (const listing of MCP_REGISTRY_LINKS) {
+      expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
+      expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);
+    }
+    for (const heading of [
+      "Identity",
+      "Installation discovery",
+      "Version metadata",
+      "Change monitoring",
+      "Independent analysis",
+    ]) {
+      expect(html).toContain(`>${heading}</h2>`);
+    }
+    expect(html).not.toContain("unverified accuracy");
+    expect(html).not.toContain("automated source");
+  });
+});

@@ -12,8 +12,8 @@ type NavLink = {
 };
 
 const NAV_LINKS: readonly NavLink[] = [
-  { href: "#workflows", label: "Workflows" },
-  { href: "#agent-access", label: "Agent access" },
+  { href: withBasePath("/#workflows"), label: "Workflows" },
+  { href: withBasePath("/#agent-access"), label: "Agent access" },
   { href: withBasePath("/guides"), label: "Guides" },
   {
     href: withBasePath("/guides/local-ydb-sql"),
