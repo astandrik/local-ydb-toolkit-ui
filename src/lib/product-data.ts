@@ -71,6 +71,7 @@ export type McpRegistryLink = {
     | "awesome-skills"
     | "skiln"
     | "policylayer"
+    | "mcp-conformance"
     | "timeahead"
     | "pulse-mcp"
     | "mcp-store"
@@ -148,6 +149,8 @@ export const PUBLIC_LINKS = {
   skiln: "https://skiln.co/mcp/mcp-io-github-astandrik-local-ydb-mcp",
   wmcp: "https://wmcp.sh/mcp/grade/npm%3A%40astandrik%2Flocal-ydb-mcp",
   policyLayer: "https://policylayer.com/tools/local-ydb",
+  mcpConformance:
+    "https://github.com/Ahmad-Faraj/mcp-conformance/blob/a4dceadd14c7a01ab255d822ca4fcfb2987dac57/data/release/probe_census.jsonl#L5699",
   timeaheadMcpScore: "https://timeahead.in/mcp/local-ydb-mcp",
   pulseMcp: "https://www.pulsemcp.com/servers/astandrik-local-ydb",
   mcpStore: "https://mcpstore.co/server/69eeaea69b1bda315bbc5a63",
@@ -177,11 +180,13 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
 const MCP_REGISTRY_REVIEW_DATE = "2026-08-11";
 
 function reviewedRegistryLink(
-  link: Omit<McpRegistryLink, "lastChecked" | "note">,
+  link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
+    lastChecked?: string;
+  },
 ): McpRegistryLink {
   return {
     ...link,
-    lastChecked: MCP_REGISTRY_REVIEW_DATE,
+    lastChecked: link.lastChecked ?? MCP_REGISTRY_REVIEW_DATE,
     note: link.limitations.join(" "),
   };
 }
@@ -560,6 +565,29 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     limitations: [
       "The record is explicitly unverified and no remote endpoint was probed.",
       "Its risk grade describes potential authority and blast radius, not a discovered vulnerability, and does not capture every plan-first confirmation guard.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+  }),
+  reviewedRegistryLink({
+    id: "mcp-conformance",
+    label: "MCP Conformance Census",
+    href: PUBLIC_LINKS.mcpConformance,
+    category: "audit",
+    status: "execution-based conformance snapshot",
+    description: "Sandboxed execution probe of the published npm MCP server.",
+    sourceType: "automated",
+    accuracy: "stale",
+    lastChecked: "2026-08-12",
+    purpose: "independent-analysis",
+    userValue: "Inspect an independently executed MCP handshake and protocol checks.",
+    confirmedClaims: [
+      "The census launched @astandrik/local-ydb-mcp@0.14.1, completed the MCP handshake, and enumerated 38 tools.",
+      "Initialize, ping, tool-list, schema validation, invalid-argument rejection, malformed-JSON survival, and stdout-purity checks passed.",
+    ],
+    limitations: [
+      "The snapshot covers version 0.14.1 rather than current version 0.15.2, does not exercise operational tools against a configured local YDB target, and is not a security audit.",
+      "Its error-as-result outcome for an unknown tool is measured SDK behavior that the study explicitly does not classify as a failure.",
     ],
     featured: false,
     includeInSameAs: false,

@@ -116,8 +116,22 @@ describe("read-only promo MCP tools", () => {
             expect.stringContaining("empty tools list"),
           ]),
         }),
+        expect.objectContaining({
+          id: "mcp-conformance",
+          label: "MCP Conformance Census",
+          accuracy: "stale",
+          purpose: "independent-analysis",
+          lastChecked: "2026-08-12",
+          featured: false,
+          includeInSameAs: false,
+        }),
       ]),
     });
+    expect(
+      JSON.stringify(result.structuredContent.links).split(
+        "MCP Conformance Census",
+      ),
+    ).toHaveLength(2);
     expect(JSON.stringify(result.structuredContent.links)).not.toContain(
       "claim available",
     );
