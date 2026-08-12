@@ -30,6 +30,7 @@ describe("agent discovery routes", () => {
         "# External listings and verification notes",
         "## Independent analysis",
         "### [Awesome MCP Servers]",
+        "### [MCP Conformance Census]",
       ],
     },
     {
@@ -235,9 +236,18 @@ describe("agent discovery routes", () => {
           accuracy: "misleading",
           limitations: expect.any(Array),
         }),
+        expect.objectContaining({
+          id: "mcp-conformance",
+          label: "MCP Conformance Census",
+          accuracy: "stale",
+          purpose: "independent-analysis",
+          lastChecked: "2026-08-12",
+          featured: false,
+          includeInSameAs: false,
+        }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(25);
+    expect(body.mcpRegistryLinks).toHaveLength(26);
     expect(body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured)).toHaveLength(4);
     expect(body.mcpDirectorySnapshotWarning).toContain(
       "not security attestations",

@@ -159,6 +159,9 @@ describe("local-ydb-toolkit product data", () => {
       "https://github.com/punkpeye/awesome-mcp-servers#databases",
     );
     expect(PUBLIC_LINKS.enterpriseDna).toContain("enterprisedna.co");
+    expect(PUBLIC_LINKS.mcpConformance).toBe(
+      "https://github.com/Ahmad-Faraj/mcp-conformance/blob/a4dceadd14c7a01ab255d822ca4fcfb2987dac57/data/release/probe_census.jsonl#L5699",
+    );
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
   });
 
@@ -209,10 +212,10 @@ describe("local-ydb-toolkit product data", () => {
     expect(mcpindex?.limitations.join(" ")).toContain("not security findings");
   });
 
-  it("keeps all 25 audited ids unique with the extended and legacy contracts", () => {
+  it("keeps all 26 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
-    expect(ids).toHaveLength(25);
+    expect(ids).toHaveLength(26);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every(
@@ -236,7 +239,7 @@ describe("local-ydb-toolkit product data", () => {
           ["current", "partial", "stale", "misleading", "unverified"].includes(
             accuracy,
           ) &&
-          lastChecked === "2026-08-11" &&
+          /^\d{4}-\d{2}-\d{2}$/.test(lastChecked ?? "") &&
           note.trim().length > 0 &&
           MCP_LISTING_PURPOSES.some((item) => item.id === purpose) &&
           userValue.trim().length > 0 &&
@@ -254,7 +257,39 @@ describe("local-ydb-toolkit product data", () => {
         "vibehackers",
         "gilde",
         "mcpindex",
+        "mcp-conformance",
       ]),
+    );
+  });
+
+  it("publishes the immutable conformance snapshot with an individual review date", () => {
+    const conformance = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "mcp-conformance",
+    );
+    const existingReviewDates = MCP_REGISTRY_LINKS.filter(
+      ({ id }) => id !== "mcp-conformance",
+    ).map(({ lastChecked }) => lastChecked);
+
+    expect(new Set(existingReviewDates)).toEqual(new Set(["2026-08-11"]));
+    expect(conformance).toMatchObject({
+      label: "MCP Conformance Census",
+      href: PUBLIC_LINKS.mcpConformance,
+      category: "audit",
+      status: "execution-based conformance snapshot",
+      sourceType: "automated",
+      accuracy: "stale",
+      lastChecked: "2026-08-12",
+      purpose: "independent-analysis",
+      featured: false,
+      includeInSameAs: false,
+    });
+    expect(conformance?.confirmedClaims.join(" ")).toContain(
+      "completed the MCP handshake",
+    );
+    expect(conformance?.confirmedClaims.join(" ")).toContain("38 tools");
+    expect(conformance?.limitations.join(" ")).toContain("not a security audit");
+    expect(conformance?.limitations.join(" ")).toContain(
+      "does not classify as a failure",
     );
   });
 
@@ -292,6 +327,7 @@ describe("local-ydb-toolkit product data", () => {
       "glama",
       "mcp-sentinel",
       "policylayer",
+      "mcp-conformance",
       "manifold",
       "forge",
     ]);
@@ -333,6 +369,7 @@ describe("local-ydb-toolkit product data", () => {
     const serialized = JSON.stringify(MCP_REGISTRY_LINKS);
 
     expect(serialized).not.toMatch(/95\/100|76\/100|55\/100/);
+    expect(serialized).not.toMatch(/A\/95|leaderboard|#\d+/i);
   });
 
   it("lists public projects using local-ydb", () => {

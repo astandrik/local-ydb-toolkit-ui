@@ -21,7 +21,7 @@ import {
   buildWebhooksMarkdown,
   buildYdbSchemaDdlMcpGuideMarkdown,
 } from "@/lib/agent-markdown";
-import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
+import { MCP_REGISTRY_LINKS, PUBLIC_LINKS } from "@/lib/product-data";
 
 describe("agent-readable markdown", () => {
   it("publishes concise llms.txt discovery with canonical agent routes", () => {
@@ -127,12 +127,17 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(25);
+    expect(body.match(/^### \[/gm)).toHaveLength(26);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
       );
     }
+    expect(body).toContain(
+      `### [MCP Conformance Census](${PUBLIC_LINKS.mcpConformance})`,
+    );
+    expect(body).toContain("Checked: 2026-08-12");
+    expect(body).toContain("does not classify as a failure");
     expect(body).not.toContain("automated source");
     expect(body).not.toContain("unverified accuracy");
   });

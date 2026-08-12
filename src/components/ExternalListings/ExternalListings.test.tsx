@@ -54,6 +54,7 @@ describe("external listing pages", () => {
       expect(html).toContain(`>${label}</h3>`);
     }
     expect(html).not.toContain(">Enterprise DNA</h3>");
+    expect(html).not.toContain(">MCP Conformance Census</h3>");
     expect(html).toContain("Useful for");
     expect(html).toContain("Confirmed");
     expect(html).toContain("Limitations");
@@ -66,11 +67,12 @@ describe("external listing pages", () => {
   it("renders every retained listing exactly once in five purpose groups", () => {
     const html = renderToStaticMarkup(<ListingsPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(25);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(26);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);
     }
+    expect(html).toContain(">MCP Conformance Census</h3>");
     for (const heading of [
       "Identity",
       "Installation discovery",
