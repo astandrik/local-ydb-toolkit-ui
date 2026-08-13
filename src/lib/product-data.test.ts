@@ -14,9 +14,10 @@ import {
   TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
+  getInstallOption,
 } from "@/lib/product-data";
 
-const TOOLKIT_0_15_2_TOOLS = [
+const TOOLKIT_0_15_4_TOOLS = [
   "local_ydb_inventory",
   "local_ydb_database_status",
   "local_ydb_healthcheck",
@@ -71,9 +72,9 @@ describe("local-ydb-toolkit product data", () => {
   it("publishes the reviewed toolkit release snapshot", () => {
     expect(TOOLKIT_RELEASE).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.2",
+      version: "0.15.4",
       toolCount: 39,
-      checkedAt: "2026-08-06",
+      checkedAt: "2026-08-13",
     });
   });
 
@@ -82,15 +83,39 @@ describe("local-ydb-toolkit product data", () => {
       "mcp-npx",
       "codex-skill",
       "github-action",
+      "codex-plugin",
     ]);
-    expect(INSTALL_OPTIONS[0]?.configSnippet).toContain(
+    expect(getInstallOption("mcp-npx")).toMatchObject({
+      command: "npx @astandrik/local-ydb-mcp@latest",
+    });
+    expect(getInstallOption("mcp-npx").configSnippet).toContain(
       "LOCAL_YDB_TOOLKIT_CONFIG",
     );
-    expect(INSTALL_OPTIONS[1]?.command).toContain("$skill-installer install");
-    expect(INSTALL_OPTIONS[2]?.command).toContain(
-      "astandrik/setup-local-ydb@v1",
+    expect(getInstallOption("codex-skill").command).toBe(
+      "$skill-installer install https://github.com/astandrik/local-ydb-toolkit/tree/main/skills/local-ydb",
     );
-    expect(INSTALL_OPTIONS[2]?.configSnippet).toContain("topology: tenant");
+    expect(getInstallOption("github-action").command).toBe(
+      "uses: astandrik/setup-local-ydb@v1",
+    );
+    expect(getInstallOption("github-action").configSnippet).toContain(
+      "topology: tenant",
+    );
+
+    const plugin = getInstallOption("codex-plugin");
+
+    expect(plugin.command).toBe(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main\n" +
+        "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(plugin.description).toContain("Node.js 20.19+");
+    expect(plugin.description).toContain("absolute configPath");
+    expect(plugin.description).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
+    expect(plugin.description).toContain("plugin root");
+    expect(plugin.configSnippet).toContain("new Codex session");
+    expect(plugin.configSnippet).toContain("has not been published");
+    expect(`${plugin.description} ${plugin.configSnippet}`).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
   });
 
   it("states the remote promo MCP boundary and actual local execution boundary", () => {
@@ -123,11 +148,11 @@ describe("local-ydb-toolkit product data", () => {
     ]);
   });
 
-  it("covers every local-ydb-toolkit 0.15.2 tool exactly once", () => {
+  it("covers every local-ydb-toolkit 0.15.4 tool exactly once", () => {
     const workflowTools = WORKFLOWS.flatMap((workflow) => workflow.tools);
 
     expect(new Set(workflowTools).size).toBe(workflowTools.length);
-    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_15_2_TOOLS].sort());
+    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_15_4_TOOLS].sort());
   });
 
   it("keeps public links stable for humans and agents", () => {

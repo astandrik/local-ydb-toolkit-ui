@@ -16,7 +16,7 @@ describe("A2A agent card", () => {
     expect(card.documentationUrl).toBe(
       "https://local-ydb-toolkit.ydb-qdrant.tech/agents.md",
     );
-    expect(card.version).toBe("1.1.0");
+    expect(card.version).toBe("1.2.0");
     expect(card.capabilities.streaming).toBe(false);
     expect(card.capabilities.pushNotifications).toBe(false);
     expect(card.security).toEqual([]);
@@ -39,8 +39,13 @@ describe("A2A agent card", () => {
       "Managed local YDB SQL guide",
     );
     expect(JSON.stringify(card.skills)).toContain("managed-sql");
+    expect(JSON.stringify(card.skills)).toContain("repository Agent Plugin");
+    expect(JSON.stringify(card.skills)).toContain("repo marketplace");
     expect(JSON.stringify(card)).toContain("read-only");
     expect(JSON.stringify(card)).not.toContain("remote bootstrap");
+    expect(JSON.stringify(card)).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
 
     vi.unstubAllEnvs();
   });

@@ -44,7 +44,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
-    expect(body).toContain("0.15.2, 39 tools");
+    expect(body).toContain("0.15.4, 39 tools");
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Featured external listings");
     expect(body).not.toContain("[Enterprise DNA]");
@@ -89,6 +89,19 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("```json");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(body).toContain("GET /docs/api");
+    expect(body).toContain(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main",
+    );
+    expect(body).toContain(
+      "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(body).toContain("Node.js 20.19+");
+    expect(body).toContain("absolute configPath");
+    expect(body).toContain("plugin root");
+    expect(body).toContain("has not been published");
+    expect(body).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
   });
 
   it("documents agent access without implying remote operational mutation", () => {
@@ -100,7 +113,19 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("get_install_options");
     expect(body).toContain("list_local_ydb_workflows");
     expect(body).toContain("remote promo MCP is read-only");
+    expect(body).toContain("## Repository Agent Plugin");
+    expect(body).toContain(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main",
+    );
+    expect(body).toContain(
+      "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(body).toContain("Node.js 20.19+");
+    expect(body).toContain("has not been published");
     expect(body).not.toContain("remote bootstrap");
+    expect(body).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
   });
 
   it("documents developer resources and public JSON endpoints", () => {

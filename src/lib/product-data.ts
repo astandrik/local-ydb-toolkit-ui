@@ -1,5 +1,11 @@
+export type InstallOptionId =
+  | "mcp-npx"
+  | "codex-skill"
+  | "github-action"
+  | "codex-plugin";
+
 export type InstallOption = {
-  id: "mcp-npx" | "codex-skill" | "github-action";
+  id: InstallOptionId;
   label: string;
   audience: string;
   command: string;
@@ -780,7 +786,7 @@ export const LOCAL_YDB_PRODUCT = {
   name: "local-ydb-toolkit",
   title: "local-ydb-toolkit - agent operations for local YDB",
   summary:
-    "Docker-based local-ydb operations for AI agents, with plan-first lifecycle tools, managed SQL, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
+    "Docker-based local-ydb operations for AI agents, with plan-first lifecycle tools, managed SQL, a repository Agent Plugin, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
   description:
     "local-ydb-toolkit helps agents inspect, query, bootstrap, diagnose, harden, migrate, and upgrade configured local-ydb deployments without turning operational changes into blind shell scripts.",
   primaryCta: {
@@ -799,9 +805,9 @@ export const LOCAL_YDB_PRODUCT = {
 
 export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
-  version: "0.15.2",
+  version: "0.15.4",
   toolCount: 39,
-  checkedAt: "2026-08-06",
+  checkedAt: "2026-08-13",
 } as const;
 
 export const AGENT_BOUNDARIES = {
@@ -860,7 +866,29 @@ export const INSTALL_OPTIONS: InstallOption[] = [
     description:
       "Bootstrap tenant, root-only, or auth-enabled local-ydb in GitHub Actions and export connection metadata for later steps.",
   },
+  {
+    id: "codex-plugin",
+    label: "Codex Agent Plugin (repo marketplace)",
+    audience:
+      "Codex users who want the local-ydb skill and pinned local stdio MCP server installed together.",
+    command: `codex plugin marketplace add astandrik/local-ydb-toolkit --ref main
+codex plugin add local-ydb-toolkit@local-ydb-toolkit`,
+    configSnippet:
+      "Start a new Codex session after installation. This repository marketplace plugin is separate from the public OpenAI skills-only submission, which has not been published.",
+    description:
+      "Install the skill and pinned local stdio MCP server together. Requires Node.js 20.19+ and npm; use an absolute configPath or LOCAL_YDB_TOOLKIT_CONFIG because MCP starts from the plugin root.",
+  },
 ];
+
+export function getInstallOption(id: InstallOptionId): InstallOption {
+  const option = INSTALL_OPTIONS.find((candidate) => candidate.id === id);
+
+  if (!option) {
+    throw new Error(`Missing install option: ${id}`);
+  }
+
+  return option;
+}
 
 export const WORKFLOWS: Workflow[] = [
   {

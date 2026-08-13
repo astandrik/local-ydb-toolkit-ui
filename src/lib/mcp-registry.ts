@@ -6,8 +6,8 @@ export const MCP_SERVER_NAME =
   "tech.ydb-qdrant.local-ydb-toolkit/promo";
 export const MCP_SERVER_TITLE = "local-ydb-toolkit Promo";
 export const MCP_SERVER_DESCRIPTION =
-  "Read-only product discovery, install guidance, workflow summaries, and routing help for local-ydb-toolkit.";
-export const MCP_SERVER_VERSION = "1.1.0";
+  "Read-only product discovery and install guidance, including the repository Agent Plugin, plus workflow summaries and routing help for local-ydb-toolkit.";
+export const MCP_SERVER_VERSION = "1.2.0";
 
 export function buildMcpRegistryServerMetadata() {
   return {
@@ -42,7 +42,8 @@ export function buildMcpServerCard() {
       },
       {
         name: "get_install_options",
-        description: "Return MCP, Codex skill, and GitHub Action install paths.",
+        description:
+          "Return MCP, Codex skill, GitHub Action, and repository Agent Plugin install paths.",
       },
       {
         name: "list_local_ydb_workflows",

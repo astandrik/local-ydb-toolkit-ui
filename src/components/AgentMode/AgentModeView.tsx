@@ -1,14 +1,16 @@
 import {
   AGENT_BOUNDARIES,
-  INSTALL_OPTIONS,
   TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
+  getInstallOption,
 } from "@/lib/product-data";
 
 import "./AgentModeView.scss";
 
 export function AgentModeView() {
+  const mcpNpxInstall = getInstallOption("mcp-npx");
+
   return (
     <main>
       <article>
@@ -66,7 +68,7 @@ export function AgentModeView() {
 
         <h2>Install</h2>
         <pre className="agent-mode__install">
-          {INSTALL_OPTIONS[0]?.configSnippet}
+          {mcpNpxInstall.configSnippet}
         </pre>
 
         <h2>Safety</h2>

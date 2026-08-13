@@ -34,6 +34,7 @@ import {
   TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
+  getInstallOption,
   type Workflow,
 } from "@/lib/product-data";
 
@@ -67,6 +68,7 @@ const WORKFLOW_ICONS: Record<Workflow["id"], typeof Database> = {
 };
 
 export function PromoPage() {
+  const mcpNpxInstall = getInstallOption("mcp-npx");
   const featuredListings = MCP_REGISTRY_LINKS.filter(
     (listing) => listing.featured,
   );
@@ -181,7 +183,7 @@ export function PromoPage() {
             </p>
             <CopyableCode
               className="quickstart-band__command"
-              value={INSTALL_OPTIONS[0]?.command ?? ""}
+              value={mcpNpxInstall.command}
             />
           </div>
           <div className="quickstart-band__links">
