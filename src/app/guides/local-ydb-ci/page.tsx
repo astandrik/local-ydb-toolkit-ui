@@ -1,12 +1,14 @@
 import { ContentPage } from "@/components/ContentPage/ContentPage";
 import { withBasePath } from "@/lib/base-path";
-import { INSTALL_OPTIONS } from "@/lib/product-data";
+import { getInstallOption } from "@/lib/product-data";
 
 export const metadata = {
   title: "Run local YDB in CI with local-ydb-toolkit",
   description:
     "Use astandrik/setup-local-ydb for tenant, root-only, and auth-enabled GitHub Actions jobs.",
 };
+
+const GITHUB_ACTION_INSTALL = getInstallOption("github-action");
 
 const ROOT_TOPOLOGY_EXAMPLE = `- uses: astandrik/setup-local-ydb@v1
   id: ydb-root
@@ -38,7 +40,7 @@ export default function LocalYdbCiPage() {
       sections={[
         {
           title: "Tenant topology",
-          code: INSTALL_OPTIONS[2]?.configSnippet,
+          code: GITHUB_ACTION_INSTALL.configSnippet,
         },
         {
           title: "Root-only topology",

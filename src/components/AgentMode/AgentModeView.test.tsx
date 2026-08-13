@@ -13,10 +13,10 @@ describe("homepage agent mode", () => {
     expect(html).toContain("Authentication");
     expect(html).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(html).toContain("confirm: true");
-    expect(html).toContain("0.15.2");
+    expect(html).toContain("0.15.4");
     expect(html).toContain("39 tools");
     expect(html).toContain(
-      "Reviewed toolkit snapshot: @astandrik/local-ydb-mcp 0.15.2, 39 tools, checked 2026-08-06.",
+      "Reviewed toolkit snapshot: @astandrik/local-ydb-mcp 0.15.4, 39 tools, checked 2026-08-13.",
     );
     expect(html).toContain("Managed SQL");
     expect(html).toContain("/guides/local-ydb-sql.md");

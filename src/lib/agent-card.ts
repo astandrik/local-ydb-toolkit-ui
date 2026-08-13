@@ -46,10 +46,18 @@ export function buildA2aAgentCard() {
         id: "install-guidance",
         name: "Install Guidance",
         description:
-          "Return safe setup instructions for the local stdio MCP server, Codex skill, and GitHub Action.",
-        tags: ["install", "npx", "Codex", "GitHub Actions"],
+          "Return safe setup instructions for the local stdio MCP server, repository Agent Plugin, Codex skill, and GitHub Action.",
+        tags: [
+          "install",
+          "npx",
+          "Codex",
+          "Agent Plugin",
+          "repo marketplace",
+          "GitHub Actions",
+        ],
         examples: [
           "Show the MCP client config for @astandrik/local-ydb-mcp.",
+          "How do I install the full repository Agent Plugin in Codex?",
           "How do I start local YDB in GitHub Actions?",
         ],
         inputModes: ["application/json", "text/plain"],

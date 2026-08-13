@@ -1,5 +1,11 @@
+export type InstallOptionId =
+  | "mcp-npx"
+  | "codex-skill"
+  | "github-action"
+  | "codex-plugin";
+
 export type InstallOption = {
-  id: "mcp-npx" | "codex-skill" | "github-action";
+  id: InstallOptionId;
   label: string;
   audience: string;
   command: string;
@@ -178,6 +184,7 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
 ];
 
 const MCP_REGISTRY_REVIEW_DATE = "2026-08-11";
+const CURRENT_TOOLKIT_VERSION = "0.15.4";
 
 function reviewedRegistryLink(
   link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
@@ -366,7 +373,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "See which package version a third-party static analysis actually inspected.",
     confirmedClaims: ["The page identifies @astandrik/local-ydb-mcp as a local stdio package."],
     limitations: [
-      "The analysis is for version 0.14.1, detects one tool, and exposes no scan date, so its grade is not evidence about the current 0.15.2 artifact.",
+      `The analysis is for version 0.14.1, detects one tool, and exposes no scan date, so its grade is not evidence about the current ${CURRENT_TOOLKIT_VERSION} artifact.`,
     ],
     featured: false,
     includeInSameAs: false,
@@ -586,7 +593,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
       "Initialize, ping, tool-list, schema validation, invalid-argument rejection, malformed-JSON survival, and stdout-purity checks passed.",
     ],
     limitations: [
-      "The snapshot covers version 0.14.1 rather than current version 0.15.2, does not exercise operational tools against a configured local YDB target, and is not a security audit.",
+      `The snapshot covers version 0.14.1 rather than current version ${CURRENT_TOOLKIT_VERSION}, does not exercise operational tools against a configured local YDB target, and is not a security audit.`,
       "Its error-as-result outcome for an unknown tool is measured SDK behavior that the study explicitly does not classify as a failure.",
     ],
     featured: false,
@@ -673,7 +680,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Inspect which source files and tools a third-party scanner analyzed.",
     confirmedClaims: ["The page identifies the canonical repository and shows its per-tool source analysis."],
     limitations: [
-      "The scan is dated 2026-08-02 for version 0.15.0, so its clean result does not establish the security of current version 0.15.2.",
+      `The scan is dated 2026-08-02 for version 0.15.0, so its clean result does not establish the security of current version ${CURRENT_TOOLKIT_VERSION}.`,
     ],
     featured: false,
     includeInSameAs: false,
@@ -692,7 +699,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     confirmedClaims: ["The page links the correct npm package, repository, and npm provenance signal."],
     limitations: [
       "The report covers version 0.14.1, reports stale license and tool-count data, and marks the publisher unverified.",
-      "Its scan cannot establish the security of current version 0.15.2.",
+      `Its scan cannot establish the security of current version ${CURRENT_TOOLKIT_VERSION}.`,
     ],
     featured: false,
     includeInSameAs: false,
@@ -780,7 +787,7 @@ export const LOCAL_YDB_PRODUCT = {
   name: "local-ydb-toolkit",
   title: "local-ydb-toolkit - agent operations for local YDB",
   summary:
-    "Docker-based local-ydb operations for AI agents, with plan-first lifecycle tools, managed SQL, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
+    "Docker-based local-ydb operations for AI agents, with plan-first lifecycle tools, managed SQL, a repository Agent Plugin, a reusable Codex skill, and a GitHub Action for disposable YDB in CI.",
   description:
     "local-ydb-toolkit helps agents inspect, query, bootstrap, diagnose, harden, migrate, and upgrade configured local-ydb deployments without turning operational changes into blind shell scripts.",
   primaryCta: {
@@ -799,9 +806,9 @@ export const LOCAL_YDB_PRODUCT = {
 
 export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
-  version: "0.15.2",
+  version: CURRENT_TOOLKIT_VERSION,
   toolCount: 39,
-  checkedAt: "2026-08-06",
+  checkedAt: "2026-08-13",
 } as const;
 
 export const AGENT_BOUNDARIES = {
@@ -860,7 +867,29 @@ export const INSTALL_OPTIONS: InstallOption[] = [
     description:
       "Bootstrap tenant, root-only, or auth-enabled local-ydb in GitHub Actions and export connection metadata for later steps.",
   },
+  {
+    id: "codex-plugin",
+    label: "Codex Agent Plugin (repo marketplace)",
+    audience:
+      "Codex users who want the local-ydb skill and pinned local stdio MCP server installed together.",
+    command: `codex plugin marketplace add astandrik/local-ydb-toolkit --ref main
+codex plugin add local-ydb-toolkit@local-ydb-toolkit`,
+    configSnippet:
+      "Start a new Codex session after installation. This repository marketplace plugin is separate from the public OpenAI skills-only submission, which has not been published.",
+    description:
+      "Install the skill and pinned local stdio MCP server together. Requires Node.js 20.19+ and npm; use an absolute configPath or LOCAL_YDB_TOOLKIT_CONFIG because MCP starts from the plugin root.",
+  },
 ];
+
+export function getInstallOption(id: InstallOptionId): InstallOption {
+  const option = INSTALL_OPTIONS.find((candidate) => candidate.id === id);
+
+  if (!option) {
+    throw new Error(`Missing install option: ${id}`);
+  }
+
+  return option;
+}
 
 export const WORKFLOWS: Workflow[] = [
   {

@@ -11,23 +11,46 @@ describe("read-only promo MCP tools", () => {
     });
     expect(result.structuredContent.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.2",
+      version: "0.15.4",
       toolCount: 39,
-      checkedAt: "2026-08-06",
+      checkedAt: "2026-08-13",
     });
     expect(result.content[0]?.text).toContain("Docker-based local-ydb");
-    expect(result.content[0]?.text).toContain("0.15.2 with 39 tools");
+    expect(result.content[0]?.text).toContain("0.15.4 with 39 tools");
   });
 
-  it("returns install options for MCP, Codex skill, and GitHub Action", async () => {
+  it("returns all compatible install options including the repository Agent Plugin", async () => {
     const result = await callPromoToolForTest("get_install_options", {});
+    const installOptions = result.structuredContent.installOptions as Array<{
+      id: string;
+      command: string;
+      description: string;
+      configSnippet: string;
+    }>;
 
-    expect(result.structuredContent.installOptions).toHaveLength(3);
+    expect(installOptions.map((option) => option.id)).toEqual([
+      "mcp-npx",
+      "codex-skill",
+      "github-action",
+      "codex-plugin",
+    ]);
     expect(JSON.stringify(result.structuredContent)).toContain(
       "@astandrik/local-ydb-mcp@latest",
     );
     expect(JSON.stringify(result.structuredContent)).toContain(
       "astandrik/setup-local-ydb@v1",
+    );
+    expect(installOptions.at(-1)?.command).toBe(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main\n" +
+        "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(installOptions.at(-1)?.description).toContain("Node.js 20.19+");
+    expect(installOptions.at(-1)?.configSnippet).toContain(
+      "has not been published",
+    );
+    expect(result.content[0]?.text).toContain("repository Agent Plugin");
+    expect(JSON.stringify(result)).not.toContain(
+      "available in the public OpenAI marketplace",
     );
   });
 

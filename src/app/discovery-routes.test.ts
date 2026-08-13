@@ -184,6 +184,28 @@ describe("agent discovery routes", () => {
     vi.unstubAllEnvs();
   });
 
+  it("publishes the repository Agent Plugin as the fourth compatible install option", async () => {
+    const { GET } = await import("@/app/api/install-options/route");
+    const response = GET();
+    const body = (await response.json()) as {
+      installOptions: Array<{ id: string; command: string }>;
+    };
+
+    expect(body.installOptions.map((option) => option.id)).toEqual([
+      "mcp-npx",
+      "codex-skill",
+      "github-action",
+      "codex-plugin",
+    ]);
+    expect(body.installOptions.at(-1)?.command).toBe(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main\n" +
+        "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(JSON.stringify(body)).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
+  });
+
   it("includes local-ydb project links in the product endpoint", async () => {
     const { GET } = await import("@/app/api/product/route");
     const response = GET();
@@ -191,9 +213,9 @@ describe("agent discovery routes", () => {
 
     expect(body.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.2",
+      version: "0.15.4",
       toolCount: 39,
-      checkedAt: "2026-08-06",
+      checkedAt: "2026-08-13",
     });
 
     expect(body.guideLinks).toEqual(

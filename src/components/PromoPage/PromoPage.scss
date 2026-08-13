@@ -286,7 +286,6 @@
 }
 
 .boundary-grid,
-.install-grid,
 .guide-grid,
 .registry-grid,
 .workflow-grid {
@@ -296,6 +295,16 @@
 
   @media (min-width: 760px) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.install-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+
+  @media (min-width: 760px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

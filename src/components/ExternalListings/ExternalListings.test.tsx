@@ -40,7 +40,26 @@ vi.mock("@/components/GravityUI/GravityUI", () => ({
   }) => <Component className={className}>{children}</Component>,
 }));
 
-describe("external listing pages", () => {
+describe("homepage and external listing pages", () => {
+  it("renders four compatible install cards including the repository Agent Plugin", () => {
+    const html = renderToStaticMarkup(<PromoPage />);
+
+    expect(html.match(/class="install-card"/g)).toHaveLength(4);
+    expect(html).toContain("MCP server via npx");
+    expect(html).toContain("Codex skill");
+    expect(html).toContain("GitHub Action");
+    expect(html).toContain("Codex Agent Plugin (repo marketplace)");
+    expect(html).toContain(
+      "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main\n" +
+        "codex plugin add local-ydb-toolkit@local-ydb-toolkit",
+    );
+    expect(html).toContain("Node.js 20.19+");
+    expect(html).toContain("absolute configPath");
+    expect(html).not.toContain(
+      "available in the public OpenAI marketplace",
+    );
+  });
+
   it("renders exactly four useful featured cards and the full-catalog CTA", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 

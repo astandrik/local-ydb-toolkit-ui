@@ -51,7 +51,7 @@ const toolHandlers: Record<PromoToolName, () => PromoMcpToolResult> = {
       {
         installOptions: INSTALL_OPTIONS,
       },
-      "Install options include the local stdio MCP server, Codex skill, and GitHub Action.",
+      "Install options include the primary local stdio MCP server, Codex skill, GitHub Action, and repository Agent Plugin.",
     ),
   list_local_ydb_workflows: () =>
     toolResult(
@@ -117,7 +117,7 @@ export function createPromoMcpServer(): McpServer {
     server,
     "get_install_options",
     "Get install options",
-    "Return install snippets for the local stdio MCP server, Codex skill, and GitHub Action.",
+    "Return install snippets for the local stdio MCP server, Codex skill, GitHub Action, and repository Agent Plugin.",
   );
   registerReadOnlyTool(
     server,

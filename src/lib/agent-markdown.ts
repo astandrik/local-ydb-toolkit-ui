@@ -12,7 +12,12 @@ import {
   TOOLKIT_RELEASE,
   WORKFLOWS,
   getAgentRoutingGuidance,
+  getInstallOption,
 } from "@/lib/product-data";
+
+const MCP_NPX_INSTALL = getInstallOption("mcp-npx");
+const GITHUB_ACTION_INSTALL = getInstallOption("github-action");
+const CODEX_PLUGIN_INSTALL = getInstallOption("codex-plugin");
 
 function formatFeaturedListings(): string {
   const listings = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
@@ -75,7 +80,7 @@ export function buildLlmsText(): string {
 
 ## Product overview
 
-local-ydb-toolkit is for AI agents and developers operating Docker-based local-ydb deployments. It provides a local stdio MCP server, a reusable Codex skill, and a GitHub Action for CI jobs that need disposable YDB.
+local-ydb-toolkit is for AI agents and developers operating Docker-based local-ydb deployments. It provides a local stdio MCP server, a repository Agent Plugin, a reusable Codex skill, and a GitHub Action for CI jobs that need disposable YDB.
 
 Current reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.version}, ${TOOLKIT_RELEASE.toolCount} tools, checked ${TOOLKIT_RELEASE.checkedAt}.
 
@@ -90,7 +95,7 @@ Current reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.
 
 ## Primary install
 
-- MCP server: \`${INSTALL_OPTIONS[0]?.command}\`
+- MCP server: \`${MCP_NPX_INSTALL.command}\`
 - [NPM package](${PUBLIC_LINKS.npm})
 - [GitHub repository](${PUBLIC_LINKS.github})
 - [Project website](${PUBLIC_LINKS.targetSite})
@@ -133,9 +138,14 @@ export function buildLlmsFullText(): string {
     (workflow) =>
       `- ${workflow.title}: ${workflow.description} Tools: ${workflow.tools.join(", ")}.`,
   ).join("\n");
-  const installLines = INSTALL_OPTIONS.map(
-    (option) => `- ${option.label}: ${option.command}`,
-  ).join("\n");
+  const installLines = INSTALL_OPTIONS.map((option) => {
+    const commands = option.command
+      .split("\n")
+      .map((command) => `  - \`${command}\``)
+      .join("\n");
+
+    return `- ${option.label}:\n${commands}`;
+  }).join("\n");
 
   return `
 # ${LOCAL_YDB_PRODUCT.name} full agent context
@@ -168,14 +178,24 @@ ${installLines}
 ### MCP client example
 
 \`\`\`json
-${INSTALL_OPTIONS[0]?.configSnippet}
+${MCP_NPX_INSTALL.configSnippet}
 \`\`\`
 
 ### GitHub Actions example
 
 \`\`\`yaml
-${INSTALL_OPTIONS[2]?.configSnippet}
+${GITHUB_ACTION_INSTALL.configSnippet}
 \`\`\`
+
+### Codex Agent Plugin from the repository marketplace
+
+\`\`\`bash
+${CODEX_PLUGIN_INSTALL.command}
+\`\`\`
+
+${CODEX_PLUGIN_INSTALL.description}
+
+${CODEX_PLUGIN_INSTALL.configSnippet}
 
 ## Agent routing
 
@@ -231,10 +251,22 @@ Use \`local_ydb_sql\` for managed YQL against the selected configured local-ydb 
 ## Quickstart
 
 \`\`\`bash
-${INSTALL_OPTIONS[0]?.command}
+${MCP_NPX_INSTALL.command}
 curl -s ${toPublicUrl("/api/product")}
 curl -s ${toPublicUrl("/llms.txt")}
 \`\`\`
+
+## Repository Agent Plugin
+
+Install the full local plugin from the repository marketplace when Codex should load both the local-ydb skill and the pinned local stdio MCP server:
+
+\`\`\`bash
+${CODEX_PLUGIN_INSTALL.command}
+\`\`\`
+
+${CODEX_PLUGIN_INSTALL.description}
+
+${CODEX_PLUGIN_INSTALL.configSnippet}
 
 ## Read-only promo MCP tools
 
@@ -348,10 +380,10 @@ Pick one of two v1 methods:
 
 ## 3. Register
 
-There is no hosted account registration, OAuth dynamic client registration, PRM metadata chain, or browser authorization flow in v1. To register the local operational server with an MCP client, add a local server entry that runs \`${INSTALL_OPTIONS[0]?.command}\`.
+There is no hosted account registration, OAuth dynamic client registration, PRM metadata chain, or browser authorization flow in v1. To register the local operational server with an MCP client, add a local server entry that runs \`${MCP_NPX_INSTALL.command}\`.
 
 \`\`\`json
-${INSTALL_OPTIONS[0]?.configSnippet}
+${MCP_NPX_INSTALL.configSnippet}
 \`\`\`
 
 ## 4. Claim
@@ -390,7 +422,7 @@ ${LOCAL_YDB_PRODUCT.summary}
 ## Quickstart
 
 \`\`\`bash
-${INSTALL_OPTIONS[0]?.command}
+${MCP_NPX_INSTALL.command}
 curl -s ${toPublicUrl("/api/product")}
 curl -s ${toPublicUrl("/openapi.json")}
 \`\`\`
@@ -462,7 +494,7 @@ Liquibase, Redgate SQL Change Automation, Harness, and Bytebase are strong choic
 
 - Plan-first mutations with \`confirm: true\`.
 - Credentials and private config files stay local.
-- MCP, Codex skill, and GitHub Action paths cover agent, IDE, and CI workflows.
+- MCP, repository Agent Plugin, Codex skill, and GitHub Action paths cover agent, IDE, and CI workflows.
 - Complementary to ydb/ydb-mcp for general database-level work against arbitrary reachable endpoints.
 `;
 }
@@ -657,7 +689,7 @@ Use \`astandrik/setup-local-ydb@v1\` when a GitHub Actions workflow needs a disp
 ## Tenant topology
 
 \`\`\`yaml
-${INSTALL_OPTIONS[2]?.configSnippet}
+${GITHUB_ACTION_INSTALL.configSnippet}
 
 - run: |
     echo "$LOCAL_YDB_ENDPOINT"

@@ -13,7 +13,7 @@ describe("OpenAPI spec", () => {
 
     expect(spec.openapi).toBe("3.1.0");
     expect(spec.info.title).toBe("local-ydb-toolkit API");
-    expect(spec.info.version).toBe("1.1.0");
+    expect(spec.info.version).toBe("1.2.0");
     expect(spec.servers).toEqual([
       { url: "https://local-ydb-toolkit.ydb-qdrant.tech" },
     ]);
