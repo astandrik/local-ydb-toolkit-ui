@@ -15,6 +15,8 @@ const PUBLIC_ALLOW_PATHS = [
   "/auth.md",
   "/compare",
   "/compare.md",
+  "/privacy",
+  "/terms",
   "/guides",
   "/guides/index.md",
   "/guides/local-ydb-mcp-vs-ydb-mcp",

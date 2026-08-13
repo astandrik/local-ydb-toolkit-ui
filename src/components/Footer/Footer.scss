@@ -32,6 +32,14 @@
     &:hover {
       color: var(--fg);
     }
+
+    &--button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
   }
 
   @media (max-width: 720px) {

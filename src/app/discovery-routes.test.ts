@@ -294,6 +294,8 @@ describe("robots and sitemap", () => {
     expect(firstRule?.allow).toContain("/guides/index.md");
     expect(firstRule?.allow).toContain("/listings");
     expect(firstRule?.allow).toContain("/listings.md");
+    expect(firstRule?.allow).toContain("/privacy");
+    expect(firstRule?.allow).toContain("/terms");
     expect(firstRule?.allow).toContain("/mcp");
     expect(firstRule?.allow).toContain("/.well-known/mcp");
     expect(firstRule?.allow).toContain("/.well-known/agent-card.json");
@@ -340,6 +342,8 @@ describe("robots and sitemap", () => {
     expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/mcp");
     expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/index.md");
     expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/compare");
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/privacy");
+    expect(urls).toContain("https://local-ydb-toolkit.ydb-qdrant.tech/terms");
     expect(urls).toContain(
       "https://local-ydb-toolkit.ydb-qdrant.tech/compare.md",
     );
