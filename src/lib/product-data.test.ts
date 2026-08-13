@@ -78,6 +78,23 @@ describe("local-ydb-toolkit product data", () => {
     });
   });
 
+  it("keeps current-version listing copy aligned with the reviewed release", () => {
+    const currentVersionReferences = MCP_REGISTRY_LINKS.flatMap(
+      ({ limitations }) =>
+        limitations.flatMap((limitation) =>
+          Array.from(
+            limitation.matchAll(/\bcurrent(?: version)? (\d+\.\d+\.\d+)\b/g),
+            ([, version]) => version,
+          ),
+        ),
+    );
+
+    expect(currentVersionReferences).toHaveLength(4);
+    expect(new Set(currentVersionReferences)).toEqual(
+      new Set([TOOLKIT_RELEASE.version]),
+    );
+  });
+
   it("keeps install options split by audience and channel", () => {
     expect(INSTALL_OPTIONS.map((option) => option.id)).toEqual([
       "mcp-npx",
