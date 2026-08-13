@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Terminal,
 } from "@gravity-ui/icons";
-import Image from "next/image";
 
 import { AskAIPanel } from "@/components/AskAI/AskAIPanel";
 import {
@@ -146,15 +145,14 @@ export function PromoPage() {
                 </div>
               </div>
             </div>
-            <div className="hero__logo-strip">
-              <Image
-                src={withBasePath("/assets/ydb-icon.svg")}
-                alt="YDB"
-                width={104}
-                height={32}
-                unoptimized
-              />
-              <span>Docker local-ydb target stays on your machine</span>
+            <div className="hero__target-strip">
+              <span className="hero__target-icon" aria-hidden="true">
+                <Database />
+              </span>
+              <span className="hero__target-copy">
+                <strong>Local YDB target</strong>
+                <span>Docker target stays on your machine</span>
+              </span>
             </div>
           </div>
         </Container>

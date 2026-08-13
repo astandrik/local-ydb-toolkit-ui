@@ -41,6 +41,15 @@ vi.mock("@/components/GravityUI/GravityUI", () => ({
 }));
 
 describe("homepage and external listing pages", () => {
+  it("uses a neutral local target badge instead of the official YDB wordmark", () => {
+    const html = renderToStaticMarkup(<PromoPage />);
+
+    expect(html).toContain("Local YDB target");
+    expect(html).toContain("Docker target stays on your machine");
+    expect(html).not.toContain("/assets/ydb-icon.svg");
+    expect(html).not.toContain('alt="YDB"');
+  });
+
   it("renders four compatible install cards including the repository Agent Plugin", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 

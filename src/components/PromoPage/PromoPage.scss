@@ -73,7 +73,7 @@
     gap: 14px;
   }
 
-  &__logo-strip {
+  &__target-strip {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -83,13 +83,32 @@
     background: rgba(255, 255, 255, 0.05);
     color: var(--muted-strong);
     font-size: 14px;
+  }
 
-    img {
-      width: 104px;
-      height: 32px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      background: #ffffff;
+  &__target-icon {
+    display: grid;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--blue);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__target-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+
+    strong {
+      color: var(--fg);
     }
   }
 }
