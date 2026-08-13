@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AnalyticsSettingsButton } from "@/components/AnalyticsConsent/AnalyticsSettingsButton";
 import { Container } from "@/components/GravityUI/GravityUI";
 import { withBasePath } from "@/lib/base-path";
 import { PUBLIC_LINKS } from "@/lib/product-data";
@@ -41,6 +42,13 @@ export function Footer() {
           <Link href={withBasePath("/docs/webhooks")} className="footer__link">
             Webhooks
           </Link>
+          <Link href={withBasePath("/privacy")} className="footer__link">
+            Privacy
+          </Link>
+          <Link href={withBasePath("/terms")} className="footer__link">
+            Terms
+          </Link>
+          <AnalyticsSettingsButton />
         </div>
       </div>
     </Container>

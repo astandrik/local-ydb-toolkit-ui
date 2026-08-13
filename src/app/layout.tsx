@@ -4,10 +4,10 @@ import "@gravity-ui/uikit/styles/fonts.css";
 import "@gravity-ui/uikit/styles/styles.css";
 import "@/styles/globals.scss";
 
+import { AnalyticsConsent } from "@/components/AnalyticsConsent/AnalyticsConsent";
 import { AppHeader } from "@/components/AppHeader/AppHeader";
 import { Footer } from "@/components/Footer/Footer";
 import { Providers } from "@/app/Providers";
-import YandexMetrika from "@/app/YandexMetrika";
 import { getPublicOrigin, toPublicUrl, withBasePath } from "@/lib/base-path";
 import {
   getAgentResourceAlternateTypes,
@@ -92,7 +92,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </Providers>
-        <YandexMetrika />
+        <AnalyticsConsent />
       </body>
     </html>
   );
