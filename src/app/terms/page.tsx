@@ -1,12 +1,14 @@
 import { ContentPage } from "@/components/ContentPage/ContentPage";
 import { withBasePath } from "@/lib/base-path";
 import { PUBLIC_LINKS } from "@/lib/product-data";
+import { getPublicPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = {
+export const metadata = getPublicPageMetadata({
   title: "Terms of Use",
   description:
     "Terms for using the local-ydb-toolkit website, skills-only package, and open-source project.",
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

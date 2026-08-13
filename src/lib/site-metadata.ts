@@ -21,6 +21,46 @@ export const SITE_KEYWORDS = [
   "Docker",
 ];
 
+export function getPublicPageMetadata({
+  title,
+  description,
+  path,
+}: {
+  title: string;
+  description: string;
+  path: string;
+}): Metadata {
+  const socialTitle = `${title} - ${SITE_NAME}`;
+  const url = toPublicUrl(path);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      siteName: SITE_NAME,
+      title: socialTitle,
+      description,
+      url,
+      images: [
+        {
+          url: toPublicUrl("/favicon.svg"),
+          secureUrl: toPublicUrl("/favicon.svg"),
+          alt: "local-ydb-toolkit Y mark",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: socialTitle,
+      description,
+      images: [toPublicUrl("/favicon.svg")],
+    },
+  };
+}
+
 export function getAgentResourceAlternateTypes(): NonNullable<
   NonNullable<Metadata["alternates"]>["types"]
 > {

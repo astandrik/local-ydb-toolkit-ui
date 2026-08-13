@@ -1,12 +1,14 @@
 import { ContentPage } from "@/components/ContentPage/ContentPage";
 import { withBasePath } from "@/lib/base-path";
 import { PUBLIC_LINKS } from "@/lib/product-data";
+import { getPublicPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = {
+export const metadata = getPublicPageMetadata({
   title: "Privacy Policy",
   description:
     "Privacy practices for the local-ydb-toolkit website and public skills-only package.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

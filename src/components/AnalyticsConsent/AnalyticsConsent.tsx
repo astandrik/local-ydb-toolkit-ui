@@ -8,6 +8,7 @@ import { withBasePath } from "@/lib/base-path";
 import {
   ANALYTICS_SETTINGS_EVENT,
   type AnalyticsConsent as AnalyticsConsentValue,
+  hasAnalyticsConsentBeenWithdrawn,
   notifyAnalyticsConsentChanged,
   readAnalyticsConsent,
   subscribeToAnalyticsConsent,
@@ -33,9 +34,16 @@ export function AnalyticsConsent() {
   const [areSettingsOpen, setAreSettingsOpen] = useState(false);
   const [storageError, setStorageError] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusReturnRef = useRef<HTMLElement>(null);
+  const previousStoredConsentRef = useRef<
+    AnalyticsConsentValue | null | undefined
+  >(undefined);
 
   useEffect(() => {
     const openSettings = () => {
+      const activeElement = document.activeElement;
+      focusReturnRef.current =
+        activeElement instanceof HTMLElement ? activeElement : null;
       setStorageError(false);
       setAreSettingsOpen(true);
     };
@@ -48,11 +56,29 @@ export function AnalyticsConsent() {
   useEffect(() => {
     if (areSettingsOpen) {
       headingRef.current?.focus();
+      return;
     }
+
+    focusReturnRef.current?.focus();
+    focusReturnRef.current = null;
   }, [areSettingsOpen]);
 
+  useEffect(() => {
+    const previousStoredConsent = previousStoredConsentRef.current;
+    previousStoredConsentRef.current = storedConsent;
+
+    if (
+      hasAnalyticsConsentBeenWithdrawn(
+        previousStoredConsent,
+        storedConsent,
+      )
+    ) {
+      disableYandexMetrika();
+      window.location.reload();
+    }
+  }, [storedConsent]);
+
   function chooseConsent(nextConsent: AnalyticsConsentValue) {
-    const previousConsent = storageError ? null : storedConsent;
     if (!writeAnalyticsConsent(nextConsent)) {
       disableYandexMetrika();
       setStorageError(true);
@@ -63,11 +89,6 @@ export function AnalyticsConsent() {
     setStorageError(false);
     setAreSettingsOpen(false);
     notifyAnalyticsConsentChanged();
-
-    if (previousConsent === "accepted" && nextConsent === "rejected") {
-      disableYandexMetrika();
-      window.location.reload();
-    }
   }
 
   if (!isHydrated) {

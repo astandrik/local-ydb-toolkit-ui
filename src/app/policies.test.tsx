@@ -2,10 +2,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import PrivacyPage from "@/app/privacy/page";
-import TermsPage from "@/app/terms/page";
+import PrivacyPage, {
+  metadata as privacyMetadata,
+} from "@/app/privacy/page";
+import TermsPage, { metadata as termsMetadata } from "@/app/terms/page";
 import { Footer } from "@/components/Footer/Footer";
-import { withBasePath } from "@/lib/base-path";
+import { toPublicUrl, withBasePath } from "@/lib/base-path";
 
 vi.mock("@/components/GravityUI/GravityUI", () => ({
   Container: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -42,5 +44,26 @@ describe("public policies", () => {
     expect(html).toContain(`href="${withBasePath("/privacy")}"`);
     expect(html).toContain(`href="${withBasePath("/terms")}"`);
     expect(html).toContain("Analytics settings");
+  });
+
+  it.each([
+    [
+      "Privacy Policy",
+      privacyMetadata,
+      toPublicUrl("/privacy"),
+      "Privacy Policy - local-ydb-toolkit",
+    ],
+    [
+      "Terms of Use",
+      termsMetadata,
+      toPublicUrl("/terms"),
+      "Terms of Use - local-ydb-toolkit",
+    ],
+  ])("publishes page-specific metadata for %s", (_, metadata, url, title) => {
+    expect(metadata).toMatchObject({
+      alternates: { canonical: url },
+      openGraph: { title, url },
+      twitter: { title },
+    });
   });
 });

@@ -9,6 +9,13 @@ export type AnalyticsConsent = "accepted" | "rejected";
 
 type AnalyticsConsentStorage = Pick<Storage, "getItem" | "setItem">;
 
+export function hasAnalyticsConsentBeenWithdrawn(
+  previousConsent: AnalyticsConsent | null | undefined,
+  nextConsent: AnalyticsConsent | null,
+): boolean {
+  return previousConsent === "accepted" && nextConsent !== "accepted";
+}
+
 export function readAnalyticsConsent(
   storage: AnalyticsConsentStorage | null = getBrowserStorage(),
 ): AnalyticsConsent | null {
@@ -48,7 +55,7 @@ export function subscribeToAnalyticsConsent(
   }
 
   const handleStorage = (event: StorageEvent) => {
-    if (event.key === ANALYTICS_CONSENT_STORAGE_KEY) {
+    if (event.key === null || event.key === ANALYTICS_CONSENT_STORAGE_KEY) {
       onStoreChange();
     }
   };
