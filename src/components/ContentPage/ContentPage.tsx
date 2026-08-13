@@ -1,7 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-
-import { withBasePath } from "@/lib/base-path";
 
 import "./ContentPage.scss";
 
@@ -35,14 +32,6 @@ export function ContentPage({
           <h1>{title}</h1>
           <p>{lead}</p>
         </div>
-        <Image
-          src={withBasePath("/assets/ydb-icon.svg")}
-          alt="YDB"
-          width={104}
-          height={32}
-          unoptimized
-          className="content-page__logo"
-        />
       </section>
 
       <section className="content-page__body">
