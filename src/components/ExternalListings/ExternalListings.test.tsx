@@ -79,19 +79,19 @@ describe("homepage and external listing pages", () => {
     );
   });
 
-  it("renders exactly four useful featured cards and the full-catalog CTA", () => {
+  it("renders exactly three useful featured cards and the full-catalog CTA", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(4);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(3);
     for (const label of [
       "Official MCP Registry",
       "ModelScope MCP Plaza",
-      "Gilde",
       "mcpindex.ai",
     ]) {
       expect(html).toContain(`>${label}</h3>`);
     }
     expect(html).not.toContain(">Enterprise DNA</h3>");
+    expect(html).not.toContain(">Gilde</h3>");
     expect(html).not.toContain(">MCP Conformance Census</h3>");
     expect(html).toContain("Useful for");
     expect(html).toContain("Confirmed");

@@ -126,7 +126,7 @@ describe("read-only promo MCP tools", () => {
         "not security attestations",
       ),
       mcpListingContext: expect.stringContaining(
-        "Directory inclusion is not an endorsement",
+        "dated external observations",
       ),
       mcpRegistries: expect.arrayContaining([
         expect.objectContaining({
@@ -139,16 +139,16 @@ describe("read-only promo MCP tools", () => {
           includeInSameAs: true,
           confirmedClaims: expect.any(Array),
           limitations: expect.any(Array),
-          lastChecked: "2026-08-11",
+          lastChecked: "2026-08-21",
           note: expect.any(String),
         }),
         expect.objectContaining({
           label: "ModelScope MCP Plaza",
           sourceType: "community",
           accuracy: "partial",
-          lastChecked: "2026-08-11",
+          lastChecked: "2026-08-21",
           limitations: expect.arrayContaining([
-            expect.stringContaining("empty tools list"),
+            expect.stringContaining("Tools section is empty"),
           ]),
         }),
         expect.objectContaining({
@@ -156,7 +156,7 @@ describe("read-only promo MCP tools", () => {
           label: "MCP Conformance Census",
           accuracy: "stale",
           purpose: "independent-analysis",
-          lastChecked: "2026-08-12",
+          lastChecked: "2026-08-21",
           featured: false,
           includeInSameAs: false,
         }),

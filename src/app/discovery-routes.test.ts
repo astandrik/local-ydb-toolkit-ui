@@ -253,12 +253,12 @@ describe("agent discovery routes", () => {
           label: "Enterprise DNA",
           accuracy: "stale",
           purpose: "version-metadata",
-          lastChecked: "2026-08-11",
+          lastChecked: "2026-08-21",
         }),
         expect.objectContaining({
           label: "Timeahead MCPScore",
           sourceType: "automated",
-          accuracy: "misleading",
+          accuracy: "unverified",
           limitations: expect.any(Array),
         }),
         expect.objectContaining({
@@ -266,19 +266,21 @@ describe("agent discovery routes", () => {
           label: "MCP Conformance Census",
           accuracy: "stale",
           purpose: "independent-analysis",
-          lastChecked: "2026-08-12",
+          lastChecked: "2026-08-21",
           featured: false,
           includeInSameAs: false,
         }),
       ]),
     );
     expect(body.mcpRegistryLinks).toHaveLength(26);
-    expect(body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured)).toHaveLength(4);
+    expect(
+      body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured),
+    ).toHaveLength(3);
     expect(body.mcpDirectorySnapshotWarning).toContain(
       "not security attestations",
     );
     expect(body.mcpListingContext).toContain(
-      "Directory inclusion is not an endorsement",
+      "dated external observations",
     );
   });
 });

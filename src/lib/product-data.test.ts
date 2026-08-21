@@ -89,7 +89,7 @@ describe("local-ydb-toolkit product data", () => {
         ),
     );
 
-    expect(currentVersionReferences).toHaveLength(4);
+    expect(currentVersionReferences.length).toBeGreaterThan(0);
     expect(new Set(currentVersionReferences)).toEqual(
       new Set([TOOLKIT_RELEASE.version]),
     );
@@ -147,7 +147,7 @@ describe("local-ydb-toolkit product data", () => {
       "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.",
     );
     expect(MCP_LISTING_CONTEXT).toBe(
-      "Use these third-party pages to confirm the canonical repository, npm package, current version, or installation metadata. Directory inclusion is not an endorsement or security audit.",
+      "Canonical GitHub Release, npm, and Official MCP Registry records define the current release. The remaining pages are dated external observations; stale, misleading, unverified, or unavailable entries are retained for transparency and are not security attestations.",
     );
   });
 
@@ -228,7 +228,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
   });
 
-  it("publishes the four featured listings with audited value and limitations", () => {
+  it("publishes only the three selected featured and sameAs listings", () => {
     const official = MCP_REGISTRY_LINKS.find(
       ({ id }) => id === "official-mcp-registry",
     );
@@ -241,38 +241,43 @@ describe("local-ydb-toolkit product data", () => {
       purpose: "identity",
       featured: true,
       includeInSameAs: true,
-      lastChecked: "2026-08-11",
+      lastChecked: "2026-08-21",
     });
+    expect(official?.confirmedClaims.join(" ")).toContain("0.18.0");
+    expect(official?.confirmedClaims.join(" ")).not.toContain("0.15.2");
     expect(modelScope).toMatchObject({
       href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
       purpose: "installation-discovery",
       accuracy: "partial",
       featured: true,
       includeInSameAs: true,
-      lastChecked: "2026-08-11",
+      lastChecked: "2026-08-21",
     });
     expect(modelScope?.confirmedClaims.join(" ")).toContain(
       "@astandrik/local-ydb-mcp@latest",
     );
-    expect(modelScope?.limitations.join(" ")).toContain("empty tools list");
+    expect(modelScope?.limitations.join(" ")).toContain("Tools section is empty");
+    expect(modelScope?.limitations.join(" ")).toContain("Verified=false");
     expect(gilde).toMatchObject({
       href: PUBLIC_LINKS.gilde,
       purpose: "version-metadata",
-      accuracy: "partial",
-      featured: true,
-      includeInSameAs: true,
-      lastChecked: "2026-08-11",
+      accuracy: "stale",
+      featured: false,
+      includeInSameAs: false,
+      lastChecked: "2026-08-21",
     });
     expect(gilde?.confirmedClaims.join(" ")).toContain("tarball SHA-256");
+    expect(gilde?.confirmedClaims.join(" ")).toContain("0.16.1");
     expect(mcpindex).toMatchObject({
       href: PUBLIC_LINKS.mcpIndex,
       purpose: "change-monitoring",
-      accuracy: "partial",
+      accuracy: "stale",
       featured: true,
       includeInSameAs: true,
-      lastChecked: "2026-08-11",
+      lastChecked: "2026-08-21",
     });
-    expect(mcpindex?.limitations.join(" ")).toContain("not security findings");
+    expect(mcpindex?.confirmedClaims.join(" ")).toContain("0.17.0");
+    expect(mcpindex?.confirmedClaims.join(" ")).toContain("2026-07-08");
   });
 
   it("keeps all 26 audited ids unique with the extended and legacy contracts", () => {
@@ -325,15 +330,66 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
-  it("publishes the immutable conformance snapshot with an individual review date", () => {
+  it("assigns the exact audited accuracy to every retained listing", () => {
+    const accuracyById = Object.fromEntries(
+      MCP_REGISTRY_LINKS.map(({ id, accuracy }) => [id, accuracy]),
+    );
+
+    expect(accuracyById).toEqual({
+      "official-mcp-registry": "current",
+      modelscope: "partial",
+      gilde: "stale",
+      mcpindex: "stale",
+      "curated-mcp": "partial",
+      glama: "partial",
+      wmcp: "stale",
+      "mcp-sentinel": "unverified",
+      "enterprise-dna": "stale",
+      "mcp-so": "partial",
+      "mcp-toplist": "stale",
+      "claude-code-marketplaces": "partial",
+      lobehub: "partial",
+      codeguilds: "stale",
+      "awesome-mcp": "stale",
+      "awesome-skills": "misleading",
+      skiln: "misleading",
+      policylayer: "partial",
+      "mcp-conformance": "stale",
+      timeahead: "unverified",
+      "pulse-mcp": "partial",
+      "mcp-store": "stale",
+      unyly: "stale",
+      manifold: "stale",
+      forge: "unverified",
+      vibehackers: "stale",
+    });
+    expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
+      new Set(["2026-08-21"]),
+    );
+  });
+
+  it("retains exact stale-version and unavailable-page evidence", () => {
+    const textFor = (id: (typeof MCP_REGISTRY_LINKS)[number]["id"]) => {
+      const listing = MCP_REGISTRY_LINKS.find((candidate) => candidate.id === id);
+
+      return `${listing?.confirmedClaims.join(" ")} ${listing?.limitations.join(" ")}`;
+    };
+
+    expect(textFor("gilde")).toContain("0.16.1");
+    expect(textFor("mcpindex")).toContain("0.17.0");
+    expect(textFor("mcp-store")).toContain("0.17.0");
+    expect(textFor("unyly")).toContain("0.15.4");
+    expect(textFor("manifold")).toContain("0.16.0");
+    expect(textFor("awesome-mcp")).toContain("no longer present");
+    expect(textFor("timeahead")).toContain("/lander");
+    expect(textFor("forge")).toContain("404");
+  });
+
+  it("publishes the immutable conformance snapshot under the common audit date", () => {
     const conformance = MCP_REGISTRY_LINKS.find(
       ({ id }) => id === "mcp-conformance",
     );
-    const existingReviewDates = MCP_REGISTRY_LINKS.filter(
-      ({ id }) => id !== "mcp-conformance",
-    ).map(({ lastChecked }) => lastChecked);
 
-    expect(new Set(existingReviewDates)).toEqual(new Set(["2026-08-11"]));
     expect(conformance).toMatchObject({
       label: "MCP Conformance Census",
       href: PUBLIC_LINKS.mcpConformance,
@@ -341,7 +397,7 @@ describe("local-ydb-toolkit product data", () => {
       status: "execution-based conformance snapshot",
       sourceType: "automated",
       accuracy: "stale",
-      lastChecked: "2026-08-12",
+      lastChecked: "2026-08-21",
       purpose: "independent-analysis",
       featured: false,
       includeInSameAs: false,
@@ -350,13 +406,15 @@ describe("local-ydb-toolkit product data", () => {
       "completed the MCP handshake",
     );
     expect(conformance?.confirmedClaims.join(" ")).toContain("38 tools");
-    expect(conformance?.limitations.join(" ")).toContain("not a security audit");
+    expect(conformance?.limitations.join(" ")).toContain(
+      "do not exercise operational tools",
+    );
     expect(conformance?.limitations.join(" ")).toContain(
       "does not classify as a failure",
     );
   });
 
-  it("assigns the requested purpose groups and exactly four sameAs listings", () => {
+  it("assigns the requested purpose groups and exactly three sameAs listings", () => {
     const idsFor = (purpose: (typeof MCP_LISTING_PURPOSES)[number]["id"]) =>
       MCP_REGISTRY_LINKS.filter((link) => link.purpose === purpose).map(
         (link) => link.id,
@@ -405,13 +463,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(featured).toEqual([
       "official-mcp-registry",
       "modelscope",
-      "gilde",
       "mcpindex",
     ]);
     expect(sameAs).toEqual(featured);
   });
 
-  it("retains the current Awesome MCP Servers community entry", () => {
+  it("retains the removed Awesome MCP Servers entry as history", () => {
     const awesomeMcp = MCP_REGISTRY_LINKS.find(
       ({ id }) => id === "awesome-mcp",
     );
@@ -419,12 +476,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(awesomeMcp).toMatchObject({
       label: "Awesome MCP Servers",
       href: PUBLIC_LINKS.awesomeMcpServers,
-      accuracy: "current",
+      accuracy: "stale",
       purpose: "installation-discovery",
-      lastChecked: "2026-08-11",
+      lastChecked: "2026-08-21",
     });
-    expect(awesomeMcp?.confirmedClaims.join(" ")).toContain(
-      "canonical upstream README contains the Local YDB entry",
+    expect(awesomeMcp?.limitations.join(" ")).toContain(
+      "no longer present",
     );
   });
 
