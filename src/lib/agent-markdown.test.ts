@@ -44,7 +44,8 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
-    expect(body).toContain("0.15.4, 39 tools");
+    expect(body).toContain("0.18.0, 39 tools");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Featured external listings");
     expect(body).not.toContain("[Enterprise DNA]");
@@ -98,7 +99,9 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Node.js 20.19+");
     expect(body).toContain("absolute configPath");
     expect(body).toContain("plugin root");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("has not been published");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).not.toContain(
       "available in the public OpenAI marketplace",
     );
@@ -141,6 +144,7 @@ describe("agent-readable markdown", () => {
     expect(body).not.toContain("PolicyLayer");
     expect(body).toContain("Directory inclusion is not an endorsement");
     expect(body).toContain("/listings.md");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
   });
 
   it("publishes every audited listing exactly once in the full markdown catalog", () => {
@@ -215,6 +219,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Read-only promo MCP");
     expect(body).toContain("Actual YDB operations stay in the local stdio MCP server");
     expect(body).toContain("confirm: true");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
   });
 
   it("builds markdown twins for homepage and topical pages", () => {
@@ -261,6 +266,21 @@ describe("agent-readable markdown", () => {
     );
     expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
       "local database deployment automation",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "dynamicNodeCount",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "one-off nodes",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "compatibility preflight",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "progressPercent",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "not byte progress",
     );
     expect(buildLocalYdbCiGuideMarkdown()).toContain(
       "astandrik/setup-local-ydb@v1",

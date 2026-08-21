@@ -17,7 +17,7 @@ import {
   getInstallOption,
 } from "@/lib/product-data";
 
-const TOOLKIT_0_15_4_TOOLS = [
+const TOOLKIT_0_18_0_TOOLS = [
   "local_ydb_inventory",
   "local_ydb_database_status",
   "local_ydb_healthcheck",
@@ -72,9 +72,9 @@ describe("local-ydb-toolkit product data", () => {
   it("publishes the reviewed toolkit release snapshot", () => {
     expect(TOOLKIT_RELEASE).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.4",
+      version: "0.18.0",
       toolCount: 39,
-      checkedAt: "2026-08-13",
+      checkedAt: "2026-08-21",
     });
   });
 
@@ -163,13 +163,31 @@ describe("local-ydb-toolkit product data", () => {
       "backup",
       "upgrade",
     ]);
+
+    const descriptions = Object.fromEntries(
+      WORKFLOWS.map(({ id, description }) => [id, description]),
+    );
+
+    expect(descriptions.bootstrap).toContain("dynamicNodeCount");
+    expect(descriptions.bootstrap).toContain("restore declarative topology");
+    expect(descriptions["dynamic-nodes"]).toContain("one-off nodes");
+    expect(descriptions["dynamic-nodes"]).toContain("configured suffix");
+    expect(descriptions.auth).toContain("compatibility preflight");
+    expect(descriptions.auth).toContain("recreating configured dynamic nodes");
+    expect(descriptions.storage).toContain("exact one-off node ports");
+    expect(descriptions.storage).toContain("incomplete node definitions");
+    expect(descriptions.upgrade).toContain("local_ydb_pull_status.progressPercent");
+    expect(descriptions.upgrade).toContain("0-99 while running");
+    expect(descriptions.upgrade).toContain("100 after success");
+    expect(descriptions.upgrade).toContain("last value after error");
+    expect(descriptions.upgrade).toContain("not byte progress");
   });
 
-  it("covers every local-ydb-toolkit 0.15.4 tool exactly once", () => {
+  it("covers every local-ydb-toolkit 0.18.0 tool exactly once", () => {
     const workflowTools = WORKFLOWS.flatMap((workflow) => workflow.tools);
 
     expect(new Set(workflowTools).size).toBe(workflowTools.length);
-    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_15_4_TOOLS].sort());
+    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_18_0_TOOLS].sort());
   });
 
   it("keeps public links stable for humans and agents", () => {
@@ -178,6 +196,9 @@ describe("local-ydb-toolkit product data", () => {
     );
     expect(PUBLIC_LINKS.npm).toBe(
       "https://www.npmjs.com/package/@astandrik/local-ydb-mcp",
+    );
+    expect(PUBLIC_LINKS.security).toBe(
+      "https://github.com/astandrik/local-ydb-toolkit/security/policy",
     );
     expect(PUBLIC_LINKS.targetSite).toBe(
       "https://local-ydb-toolkit.ydb-qdrant.tech",

@@ -98,6 +98,7 @@ Current reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.
 - MCP server: \`${MCP_NPX_INSTALL.command}\`
 - [NPM package](${PUBLIC_LINKS.npm})
 - [GitHub repository](${PUBLIC_LINKS.github})
+- [Security policy](${PUBLIC_LINKS.security})
 - [Project website](${PUBLIC_LINKS.targetSite})
 
 ## Featured external listings
@@ -162,6 +163,7 @@ Reviewed toolkit snapshot: ${TOOLKIT_RELEASE.package} ${TOOLKIT_RELEASE.version}
 - [API docs](${toPublicUrl("/docs/api")})
 - [Auth guide](${toPublicUrl("/auth.md")})
 - [MCP guide](${toPublicUrl("/mcp.md")})
+- [Security policy](${PUBLIC_LINKS.security})
 - [Comparison guide](${toPublicUrl("/compare")})
 - [Guides index](${toPublicUrl("/guides")})
 - [OpenAPI JSON](${toPublicUrl("/openapi.json")})
@@ -282,6 +284,7 @@ The remote promo MCP is read-only and only returns product/documentation help. A
 
 - Start with [llms.txt](${toPublicUrl("/llms.txt")}) or [llms-full.txt](${toPublicUrl("/llms-full.txt")}) when evaluating the product.
 - Fetch [OpenAPI JSON](${toPublicUrl("/openapi.json")}) before calling public HTTP endpoints.
+- Read the [Security policy](${PUBLIC_LINKS.security}) before granting operational MCP permissions.
 - Treat the hosted [promo MCP](${toPublicUrl("/mcp")}) as discovery-only.
 - For actual operations, configure the local stdio MCP server with \`LOCAL_YDB_TOOLKIT_CONFIG\`.
 - Never send local YDB passwords, SSH keys, private config paths, or password files to the hosted promo site.
@@ -322,6 +325,7 @@ Developer resources for local-ydb-toolkit are intentionally public and predictab
 
 - [GitHub](${PUBLIC_LINKS.github})
 - [NPM](${PUBLIC_LINKS.npm})
+- [Security policy](${PUBLIC_LINKS.security})
 - [GitHub Action](${PUBLIC_LINKS.githubAction})
 - [Project website](${PUBLIC_LINKS.targetSite})
 
@@ -342,6 +346,8 @@ The hosted /mcp endpoint is a read-only promo MCP. It helps agents discover what
 ## Local operational MCP
 
 Actual YDB operations stay in the local stdio MCP server installed with @astandrik/local-ydb-mcp. Mutating tools remain plan-first and require confirm: true before execution.
+
+Read the [Security policy](${PUBLIC_LINKS.security}) before granting the local server operational permissions.
 
 ## Tools on hosted /mcp
 
@@ -437,6 +443,7 @@ local-ydb-toolkit is focused on local database deployment automation for Docker-
 - [API docs](${toPublicUrl("/docs/api")})
 - [Auth guide](${toPublicUrl("/auth.md")})
 - [MCP guide](${toPublicUrl("/mcp.md")})
+- [Security policy](${PUBLIC_LINKS.security})
 - [Comparison guide](${toPublicUrl("/compare")})
 - [Guides index](${toPublicUrl("/guides")})
 - [CI guide](${toPublicUrl("/guides/local-ydb-ci")})
@@ -668,15 +675,19 @@ local database deployment automation for YDB is different from generic schema mi
 
 1. Run \`local_ydb_check_prerequisites\` to verify Docker and host helpers.
 2. Run \`local_ydb_status_report\` and \`local_ydb_healthcheck\` to capture state.
-3. Bootstrap either a root /local database or a tenant topology depending on the task.
-4. Generate and validate schema DDL before applying it.
-5. Execute mutating steps only after the user approves \`confirm: true\`.
+3. Bootstrap either a root /local database or a tenant topology; tenant bootstrap creates every configured node from \`dynamicNodeCount\`, and restart or bootstrap restores missing configured suffixes.
+4. Use add/remove only for one-off nodes above the configured count. Explicitly removing a configured suffix creates declarative drift that restart or bootstrap repairs.
+5. Generate and validate schema DDL before applying it.
+6. Execute mutating steps only after the user approves \`confirm: true\`.
 
 ## Agent guardrails
 
 - Do not invent profile names, hosts, tenant paths, password files, or backup locations.
 - Keep private paths and credentials inside the user's local MCP process or CI runner.
 - Prefer read-only diagnostics before any bootstrap, auth, storage, or upgrade step.
+- Auth hardening runs a compatibility preflight and recreates configured dynamic nodes.
+- Storage reduction and upgrades preserve exact one-off node ports and stop if any required node definition is incomplete.
+- \`local_ydb_pull_status.progressPercent\` is monotonic layer-based progress: 0-99 while running, 100 after success, and the last value after an error. It is not byte progress.
 `;
 }
 

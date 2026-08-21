@@ -120,6 +120,7 @@ export type GuideLink = {
 export const PUBLIC_LINKS = {
   targetSite: "https://local-ydb-toolkit.ydb-qdrant.tech",
   github: "https://github.com/astandrik/local-ydb-toolkit",
+  security: "https://github.com/astandrik/local-ydb-toolkit/security/policy",
   npm: "https://www.npmjs.com/package/@astandrik/local-ydb-mcp",
   githubAction:
     "https://github.com/marketplace/actions/setup-local-ydb",
@@ -184,7 +185,7 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
 ];
 
 const MCP_REGISTRY_REVIEW_DATE = "2026-08-11";
-const CURRENT_TOOLKIT_VERSION = "0.15.4";
+const CURRENT_TOOLKIT_VERSION = "0.18.0";
 
 function reviewedRegistryLink(
   link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
@@ -808,7 +809,7 @@ export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
   version: CURRENT_TOOLKIT_VERSION,
   toolCount: 39,
-  checkedAt: "2026-08-13",
+  checkedAt: "2026-08-21",
 } as const;
 
 export const AGENT_BOUNDARIES = {
@@ -927,7 +928,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "auth",
     title: "Auth hardening",
     description:
-      "Inspect permissions, verify auth posture, prepare and apply native auth, and rotate the root password through reviewed plans.",
+      "Inspect permissions, verify auth posture, run a compatibility preflight, apply native auth by recreating configured dynamic nodes, and rotate the root password through reviewed plans.",
     tools: [
       "local_ydb_permissions",
       "local_ydb_auth_check",
@@ -941,7 +942,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "bootstrap",
     title: "Bootstrap and lifecycle",
     description:
-      "Check prerequisites, create root or tenant topologies, start dynamic nodes, and use reviewed restart or teardown plans.",
+      "Check prerequisites, create root or tenant topologies, bootstrap every configured node from dynamicNodeCount, and use restart or bootstrap to restore declarative topology before reviewed teardown.",
     tools: [
       "local_ydb_check_prerequisites",
       "local_ydb_bootstrap_root_database",
@@ -956,7 +957,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "dynamic-nodes",
     title: "Dynamic nodes",
     description:
-      "Add or remove tenant dynamic nodes one at a time with registration or disappearance verification.",
+      "Add or remove one-off nodes above the configured dynamicNodeCount; explicitly removing a configured suffix creates drift that restart or bootstrap restores.",
     tools: [
       "local_ydb_add_dynamic_nodes",
       "local_ydb_remove_dynamic_nodes",
@@ -966,7 +967,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "storage",
     title: "Storage",
     description:
-      "Inspect storage placement and leftovers, add or reduce groups, and clean exact reviewed targets only after verification.",
+      "Inspect storage placement and leftovers, add or reduce groups while preserving exact one-off node ports, stop on incomplete node definitions, and clean exact reviewed targets only after verification.",
     tools: [
       "local_ydb_storage_placement",
       "local_ydb_storage_leftovers",
@@ -990,7 +991,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "upgrade",
     title: "Version upgrades",
     description:
-      "Discover image tags, pull images in the background, and upgrade by dump, rebuild, restore, auth reapply, and verification.",
+      "Discover image tags, track local_ydb_pull_status.progressPercent as monotonic layer-based progress (0-99 while running, 100 after success, last value after error; not byte progress), and upgrade while preserving exact one-off ports and stopping on incomplete node definitions.",
     tools: [
       "local_ydb_list_versions",
       "local_ydb_pull_image",

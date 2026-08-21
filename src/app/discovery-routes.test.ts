@@ -213,10 +213,13 @@ describe("agent discovery routes", () => {
 
     expect(body.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.4",
+      version: "0.18.0",
       toolCount: 39,
-      checkedAt: "2026-08-13",
+      checkedAt: "2026-08-21",
     });
+    expect(body.links.security).toBe(
+      "https://github.com/astandrik/local-ydb-toolkit/security/policy",
+    );
 
     expect(body.guideLinks).toEqual(
       expect.arrayContaining([
