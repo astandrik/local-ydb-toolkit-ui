@@ -44,10 +44,20 @@ describe("homepage and external listing pages", () => {
   it("uses a neutral local target badge instead of the official YDB wordmark", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 
+    expect(html).toContain("0.18.0 · 39 tools");
     expect(html).toContain("Local YDB target");
     expect(html).toContain("Docker target stays on your machine");
     expect(html).not.toContain("/assets/ydb-icon.svg");
     expect(html).not.toContain('alt="YDB"');
+  });
+
+  it("renders declarative topology and pull-progress workflow copy", () => {
+    const html = renderToStaticMarkup(<PromoPage />);
+
+    expect(html).toContain("dynamicNodeCount");
+    expect(html).toContain("one-off nodes");
+    expect(html).toContain("0-99 while running");
+    expect(html).toContain("not byte progress");
   });
 
   it("renders four compatible install cards including the repository Agent Plugin", () => {
@@ -69,19 +79,19 @@ describe("homepage and external listing pages", () => {
     );
   });
 
-  it("renders exactly four useful featured cards and the full-catalog CTA", () => {
+  it("renders exactly three useful featured cards and the full-catalog CTA", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(4);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(3);
     for (const label of [
       "Official MCP Registry",
       "ModelScope MCP Plaza",
-      "Gilde",
       "mcpindex.ai",
     ]) {
       expect(html).toContain(`>${label}</h3>`);
     }
     expect(html).not.toContain(">Enterprise DNA</h3>");
+    expect(html).not.toContain(">Gilde</h3>");
     expect(html).not.toContain(">MCP Conformance Census</h3>");
     expect(html).toContain("Useful for");
     expect(html).toContain("Confirmed");

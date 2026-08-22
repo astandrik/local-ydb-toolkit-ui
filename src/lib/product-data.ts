@@ -120,6 +120,7 @@ export type GuideLink = {
 export const PUBLIC_LINKS = {
   targetSite: "https://local-ydb-toolkit.ydb-qdrant.tech",
   github: "https://github.com/astandrik/local-ydb-toolkit",
+  security: "https://github.com/astandrik/local-ydb-toolkit/security/policy",
   npm: "https://www.npmjs.com/package/@astandrik/local-ydb-mcp",
   githubAction:
     "https://github.com/marketplace/actions/setup-local-ydb",
@@ -183,8 +184,8 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
   },
 ];
 
-const MCP_REGISTRY_REVIEW_DATE = "2026-08-11";
-const CURRENT_TOOLKIT_VERSION = "0.15.4";
+const MCP_REGISTRY_REVIEW_DATE = "2026-08-21";
+const CURRENT_TOOLKIT_VERSION = "0.18.0";
 
 function reviewedRegistryLink(
   link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
@@ -202,7 +203,7 @@ export const MCP_DIRECTORY_SNAPSHOT_WARNING =
   "Third-party directory scores, tool counts, and install metrics are external snapshots, often automated, not security attestations.";
 
 export const MCP_LISTING_CONTEXT =
-  "Use these third-party pages to confirm the canonical repository, npm package, current version, or installation metadata. Directory inclusion is not an endorsement or security audit.";
+  "Canonical GitHub Release, npm, and Official MCP Registry records define the current release. The remaining pages are dated external observations; stale, misleading, unverified, or unavailable entries are retained for transparency and are not security attestations.";
 
 export const MCP_LISTING_PURPOSES: ReadonlyArray<{
   id: McpListingPurpose;
@@ -242,18 +243,18 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Official MCP Registry",
     href: PUBLIC_LINKS.officialMcpRegistry,
     category: "registry",
-    status: "published identity metadata",
-    description: "Canonical Registry record for the published MCP server identity.",
+    status: "current canonical release metadata",
+    description: "Canonical Registry record for the current published MCP server identity.",
     sourceType: "official",
     accuracy: "current",
     purpose: "identity",
     userValue: "Confirm the server ID, npm package, and canonical repository before installing.",
     confirmedClaims: [
       "The published server ID is io.github.astandrik/local-ydb-mcp.",
-      "Version 0.15.2 points to @astandrik/local-ydb-mcp and the canonical GitHub repository.",
+      "Version 0.18.0 points to @astandrik/local-ydb-mcp and the canonical GitHub repository.",
     ],
     limitations: [
-      "Registry publication confirms identity metadata, not runtime behavior or security.",
+      "Registry publication confirms identity metadata; it does not verify runtime behavior or security.",
     ],
     featured: true,
     includeInSameAs: true,
@@ -271,11 +272,10 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Find the marketplace installation entry and its npx stdio configuration.",
     confirmedClaims: [
       "The marketplace entry links the canonical repository and exposes an npx stdio configuration for @astandrik/local-ydb-mcp@latest.",
-      "LOCAL_YDB_TOOLKIT_CONFIG is represented as optional installation metadata.",
     ],
     limitations: [
-      "The current marketplace snapshot exposes an empty tools list.",
-      "Marketplace inclusion is not a security assessment.",
+      "The Tools section is empty, the release version is absent, and LOCAL_YDB_MCP_CONTENT_FORMAT is missing from the environment configuration.",
+      "The page reports Verified=false and provides no independent runtime or security validation.",
     ],
     featured: true,
     includeInSameAs: true,
@@ -285,41 +285,41 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Gilde",
     href: PUBLIC_LINKS.gilde,
     category: "directory",
-    status: "versioned catalog record",
-    description: "Versioned community manifest imported from the Official MCP Registry.",
+    status: "stale versioned catalog record",
+    description: "Versioned community manifest imported from an older Official MCP Registry release.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "version-metadata",
     userValue: "Inspect a versioned manifest with package integrity and runtime metadata.",
     confirmedClaims: [
-      "The manifest matches version 0.15.2, the canonical repository, npm package, entrypoint, and environment fields.",
-      "Its tarball SHA-256 matches the npm 0.15.2 artifact.",
+      "The newest retained artifact is version 0.16.1 for the canonical repository and npm package.",
+      "Its tarball SHA-256 matches the npm 0.16.1 artifact.",
     ],
     limitations: [
       "The version manifest exposes an empty tools array.",
-      "Gilde has no stable rendered deep link for this record and provides no independent audit.",
+      "Versions 0.17.0 and 0.18.0 are absent, and the page provides no independent runtime or security audit.",
     ],
-    featured: true,
-    includeInSameAs: true,
+    featured: false,
+    includeInSameAs: false,
   }),
   reviewedRegistryLink({
     id: "mcpindex",
     label: "mcpindex.ai",
     href: PUBLIC_LINKS.mcpIndex,
     category: "directory",
-    status: "registry and drift snapshot",
-    description: "Registry metadata and description-drift observation for Local YDB MCP.",
+    status: "stale registry and drift snapshot",
+    description: "Older Registry metadata and description-drift observation for Local YDB MCP.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "change-monitoring",
     userValue: "Check install metadata and whether the public description changed between crawls.",
     confirmedClaims: [
-      "Version 0.15.2, repository, website, npx command, and environment fields match primary sources.",
-      "The page records a description-level drift snapshot.",
+      "The page shows version 0.17.0 and both LOCAL_YDB_TOOLKIT_CONFIG and LOCAL_YDB_MCP_CONTENT_FORMAT.",
+      "Its semantic screen is dated 2026-07-08.",
     ],
     limitations: [
-      "Its quality score measures listing maturity, not trust.",
-      "PARTIAL and no-drift refer only to the observed description and are not security findings.",
+      "The semantic screen does not cover version 0.18.0 or validate runtime behavior.",
+      "Quality and drift labels describe directory observations, not security findings.",
     ],
     featured: true,
     includeInSameAs: true,
@@ -335,9 +335,11 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "installation-discovery",
     userValue: "Copy a basic npx command and open the canonical repository.",
-    confirmedClaims: ["The page identifies the maintainer, repository, and current npm package command."],
+    confirmedClaims: [
+      "The page exposes the canonical repository and a correct npx command for @astandrik/local-ydb-mcp.",
+    ],
     limitations: [
-      "The page's Verified label and security-review link do not expose a current artifact, scan date, and methodology together.",
+      "Verified and Read/write are catalog classifications without an artifact version, scan date, or runtime methodology.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -353,9 +355,11 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "independent-analysis",
     userValue: "Review a categorized overview of what the server can operate.",
-    confirmedClaims: ["The page links the canonical project and reflects the current broad capability areas."],
+    confirmedClaims: [
+      "The page reflects the 39-tool capability surface and links the canonical Security policy.",
+    ],
     limitations: [
-      "Most content is derived from project documentation; directory scores are not runtime or security verification.",
+      "This is a README-derived mirror without independent runtime or release-version evidence.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -371,9 +375,11 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "stale",
     purpose: "version-metadata",
     userValue: "See which package version a third-party static analysis actually inspected.",
-    confirmedClaims: ["The page identifies @astandrik/local-ydb-mcp as a local stdio package."],
+    confirmedClaims: [
+      "The page analyzes @astandrik/local-ydb-mcp version 0.14.1 and detects one tool.",
+    ],
     limitations: [
-      `The analysis is for version 0.14.1, detects one tool, and exposes no scan date, so its grade is not evidence about the current ${CURRENT_TOOLKIT_VERSION} artifact.`,
+      `Its grade and download count do not describe the current ${CURRENT_TOOLKIT_VERSION} artifact.`,
     ],
     featured: false,
     includeInSameAs: false,
@@ -389,10 +395,12 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "unverified",
     purpose: "independent-analysis",
     userValue: "Inspect which security rule families the service attempts to evaluate.",
-    confirmedClaims: ["The page exposes rule names, test methodology, and evidence placeholders."],
+    confirmedClaims: [
+      "The visible page exposes named rule families, with most rules marked Not assessed.",
+    ],
     limitations: [
-      "The report is explicitly not attested and does not reliably identify a current artifact version and scan date.",
-      "Displayed passed rules must not be read as a current package security verdict.",
+      "No attestation is present, and the attestation API returns 404.",
+      "The visible rule placeholders do not establish a current package security verdict.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -426,9 +434,12 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "installation-discovery",
     userValue: "Copy an npx client configuration and browse the current tool surface.",
-    confirmedClaims: ["The page links canonical sources, uses the current package, and lists 39 tools."],
+    confirmedClaims: [
+      "The page links the canonical repository, uses @astandrik/local-ydb-mcp@latest, and shows modern tool descriptions.",
+    ],
     limitations: [
-      "Its example includes only one of the two optional environment variables and is not an independent runtime or security check.",
+      "Its headline says 38 tools instead of 39, and the client configuration is incomplete.",
+      "The page is not an independent runtime or security check.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -438,15 +449,17 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "MCP Toplist",
     href: PUBLIC_LINKS.mcpToplist,
     category: "directory",
-    status: "version history snapshot",
+    status: "stale version history snapshot",
     description: "Tracked release history and install metadata for the official server ID.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "version-metadata",
-    userValue: "Review the indexed release sequence through version 0.15.2.",
-    confirmedClaims: ["The page links the canonical repository and records versions 0.8.0 through 0.15.2."],
+    userValue: "Review the older indexed release sequence for the official server ID.",
+    confirmedClaims: [
+      "The page links the canonical repository and records 11 versions through 0.16.1.",
+    ],
     limitations: [
-      "Registry totals on the page are internally inconsistent, and ranks and counts are volatile directory metrics.",
+      "Version 0.18.0 is absent; rankings, stars, and counts are volatile directory snapshots.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -462,9 +475,12 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "installation-discovery",
     userValue: "Discover the server from a Claude-oriented marketplace and follow its repository link.",
-    confirmedClaims: ["The page uses the official registry identity and canonical repository."],
+    confirmedClaims: [
+      "The mirror uses the official Registry identity, canonical repository, and package pin 0.18.0.",
+    ],
     limitations: [
       "The generated summary does not independently validate package contents, tools, or runtime behavior.",
+      "Its relative Security link resolves against the marketplace domain instead of the canonical repository.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -480,9 +496,11 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "installation-discovery",
     userValue: "Find repository-based install instructions for Codex and other MCP clients.",
-    confirmedClaims: ["The page links the canonical repository and reproduces current project install guidance."],
+    confirmedClaims: [
+      "The page links the canonical repository, uses @astandrik/local-ydb-mcp@latest, and reflects broad current capabilities.",
+    ],
     limitations: [
-      "The page is largely a README mirror; displayed versions, scores, and counts are not authoritative package or security evidence.",
+      "The displayed 1.0.0 is not an MCP release version, and the content is README-derived without independent runtime evidence.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -492,15 +510,15 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "CodeGuilds",
     href: PUBLIC_LINKS.codeGuilds,
     category: "directory",
-    status: "package snapshot",
+    status: "stale package snapshot",
     description: "Developer directory page that mirrors the project README.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "version-metadata",
     userValue: "Compare the directory's package snapshot with the canonical project.",
-    confirmedClaims: ["The page identifies the canonical repository and current project scope."],
+    confirmedClaims: ["The page identifies the canonical repository and project scope."],
     limitations: [
-      "Its versions section reports zero, and ratings or download metrics describe the directory channel rather than npm usage.",
+      "Its Versions section reports 0 and the page lists 38 tools, so it does not reflect the current release contract.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -510,14 +528,18 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Awesome MCP Servers",
     href: PUBLIC_LINKS.awesomeMcpServers,
     category: "directory",
-    status: "community list entry",
-    description: "Community-maintained Databases category entry linking the canonical repository.",
+    status: "removed community list entry",
+    description: "Historical discovery link to the community-maintained Databases category.",
     sourceType: "community",
-    accuracy: "current",
+    accuracy: "stale",
     purpose: "installation-discovery",
-    userValue: "Discover Local YDB MCP alongside other database-oriented MCP servers.",
-    confirmedClaims: ["The canonical upstream README contains the Local YDB entry in its Databases section."],
-    limitations: ["List inclusion is a community discovery signal, not runtime or security verification."],
+    userValue: "Retain the former discovery location as transparent history of the removed entry.",
+    confirmedClaims: [
+      "The upstream repository and its Databases section remain available.",
+    ],
+    limitations: [
+      "The Local YDB entry is no longer present; this link is retained only as removal history, not current discovery or validation.",
+    ],
     featured: false,
     includeInSameAs: false,
   }),
@@ -526,7 +548,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Awesome Skills",
     href: PUBLIC_LINKS.awesomeSkills,
     category: "directory",
-    status: "minimal skill profile",
+    status: "misclassified skill profile",
     description: "Agent-skill discovery page with a short project description.",
     sourceType: "automated",
     accuracy: "misleading",
@@ -534,7 +556,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Open a lightweight directory page for the companion local-ydb skill.",
     confirmedClaims: ["The page identifies local-ydb-toolkit and its Docker-based local-ydb purpose."],
     limitations: [
-      "It provides no practical install or configuration metadata and incorrectly groups the skill under Writing & Editing.",
+      "The main text describes an unrelated writing-style skill and leaves the entry in the wrong category.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -550,9 +572,12 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "misleading",
     purpose: "version-metadata",
     userValue: "Confirm that Skiln indexed the official server identity and source repository.",
-    confirmedClaims: ["The page names the exact server ID, repository, and Official Registry as its source."],
+    confirmedClaims: [
+      "The mirror names the exact server ID, repository, Official Registry source, and version 0.18.0.",
+    ],
     limitations: [
-      "Its install command is a repository clone rather than the canonical npm stdio configuration, and a community Works vote is not security verification.",
+      "Its install path proposes a repository clone and skills command rather than the canonical npm stdio configuration.",
+      "The 100% working claim is based on one community vote and is not runtime or security validation.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -568,10 +593,12 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "partial",
     purpose: "independent-analysis",
     userValue: "Review which tools can read, write, execute, or delete before setting agent policy.",
-    confirmedClaims: ["The page identifies the npm package and enumerates the current 39-tool surface."],
+    confirmedClaims: [
+      "The page enumerates 39 tools classified as 4 destructive, 9 execute, 8 write, and 18 read.",
+    ],
     limitations: [
-      "The record is explicitly unverified and no remote endpoint was probed.",
-      "Its risk grade describes potential authority and blast radius, not a discovered vulnerability, and does not capture every plan-first confirmation guard.",
+      "The record is explicitly Unverified and no remote endpoint was probed.",
+      "Grade F describes potential authority and blast radius; it does not prove a vulnerability and does not capture every plan-first confirmation guard.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -585,7 +612,6 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     description: "Sandboxed execution probe of the published npm MCP server.",
     sourceType: "automated",
     accuracy: "stale",
-    lastChecked: "2026-08-12",
     purpose: "independent-analysis",
     userValue: "Inspect an independently executed MCP handshake and protocol checks.",
     confirmedClaims: [
@@ -593,7 +619,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
       "Initialize, ping, tool-list, schema validation, invalid-argument rejection, malformed-JSON survival, and stdout-purity checks passed.",
     ],
     limitations: [
-      `The snapshot covers version 0.14.1 rather than current version ${CURRENT_TOOLKIT_VERSION}, does not exercise operational tools against a configured local YDB target, and is not a security audit.`,
+      `The immutable snapshot covers version 0.14.1 rather than current version ${CURRENT_TOOLKIT_VERSION}; its protocol checks do not exercise operational tools against a configured local YDB target.`,
       "Its error-as-result outcome for an unknown tool is measured SDK behavior that the study explicitly does not classify as a failure.",
     ],
     featured: false,
@@ -604,15 +630,15 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Timeahead MCPScore",
     href: PUBLIC_LINKS.timeaheadMcpScore,
     category: "directory",
-    status: "conflicting metadata snapshot",
-    description: "Repository activity and package-discovery snapshot.",
+    status: "unavailable listing",
+    description: "Former repository activity and package-discovery snapshot.",
     sourceType: "automated",
-    accuracy: "misleading",
+    accuracy: "unverified",
     purpose: "version-metadata",
-    userValue: "See where automated ecosystem metadata conflicts with primary package sources.",
-    confirmedClaims: ["The page links the canonical repository and recognizes the Local YDB MCP project."],
+    userValue: "Retain the former listing URL and its current availability state for transparency.",
+    confirmedClaims: ["The listing URL currently redirects to an empty /lander page."],
     limitations: [
-      "It incorrectly reports that no npm package exists; its score, downloads, CI state, stars, and timestamps are volatile or conflict with primary sources.",
+      "Earlier score and package claims cannot be confirmed from the currently available page.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -629,7 +655,9 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     purpose: "version-metadata",
     userValue: "Open the indexed server.json identity and canonical repository from one page.",
     confirmedClaims: ["The page shows the exact server ID, maintainer, repository, and a server.json view."],
-    limitations: ["Traffic, popularity, download, and star figures are estimates or volatile snapshots."],
+    limitations: [
+      "The release version is not shown; traffic, popularity, download, and star figures are estimates or volatile snapshots.",
+    ],
     featured: false,
     includeInSameAs: false,
   }),
@@ -638,15 +666,17 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "MCP Store",
     href: PUBLIC_LINKS.mcpStore,
     category: "directory",
-    status: "README mirror",
+    status: "stale README mirror",
     description: "Repository discovery page with mirrored project documentation.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "installation-discovery",
     userValue: "Find the canonical repository and read its install documentation in the directory.",
-    confirmedClaims: ["The page identifies the correct repository and project description."],
+    confirmedClaims: [
+      "The page identifies the correct repository and mirrors project documentation with a plugin pin at 0.17.0.",
+    ],
     limitations: [
-      "The content is primarily a README mirror, provides no independent validation, and mixes in directory hosting or authentication prompts.",
+      "The 0.17.0 pin is stale for release 0.18.0, and the page provides no independent validation.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -659,11 +689,15 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     status: "unchecked README profile",
     description: "Client-oriented directory page with mirrored installation documentation.",
     sourceType: "automated",
-    accuracy: "partial",
+    accuracy: "stale",
     purpose: "installation-discovery",
     userValue: "Review the repository's MCP and Codex installation paths from a client directory.",
-    confirmedClaims: ["The page links the canonical repository and reproduces the current 39-tool README."],
-    limitations: ["The directory explicitly labels the entry Not checked; it does not validate runtime behavior or security."],
+    confirmedClaims: [
+      "The page links the canonical repository and mirrors the 39-tool README surface.",
+    ],
+    limitations: [
+      "Its plugin pin remains at 0.15.4 and the directory labels the entry Not checked.",
+    ],
     featured: false,
     includeInSameAs: false,
   }),
@@ -678,9 +712,11 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     accuracy: "stale",
     purpose: "independent-analysis",
     userValue: "Inspect which source files and tools a third-party scanner analyzed.",
-    confirmedClaims: ["The page identifies the canonical repository and shows its per-tool source analysis."],
+    confirmedClaims: [
+      "The scan covers version 0.16.0, is dated 2026-08-16, and enumerates 39 tools.",
+    ],
     limitations: [
-      `The scan is dated 2026-08-02 for version 0.15.0, so its clean result does not establish the security of current version ${CURRENT_TOOLKIT_VERSION}.`,
+      `High Risk and other scanner flags are policy signals, not confirmed vulnerabilities in current version ${CURRENT_TOOLKIT_VERSION}.`,
     ],
     featured: false,
     includeInSameAs: false,
@@ -690,16 +726,15 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Forge Registry",
     href: PUBLIC_LINKS.forge,
     category: "trust",
-    status: "stale supply-chain profile",
-    description: "Supply-chain metadata and static checks for an older npm artifact.",
+    status: "unavailable listing",
+    description: "Former supply-chain metadata and static-check profile.",
     sourceType: "automated",
-    accuracy: "stale",
+    accuracy: "unverified",
     purpose: "independent-analysis",
-    userValue: "Review which package provenance and static-analysis checks Forge exposes.",
-    confirmedClaims: ["The page links the correct npm package, repository, and npm provenance signal."],
+    userValue: "Retain the former listing URL and its current availability state for transparency.",
+    confirmedClaims: ["The listing URL currently returns 404."],
     limitations: [
-      "The report covers version 0.14.1, reports stale license and tool-count data, and marks the publisher unverified.",
-      `Its scan cannot establish the security of current version ${CURRENT_TOOLKIT_VERSION}.`,
+      "Earlier supply-chain claims can no longer be confirmed from the unavailable page.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -717,7 +752,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Use its client-specific npx examples as a starting point, then compare them with primary metadata.",
     confirmedClaims: ["The page identifies the correct package, repository, stdio transport, and Node.js prerequisite."],
     limitations: [
-      "It remains on version 0.14.0, lists only five tools, and incorrectly marks an optional environment variable as required.",
+      "It remains on version 0.14.0, lists only five tools, and incorrectly marks both environment variables as required.",
     ],
     featured: false,
     includeInSameAs: false,
@@ -808,7 +843,7 @@ export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
   version: CURRENT_TOOLKIT_VERSION,
   toolCount: 39,
-  checkedAt: "2026-08-13",
+  checkedAt: "2026-08-21",
 } as const;
 
 export const AGENT_BOUNDARIES = {
@@ -927,7 +962,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "auth",
     title: "Auth hardening",
     description:
-      "Inspect permissions, verify auth posture, prepare and apply native auth, and rotate the root password through reviewed plans.",
+      "Inspect permissions, verify auth posture, run a compatibility preflight, apply native auth by recreating configured dynamic nodes, and rotate the root password through reviewed plans.",
     tools: [
       "local_ydb_permissions",
       "local_ydb_auth_check",
@@ -941,7 +976,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "bootstrap",
     title: "Bootstrap and lifecycle",
     description:
-      "Check prerequisites, create root or tenant topologies, start dynamic nodes, and use reviewed restart or teardown plans.",
+      "Check prerequisites, create root or tenant topologies, bootstrap every configured node from dynamicNodeCount, and use restart or bootstrap to restore declarative topology before reviewed teardown.",
     tools: [
       "local_ydb_check_prerequisites",
       "local_ydb_bootstrap_root_database",
@@ -956,7 +991,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "dynamic-nodes",
     title: "Dynamic nodes",
     description:
-      "Add or remove tenant dynamic nodes one at a time with registration or disappearance verification.",
+      "Add or remove one-off nodes above the configured dynamicNodeCount; explicitly removing a configured suffix creates drift that restart or bootstrap restores.",
     tools: [
       "local_ydb_add_dynamic_nodes",
       "local_ydb_remove_dynamic_nodes",
@@ -966,7 +1001,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "storage",
     title: "Storage",
     description:
-      "Inspect storage placement and leftovers, add or reduce groups, and clean exact reviewed targets only after verification.",
+      "Inspect storage placement and leftovers, add or reduce groups while preserving exact one-off node ports, stop on incomplete node definitions, and clean exact reviewed targets only after verification.",
     tools: [
       "local_ydb_storage_placement",
       "local_ydb_storage_leftovers",
@@ -990,7 +1025,7 @@ export const WORKFLOWS: Workflow[] = [
     id: "upgrade",
     title: "Version upgrades",
     description:
-      "Discover image tags, pull images in the background, and upgrade by dump, rebuild, restore, auth reapply, and verification.",
+      "Discover image tags, track local_ydb_pull_status.progressPercent as monotonic layer-based progress (0-99 while running, 100 after success, last value after error; not byte progress), and upgrade while preserving exact one-off ports and stopping on incomplete node definitions.",
     tools: [
       "local_ydb_list_versions",
       "local_ydb_pull_image",

@@ -90,6 +90,7 @@ const toolHandlers: Record<PromoToolName, () => PromoMcpToolResult> = {
           agentCard: toPublicUrl("/.well-known/agent-card.json"),
           github: PUBLIC_LINKS.github,
           npm: PUBLIC_LINKS.npm,
+          security: PUBLIC_LINKS.security,
           githubAction: PUBLIC_LINKS.githubAction,
           officialYdbMcp: PUBLIC_LINKS.officialYdbMcp,
           mcpDirectorySnapshotWarning: MCP_DIRECTORY_SNAPSHOT_WARNING,

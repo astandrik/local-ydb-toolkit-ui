@@ -6,7 +6,7 @@ import {
 } from "@/lib/site-metadata";
 
 describe("site metadata", () => {
-  it("limits JSON-LD identity to primary sources and four featured listings", () => {
+  it("limits JSON-LD identity to primary sources and three selected listings", () => {
     const jsonLd = getWebsiteJsonLd();
 
     expect(jsonLd.sameAs).toEqual([
@@ -15,7 +15,6 @@ describe("site metadata", () => {
       "https://github.com/marketplace/actions/setup-local-ydb",
       "https://registry.modelcontextprotocol.io/?q=io.github.astandrik%2Flocal-ydb-mcp",
       "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
-      "https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json",
       "https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp",
     ]);
   });

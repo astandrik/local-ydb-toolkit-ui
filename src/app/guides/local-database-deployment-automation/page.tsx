@@ -19,7 +19,8 @@ export default function LocalDatabaseDeploymentAutomationPage() {
           items: [
             "Run local_ydb_check_prerequisites before deeper checks on a new target.",
             "Run local_ydb_status_report, then local_ydb_healthcheck for database-level diagnosis.",
-            "Choose root database bootstrap for simple local work, or tenant topology for GraphShard and dynamic-node testing.",
+            "Choose root database bootstrap for simple local work, or tenant topology for GraphShard and dynamic-node testing. Tenant bootstrap creates every configured node from dynamicNodeCount, and restart or bootstrap restores missing configured suffixes.",
+            "Use add/remove only for one-off nodes above the configured count. Explicitly removing a configured suffix creates declarative drift that restart or bootstrap repairs.",
             "Generate and validate schema DDL before applying it.",
             "Require confirm: true for mutating operations.",
           ],
@@ -28,6 +29,8 @@ export default function LocalDatabaseDeploymentAutomationPage() {
           title: "Safety model",
           body: [
             "Read-only diagnostics establish the current state before any planned mutation. Plans include command shape, risk, rollback, and verification so the user can review the exact effect.",
+            "Auth hardening runs a compatibility preflight and recreates configured dynamic nodes. Storage reduction and upgrades preserve exact one-off node ports and stop if a required node definition is incomplete.",
+            "local_ydb_pull_status.progressPercent is monotonic layer-based progress: 0-99 while running, 100 after success, and the last value after an error. It is not byte progress.",
             "Private config paths, SSH settings, password files, and database credentials stay in the local MCP client, shell, CI runner, or SSH target.",
           ],
         },

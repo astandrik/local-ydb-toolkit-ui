@@ -21,6 +21,9 @@ export function Footer() {
           <a href={PUBLIC_LINKS.npm} className="footer__link">
             npm
           </a>
+          <a href={PUBLIC_LINKS.security} className="footer__link">
+            Security
+          </a>
           <a href={PUBLIC_LINKS.githubAction} className="footer__link">
             GitHub Action
           </a>

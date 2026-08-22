@@ -11,12 +11,12 @@ describe("read-only promo MCP tools", () => {
     });
     expect(result.structuredContent.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.15.4",
+      version: "0.18.0",
       toolCount: 39,
-      checkedAt: "2026-08-13",
+      checkedAt: "2026-08-21",
     });
     expect(result.content[0]?.text).toContain("Docker-based local-ydb");
-    expect(result.content[0]?.text).toContain("0.15.4 with 39 tools");
+    expect(result.content[0]?.text).toContain("0.18.0 with 39 tools");
   });
 
   it("returns all compatible install options including the repository Agent Plugin", async () => {
@@ -58,6 +58,7 @@ describe("read-only promo MCP tools", () => {
     const result = await callPromoToolForTest("list_local_ydb_workflows", {});
     const workflows = result.structuredContent.workflows as Array<{
       id: string;
+      description: string;
       tools: string[];
     }>;
     const tools = workflows.flatMap((workflow) => workflow.tools);
@@ -68,6 +69,15 @@ describe("read-only promo MCP tools", () => {
     expect(tools).toHaveLength(39);
     expect(new Set(tools)).toHaveProperty("size", 39);
     expect(tools).toContain("local_ydb_sql");
+    expect(
+      workflows.find(({ id }) => id === "bootstrap")?.description,
+    ).toContain("dynamicNodeCount");
+    expect(
+      workflows.find(({ id }) => id === "upgrade")?.description,
+    ).toContain("local_ydb_pull_status.progressPercent");
+    expect(
+      workflows.find(({ id }) => id === "upgrade")?.description,
+    ).toContain("not byte progress");
     expect(result.content[0]?.text).toContain("read-only summary");
   });
 
@@ -96,6 +106,8 @@ describe("read-only promo MCP tools", () => {
       listings: "https://local-ydb-toolkit.ydb-qdrant.tech/listings",
       listingsMarkdown:
         "https://local-ydb-toolkit.ydb-qdrant.tech/listings.md",
+      security:
+        "https://github.com/astandrik/local-ydb-toolkit/security/policy",
     });
     expect(JSON.stringify(result.structuredContent.links)).toContain(
       "/guides/ydb-schema-ddl-mcp.md",
@@ -114,7 +126,7 @@ describe("read-only promo MCP tools", () => {
         "not security attestations",
       ),
       mcpListingContext: expect.stringContaining(
-        "Directory inclusion is not an endorsement",
+        "dated external observations",
       ),
       mcpRegistries: expect.arrayContaining([
         expect.objectContaining({
@@ -127,16 +139,16 @@ describe("read-only promo MCP tools", () => {
           includeInSameAs: true,
           confirmedClaims: expect.any(Array),
           limitations: expect.any(Array),
-          lastChecked: "2026-08-11",
+          lastChecked: "2026-08-21",
           note: expect.any(String),
         }),
         expect.objectContaining({
           label: "ModelScope MCP Plaza",
           sourceType: "community",
           accuracy: "partial",
-          lastChecked: "2026-08-11",
+          lastChecked: "2026-08-21",
           limitations: expect.arrayContaining([
-            expect.stringContaining("empty tools list"),
+            expect.stringContaining("Tools section is empty"),
           ]),
         }),
         expect.objectContaining({
@@ -144,7 +156,7 @@ describe("read-only promo MCP tools", () => {
           label: "MCP Conformance Census",
           accuracy: "stale",
           purpose: "independent-analysis",
-          lastChecked: "2026-08-12",
+          lastChecked: "2026-08-21",
           featured: false,
           includeInSameAs: false,
         }),

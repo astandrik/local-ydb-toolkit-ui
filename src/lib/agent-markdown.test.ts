@@ -44,14 +44,13 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
-    expect(body).toContain("0.15.4, 39 tools");
+    expect(body).toContain("0.18.0, 39 tools");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Featured external listings");
     expect(body).not.toContain("[Enterprise DNA]");
     expect(body).toContain("[ModelScope MCP Plaza]");
-    expect(body).toContain(
-      "[Gilde](https://github.com/bendyline/gilde/blob/main/data/community/toolsets/as/astandrik-local-ydb-mcp/manifest.json)",
-    );
+    expect(body).not.toContain("[Gilde]");
     expect(body).toContain(
       "[mcpindex.ai](https://mcpindex.ai/server/io-github-astandrik-local-ydb-mcp)",
     );
@@ -60,10 +59,10 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Useful for:");
     expect(body).toContain("Confirmed:");
     expect(body).toContain("Limitations:");
-    expect(body).toContain("Checked: 2026-08-11");
-    expect(body).toContain("empty tools array");
-    expect(body).toContain("not security findings");
-    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("Checked: 2026-08-21");
+    expect(body).toContain("Tools section is empty");
+    expect(body).toContain("semantic screen is dated 2026-07-08");
+    expect(body).toContain("not security attestations");
     expect(body).toContain("/listings.md");
     expect(body).not.toContain("claim available");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
@@ -83,7 +82,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("[Guides index]");
     expect(body).toContain("## Featured external listings");
     expect(body).not.toContain("Timeahead MCPScore");
-    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("dated external observations");
     expect(body).toContain("/listings.md");
     expect(body).not.toContain("https://timeahead.in/mcp/claim/local-ydb-mcp");
     expect(body).toContain("```json");
@@ -98,7 +97,9 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Node.js 20.19+");
     expect(body).toContain("absolute configPath");
     expect(body).toContain("plugin root");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("has not been published");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).not.toContain(
       "available in the public OpenAI marketplace",
     );
@@ -139,8 +140,9 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("## Featured external listings");
     expect(body).not.toContain("PolicyLayer");
-    expect(body).toContain("Directory inclusion is not an endorsement");
+    expect(body).toContain("dated external observations");
     expect(body).toContain("/listings.md");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
   });
 
   it("publishes every audited listing exactly once in the full markdown catalog", () => {
@@ -161,13 +163,13 @@ describe("agent-readable markdown", () => {
     expect(body).toContain(
       `### [MCP Conformance Census](${PUBLIC_LINKS.mcpConformance})`,
     );
-    expect(body).toContain("Checked: 2026-08-12");
+    expect(body).toContain("Checked: 2026-08-21");
     expect(body).toContain("does not classify as a failure");
     expect(body).not.toContain("automated source");
     expect(body).not.toContain("unverified accuracy");
   });
 
-  it("keeps compact discovery pages limited to the four featured listings", () => {
+  it("keeps compact discovery pages limited to the three featured listings", () => {
     const pages = [
       buildLlmsText(),
       buildLlmsFullText(),
@@ -215,6 +217,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Read-only promo MCP");
     expect(body).toContain("Actual YDB operations stay in the local stdio MCP server");
     expect(body).toContain("confirm: true");
+    expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
   });
 
   it("builds markdown twins for homepage and topical pages", () => {
@@ -261,6 +264,21 @@ describe("agent-readable markdown", () => {
     );
     expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
       "local database deployment automation",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "dynamicNodeCount",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "one-off nodes",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "compatibility preflight",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "progressPercent",
+    );
+    expect(buildLocalDatabaseDeploymentAutomationGuideMarkdown()).toContain(
+      "not byte progress",
     );
     expect(buildLocalYdbCiGuideMarkdown()).toContain(
       "astandrik/setup-local-ydb@v1",
