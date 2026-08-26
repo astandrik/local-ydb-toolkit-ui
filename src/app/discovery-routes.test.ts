@@ -66,7 +66,13 @@ describe("agent discovery routes", () => {
     {
       modulePath: "@/app/guides/diagnose-local-ydb-mcp.md/route",
       contentType: "text/markdown; charset=utf-8",
-      expected: ["Diagnose local-ydb", "local_ydb_healthcheck"],
+      expected: [
+        "Diagnose local-ydb",
+        "local_ydb_healthcheck",
+        "optionResolution.effective",
+        "warnings",
+        "compatibilityFallback",
+      ],
     },
     {
       modulePath: "@/app/guides/local-ydb-sql.md/route",

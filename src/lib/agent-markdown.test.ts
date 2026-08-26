@@ -256,6 +256,11 @@ describe("agent-readable markdown", () => {
     expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain(
       "local_ydb_healthcheck",
     );
+    expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain(
+      "optionResolution.effective",
+    );
+    expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain("warnings");
+    expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain("compatibilityFallback");
     expect(buildYdbSchemaDdlMcpGuideMarkdown()).toContain(
       "local_ydb_generate_schema",
     );
