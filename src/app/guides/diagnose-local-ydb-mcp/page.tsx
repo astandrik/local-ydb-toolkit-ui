@@ -19,7 +19,7 @@ export default function DiagnoseLocalYdbMcpPage() {
           items: [
             "Run local_ydb_check_prerequisites on a new host or profile.",
             "Run local_ydb_status_report to capture Docker, tenant, node, auth, and health context.",
-            "Run local_ydb_healthcheck when a fresh YDB self-check signal is needed.",
+            "Run local_ydb_healthcheck with noCache=true when a fresh YDB self-check signal is needed. Call the result fresh only if noCache remains in optionResolution.effective, and inspect warnings and compatibilityFallback.",
             "Route by issue type rather than trying repair commands immediately.",
           ],
         },
