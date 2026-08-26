@@ -260,6 +260,7 @@ describe("agent-readable markdown", () => {
       "optionResolution.effective",
     );
     expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain("warnings");
+    expect(buildDiagnoseLocalYdbMcpGuideMarkdown()).toContain("compatibilityFallback");
     expect(buildYdbSchemaDdlMcpGuideMarkdown()).toContain(
       "local_ydb_generate_schema",
     );

@@ -71,6 +71,7 @@ describe("agent discovery routes", () => {
         "local_ydb_healthcheck",
         "optionResolution.effective",
         "warnings",
+        "compatibilityFallback",
       ],
     },
     {
