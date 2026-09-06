@@ -1,24 +1,57 @@
-import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { createElement, type ReactNode } from "react";
+// Load Vitest's JSX runtime before testing production module initialization.
+import "react/jsx-dev-runtime";
+import { renderToStaticMarkup } from "react-dom/server";
+import type { ScriptProps } from "next/script";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("next/script", () => ({
+  default: ({ id, strategy, children }: ScriptProps) =>
+    createElement("script", { id, "data-strategy": strategy }, children),
+}));
+
+vi.mock("@/app/Providers", () => ({
+  Providers: ({ children }: { children: ReactNode }) => children,
+}));
+
+vi.mock("@/components/GravityUI/GravityUI", () => ({
+  Container: ({ children }: { children: ReactNode }) =>
+    createElement("div", null, children),
+}));
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.resetModules();
+});
+
+async function renderLayout(environment: string): Promise<string> {
+  vi.stubEnv("NODE_ENV", environment);
+  const { default: RootLayout } = await import("./layout");
+  return renderToStaticMarkup(
+    createElement(RootLayout, null, createElement("main", null, "Documentation")),
+  );
+}
 
 describe("Root layout analytics", () => {
-  it("mounts the consent boundary instead of the tracker directly", () => {
-    const source = readFileSync(new URL("layout.tsx", import.meta.url), "utf8");
+  it("includes the production tracker without a consent interaction", async () => {
+    const html = await renderLayout("production");
 
-    expect(source).toContain(
-      'import { AnalyticsConsent } from "@/components/AnalyticsConsent/AnalyticsConsent"',
-    );
-    expect(source).toContain("<AnalyticsConsent />");
-    expect(source).not.toContain('import YandexMetrika from "@/app/YandexMetrika"');
+    expect(html).toContain('id="yandex-metrika"');
+    expect(html).toContain('data-strategy="afterInteractive"');
+    expect(html).toContain("https://mc.yandex.ru/metrika/tag.js");
+    expect(html).not.toContain("Optional analytics");
+    expect(html).not.toContain("Analytics settings");
   });
 
-  it("does not include an ungated noscript tracking pixel", () => {
-    const source = readFileSync(
-      new URL("YandexMetrika.tsx", import.meta.url),
-      "utf8",
-    );
+  it.each(["development", "test"])(
+    "does not include analytics in %s",
+    async (environment) => {
+      const html = await renderLayout(environment);
 
-    expect(source).not.toContain("<noscript>");
-    expect(source).not.toContain("mc.yandex.ru/watch");
-  });
+      expect(html).not.toContain('id="yandex-metrika"');
+      expect(html).not.toContain("mc.yandex.ru");
+      expect(html).not.toContain("Optional analytics");
+      expect(html).not.toContain("Analytics settings");
+    },
+  );
 });

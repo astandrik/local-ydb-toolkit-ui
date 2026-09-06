@@ -40,23 +40,3 @@ export function trackGoal(goal: string, params?: YandexGoalParams): void {
     // Ignore analytics failures; product behavior must not depend on metrics.
   }
 }
-
-export function disableYandexMetrika(): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  try {
-    window.ym?.(YANDEX_METRIKA_ID, "destruct");
-  } catch {
-    // Consent withdrawal must continue even if the tracker cannot be reached.
-  }
-
-  document.getElementById("yandex-metrika")?.remove();
-  document
-    .querySelectorAll<HTMLScriptElement>(
-      'script[src="https://mc.yandex.ru/metrika/tag.js"]',
-    )
-    .forEach((script) => script.remove());
-  delete window.ym;
-}

@@ -4,7 +4,7 @@ import "@gravity-ui/uikit/styles/fonts.css";
 import "@gravity-ui/uikit/styles/styles.css";
 import "@/styles/globals.scss";
 
-import { AnalyticsConsent } from "@/components/AnalyticsConsent/AnalyticsConsent";
+import YandexMetrika from "@/app/YandexMetrika";
 import { AppHeader } from "@/components/AppHeader/AppHeader";
 import { Footer } from "@/components/Footer/Footer";
 import { Providers } from "@/app/Providers";
@@ -92,7 +92,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </Providers>
-        <AnalyticsConsent />
+        <YandexMetrika />
       </body>
     </html>
   );

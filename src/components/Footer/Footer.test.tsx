@@ -5,10 +5,6 @@ import { describe, expect, it, vi } from "vitest";
 import { Footer } from "@/components/Footer/Footer";
 import { PUBLIC_LINKS } from "@/lib/product-data";
 
-vi.mock("@/components/AnalyticsConsent/AnalyticsSettingsButton", () => ({
-  AnalyticsSettingsButton: () => <button>Analytics settings</button>,
-}));
-
 vi.mock("@/components/GravityUI/GravityUI", () => ({
   Container: ({ children }: { children: ReactNode }) => <footer>{children}</footer>,
 }));
