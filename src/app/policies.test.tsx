@@ -18,11 +18,13 @@ describe("public policies", () => {
     const html = renderToStaticMarkup(<PrivacyPage />);
 
     expect(html).toContain("Privacy Policy");
-    expect(html).toContain("Effective August 13, 2026");
+    expect(html).toContain("Effective September 6, 2026");
     expect(html).toContain("published by astandrik");
     expect(html).toContain("does not gain implicit access");
-    expect(html).toContain("Yandex Metrica, including Webvisor, is optional");
-    expect(html).toContain("local-ydb-toolkit.analytics-consent.v1");
+    expect(html).toContain("Yandex Metrica, including Webvisor, loads automatically");
+    expect(html).toContain("cookies and localStorage");
+    expect(html).not.toContain("Allow analytics");
+    expect(html).not.toContain("local-ydb-toolkit.analytics-consent.v1");
     expect(html).toContain("does not sell personal data");
     expect(html).toContain("https://github.com/astandrik/local-ydb-toolkit/issues");
   });
@@ -38,12 +40,12 @@ describe("public policies", () => {
     expect(html).toContain("No warranty or service commitment");
   });
 
-  it("links policies and analytics settings from the global footer", () => {
+  it("links policies without analytics settings in the global footer", () => {
     const html = renderToStaticMarkup(<Footer />);
 
     expect(html).toContain(`href="${withBasePath("/privacy")}"`);
     expect(html).toContain(`href="${withBasePath("/terms")}"`);
-    expect(html).toContain("Analytics settings");
+    expect(html).not.toContain("Analytics settings");
   });
 
   it.each([

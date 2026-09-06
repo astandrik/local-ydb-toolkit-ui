@@ -13,7 +13,7 @@ export const metadata = getPublicPageMetadata({
 export default function PrivacyPage() {
   return (
     <ContentPage
-      eyebrow="Effective August 13, 2026"
+      eyebrow="Effective September 6, 2026"
       title="Privacy Policy"
       lead="This policy explains what the local-ydb-toolkit project website and public skills-only package do with data. The project is published by astandrik."
       sections={[
@@ -34,9 +34,8 @@ export default function PrivacyPage() {
         {
           title: "Website analytics",
           body: [
-            "Yandex Metrica, including Webvisor, is optional. No analytics script or tracking pixel is loaded before you select Allow analytics. If enabled, Yandex may process page-view and interaction telemetry under its own terms and privacy policy.",
-            "Your choice is stored in your browser under local-ydb-toolkit.analytics-consent.v1 as accepted or rejected. It is not an authentication token. You can reopen Analytics settings in the footer and reject analytics; the page then reloads without the tracker.",
-            "If the browser does not allow the preference to be read or saved, the website treats that as no consent and keeps analytics off.",
+            "Yandex Metrica, including Webvisor, loads automatically when you visit this website. It collects page-view and interaction telemetry to help us understand how the documentation is used.",
+            "Yandex Metrica uses cookies and localStorage to distinguish visitors and measure website usage. Yandex processes this data under its own terms and privacy policy.",
           ],
         },
         {
