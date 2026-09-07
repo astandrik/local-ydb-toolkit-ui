@@ -257,7 +257,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Confirm the server ID, npm package, and canonical repository before installing.",
     confirmedClaims: [
       "The published server ID is io.github.astandrik/local-ydb-mcp.",
-      "Version 0.18.2 points to @astandrik/local-ydb-mcp and the canonical GitHub repository.",
+      `Version ${CURRENT_TOOLKIT_VERSION} points to @astandrik/local-ydb-mcp and the canonical GitHub repository.`,
     ],
     limitations: [
       "Registry publication confirms identity metadata; it does not verify runtime behavior or security.",

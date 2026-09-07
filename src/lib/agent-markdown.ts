@@ -219,7 +219,7 @@ The remote promo MCP is read-only. It is an agent-friendly discovery and documen
 
 ## Authentication
 
-Public docs, JSON endpoints, OpenAPI, and the hosted promo MCP do not require authentication. Local operations use the user's MCP client configuration. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to a local \`local-ydb.config.json\`, or pass a per-tool \`configPath\` where supported. Auth-enabled profiles may reference \`rootPasswordFile\`, \`authConfigPath\`, and \`dynamicNodeAuthTokenFile\`; those files stay on the user's local or SSH target host.
+Public docs, JSON endpoints, OpenAPI, and the hosted promo MCP do not require authentication. Local operations use the user's MCP client configuration. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to an absolute path to \`local-ydb.config.json\`, or pass an absolute per-tool \`configPath\` where supported. Explicit missing, unreadable, oversized, or invalid files fail closed instead of using defaults. Auth-enabled profiles may reference \`rootPasswordFile\`, \`authConfigPath\`, and \`dynamicNodeAuthTokenFile\`; those files stay on the user's local or SSH target host.
 
 OAuth and browser account flows are not part of v1.
 

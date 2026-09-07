@@ -88,6 +88,14 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("```json");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(body).toContain("GET /docs/api");
+    const authentication = body.split("## Authentication\n")[1]?.split("\n## ")[0];
+    expect(authentication).toContain(
+      "Set `LOCAL_YDB_TOOLKIT_CONFIG` to an absolute path",
+    );
+    expect(authentication).toContain("an absolute per-tool `configPath`");
+    expect(authentication).toContain(
+      "missing, unreadable, oversized, or invalid files fail closed",
+    );
     expect(body).toContain(
       "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main",
     );

@@ -93,6 +93,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(new Set(currentVersionReferences)).toEqual(
       new Set([TOOLKIT_RELEASE.version]),
     );
+    const officialRegistry = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "official-mcp-registry",
+    );
+    expect(officialRegistry?.confirmedClaims.join(" ")).toContain(
+      `Version ${TOOLKIT_RELEASE.version} points to @astandrik/local-ydb-mcp`,
+    );
   });
 
   it("keeps install options split by audience and channel", () => {
@@ -461,7 +467,9 @@ describe("local-ydb-toolkit product data", () => {
       includeInSameAs: false,
       lastChecked: "2026-09-07",
     });
-    expect(verifyMcp?.confirmedClaims.join(" ")).toContain("version 0.18.2");
+    expect(verifyMcp?.confirmedClaims.join(" ")).toContain(
+      "version 0.18.2 on 2026-09-07",
+    );
     expect(verifyMcp?.limitations.join(" ")).toContain("beta");
     expect(verifyMcp?.limitations.join(" ")).toContain("bounded automatic checks");
     expect(verifyMcp?.limitations.join(" ")).toContain("configured Docker/YDB deployment");
