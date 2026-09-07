@@ -44,7 +44,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
-    expect(body).toContain("0.18.0, 39 tools");
+    expect(body).toContain("0.18.2, 39 tools");
     expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Featured external listings");
@@ -88,6 +88,14 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("```json");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(body).toContain("GET /docs/api");
+    const authentication = body.split("## Authentication\n")[1]?.split("\n## ")[0];
+    expect(authentication).toContain(
+      "Set `LOCAL_YDB_TOOLKIT_CONFIG` to an absolute path",
+    );
+    expect(authentication).toContain("an absolute per-tool `configPath`");
+    expect(authentication).toContain(
+      "missing, unreadable, oversized, or invalid files fail closed",
+    );
     expect(body).toContain(
       "codex plugin marketplace add astandrik/local-ydb-toolkit --ref main",
     );
@@ -154,7 +162,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(26);
+    expect(body.match(/^### \[/gm)).toHaveLength(28);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
@@ -165,6 +173,10 @@ describe("agent-readable markdown", () => {
     );
     expect(body).toContain("Checked: 2026-08-21");
     expect(body).toContain("does not classify as a failure");
+    expect(body).toContain(`### [VerifyMCP](${PUBLIC_LINKS.verifyMcp})`);
+    expect(body).toContain(
+      `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,
+    );
     expect(body).not.toContain("automated source");
     expect(body).not.toContain("unverified accuracy");
   });
@@ -207,6 +219,10 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## 7. Revocation");
     expect(body).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(body).toContain("configPath");
+    expect(body).toContain("absolute path");
+    expect(body).toContain("fails closed");
+    expect(body).toContain("missing, unreadable, oversized, or invalid");
+    expect(body).toContain("Unset config path");
     expect(body).toContain("rootPasswordFile");
     expect(body).toContain("dynamicNodeAuthTokenFile");
   });

@@ -219,9 +219,9 @@ describe("agent discovery routes", () => {
 
     expect(body.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.18.0",
+      version: "0.18.2",
       toolCount: 39,
-      checkedAt: "2026-08-21",
+      checkedAt: "2026-09-07",
     });
     expect(body.links.security).toBe(
       "https://github.com/astandrik/local-ydb-toolkit/security/policy",
@@ -276,9 +276,21 @@ describe("agent discovery routes", () => {
           featured: false,
           includeInSameAs: false,
         }),
+        expect.objectContaining({
+          id: "verifymcp",
+          href: "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
+          purpose: "independent-analysis",
+          lastChecked: "2026-09-07",
+        }),
+        expect.objectContaining({
+          id: "agent-plugins-directory",
+          href: "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
+          purpose: "installation-discovery",
+          lastChecked: "2026-09-07",
+        }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(26);
+    expect(body.mcpRegistryLinks).toHaveLength(28);
     expect(
       body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured),
     ).toHaveLength(3);

@@ -17,7 +17,7 @@ import {
   getInstallOption,
 } from "@/lib/product-data";
 
-const TOOLKIT_0_18_0_TOOLS = [
+const TOOLKIT_0_18_2_TOOLS = [
   "local_ydb_inventory",
   "local_ydb_database_status",
   "local_ydb_healthcheck",
@@ -72,9 +72,9 @@ describe("local-ydb-toolkit product data", () => {
   it("publishes the reviewed toolkit release snapshot", () => {
     expect(TOOLKIT_RELEASE).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.18.0",
+      version: "0.18.2",
       toolCount: 39,
-      checkedAt: "2026-08-21",
+      checkedAt: "2026-09-07",
     });
   });
 
@@ -92,6 +92,12 @@ describe("local-ydb-toolkit product data", () => {
     expect(currentVersionReferences.length).toBeGreaterThan(0);
     expect(new Set(currentVersionReferences)).toEqual(
       new Set([TOOLKIT_RELEASE.version]),
+    );
+    const officialRegistry = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "official-mcp-registry",
+    );
+    expect(officialRegistry?.confirmedClaims.join(" ")).toContain(
+      `Version ${TOOLKIT_RELEASE.version} points to @astandrik/local-ydb-mcp`,
     );
   });
 
@@ -183,11 +189,11 @@ describe("local-ydb-toolkit product data", () => {
     expect(descriptions.upgrade).toContain("not byte progress");
   });
 
-  it("covers every local-ydb-toolkit 0.18.0 tool exactly once", () => {
+  it("covers every local-ydb-toolkit 0.18.2 tool exactly once", () => {
     const workflowTools = WORKFLOWS.flatMap((workflow) => workflow.tools);
 
     expect(new Set(workflowTools).size).toBe(workflowTools.length);
-    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_18_0_TOOLS].sort());
+    expect([...workflowTools].sort()).toEqual([...TOOLKIT_0_18_2_TOOLS].sort());
   });
 
   it("keeps public links stable for humans and agents", () => {
@@ -226,6 +232,12 @@ describe("local-ydb-toolkit product data", () => {
       "https://github.com/Ahmad-Faraj/mcp-conformance/blob/a4dceadd14c7a01ab255d822ca4fcfb2987dac57/data/release/probe_census.jsonl#L5699",
     );
     expect(PUBLIC_LINKS.timeaheadMcpScore).toContain("timeahead.in/mcp");
+    expect(PUBLIC_LINKS.verifyMcp).toBe(
+      "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
+    );
+    expect(PUBLIC_LINKS.agentPluginsDirectory).toBe(
+      "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
+    );
   });
 
   it("publishes only the three selected featured and sameAs listings", () => {
@@ -241,9 +253,9 @@ describe("local-ydb-toolkit product data", () => {
       purpose: "identity",
       featured: true,
       includeInSameAs: true,
-      lastChecked: "2026-08-21",
+      lastChecked: "2026-09-07",
     });
-    expect(official?.confirmedClaims.join(" ")).toContain("0.18.0");
+    expect(official?.confirmedClaims.join(" ")).toContain("0.18.2");
     expect(official?.confirmedClaims.join(" ")).not.toContain("0.15.2");
     expect(modelScope).toMatchObject({
       href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
@@ -280,10 +292,10 @@ describe("local-ydb-toolkit product data", () => {
     expect(mcpindex?.confirmedClaims.join(" ")).toContain("2026-07-08");
   });
 
-  it("keeps all 26 audited ids unique with the extended and legacy contracts", () => {
+  it("keeps all 28 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
-    expect(ids).toHaveLength(26);
+    expect(ids).toHaveLength(28);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every(
@@ -326,6 +338,8 @@ describe("local-ydb-toolkit product data", () => {
         "gilde",
         "mcpindex",
         "mcp-conformance",
+        "verifymcp",
+        "agent-plugins-directory",
       ]),
     );
   });
@@ -362,9 +376,31 @@ describe("local-ydb-toolkit product data", () => {
       manifold: "stale",
       forge: "unverified",
       vibehackers: "stale",
+      verifymcp: "current",
+      "agent-plugins-directory": "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21"]),
+      new Set(["2026-08-21", "2026-09-07"]),
+    );
+    expect(
+      MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
+    ).toHaveLength(25);
+    const refreshedIds = new Set([
+      "official-mcp-registry",
+      "verifymcp",
+      "agent-plugins-directory",
+    ]);
+    expect(
+      Object.fromEntries(
+        MCP_REGISTRY_LINKS.map(({ id, lastChecked }) => [id, lastChecked]),
+      ),
+    ).toEqual(
+      Object.fromEntries(
+        MCP_REGISTRY_LINKS.map(({ id }) => [
+          id,
+          refreshedIds.has(id) ? "2026-09-07" : "2026-08-21",
+        ]),
+      ),
     );
   });
 
@@ -414,6 +450,52 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
+  it("publishes dated bounded scanner and manifest verification records", () => {
+    const verifyMcp = MCP_REGISTRY_LINKS.find(({ id }) => id === "verifymcp");
+    const agentPluginsDirectory = MCP_REGISTRY_LINKS.find(
+      ({ id }) => id === "agent-plugins-directory",
+    );
+
+    expect(verifyMcp).toMatchObject({
+      label: "VerifyMCP",
+      href: PUBLIC_LINKS.verifyMcp,
+      category: "audit",
+      sourceType: "automated",
+      accuracy: "current",
+      purpose: "independent-analysis",
+      featured: false,
+      includeInSameAs: false,
+      lastChecked: "2026-09-07",
+    });
+    expect(verifyMcp?.confirmedClaims.join(" ")).toContain(
+      "version 0.18.2 on 2026-09-07",
+    );
+    expect(verifyMcp?.limitations.join(" ")).toContain("beta");
+    expect(verifyMcp?.limitations.join(" ")).toContain("bounded automatic checks");
+    expect(verifyMcp?.limitations.join(" ")).toContain("configured Docker/YDB deployment");
+
+    expect(agentPluginsDirectory).toMatchObject({
+      label: "AgentPluginsDirectory.com",
+      href: PUBLIC_LINKS.agentPluginsDirectory,
+      category: "directory",
+      sourceType: "automated",
+      accuracy: "partial",
+      purpose: "installation-discovery",
+      featured: false,
+      includeInSameAs: false,
+      lastChecked: "2026-09-07",
+    });
+    expect(agentPluginsDirectory?.confirmedClaims.join(" ")).toContain(
+      "Agent Plugins 1.0.0",
+    );
+    expect(agentPluginsDirectory?.confirmedClaims.join(" ")).toContain("1 skill");
+    expect(agentPluginsDirectory?.confirmedClaims.join(" ")).toContain("1 MCP server");
+    expect(agentPluginsDirectory?.limitations.join(" ")).toContain("runtime testing");
+    expect(agentPluginsDirectory?.limitations.join(" ")).toContain(
+      "client marketplace availability",
+    );
+  });
+
   it("assigns the requested purpose groups and exactly three sameAs listings", () => {
     const idsFor = (purpose: (typeof MCP_LISTING_PURPOSES)[number]["id"]) =>
       MCP_REGISTRY_LINKS.filter((link) => link.purpose === purpose).map(
@@ -432,6 +514,7 @@ describe("local-ydb-toolkit product data", () => {
       "mcp-store",
       "unyly",
       "vibehackers",
+      "agent-plugins-directory",
     ]);
     expect(idsFor("version-metadata")).toEqual([
       "gilde",
@@ -451,6 +534,7 @@ describe("local-ydb-toolkit product data", () => {
       "mcp-conformance",
       "manifold",
       "forge",
+      "verifymcp",
     ]);
 
     const featured = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
@@ -487,9 +571,16 @@ describe("local-ydb-toolkit product data", () => {
 
   it("does not freeze volatile numeric directory scores", () => {
     const serialized = JSON.stringify(MCP_REGISTRY_LINKS);
+    const numericDependencyClaim =
+      /\b\d+(?:\s+of\s+\d+)?\s+dependenc(?:y|ies)\b/i;
 
-    expect(serialized).not.toMatch(/95\/100|76\/100|55\/100/);
+    expect("42 dependencies; 44 of 147 dependencies").toMatch(
+      numericDependencyClaim,
+    );
+    expect(serialized).not.toMatch(/\b\d+\s*\/\s*\d+\b/);
+    expect(serialized).not.toMatch(numericDependencyClaim);
     expect(serialized).not.toMatch(/A\/95|leaderboard|#\d+/i);
+    expect(serialized).not.toMatch(/trust score|dependency counter/i);
   });
 
   it("lists public projects using local-ydb", () => {

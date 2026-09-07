@@ -44,7 +44,7 @@ describe("homepage and external listing pages", () => {
   it("uses a neutral local target badge instead of the official YDB wordmark", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 
-    expect(html).toContain("0.18.0 · 39 tools");
+    expect(html).toContain("0.18.2 · 39 tools");
     expect(html).toContain("Local YDB target");
     expect(html).toContain("Docker target stays on your machine");
     expect(html).not.toContain("/assets/ydb-icon.svg");
@@ -105,7 +105,7 @@ describe("homepage and external listing pages", () => {
   it("renders every retained listing exactly once in five purpose groups", () => {
     const html = renderToStaticMarkup(<ListingsPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(26);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(28);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);

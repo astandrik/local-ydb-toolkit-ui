@@ -219,7 +219,7 @@ The remote promo MCP is read-only. It is an agent-friendly discovery and documen
 
 ## Authentication
 
-Public docs, JSON endpoints, OpenAPI, and the hosted promo MCP do not require authentication. Local operations use the user's MCP client configuration. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to a local \`local-ydb.config.json\`, or pass a per-tool \`configPath\` where supported. Auth-enabled profiles may reference \`rootPasswordFile\`, \`authConfigPath\`, and \`dynamicNodeAuthTokenFile\`; those files stay on the user's local or SSH target host.
+Public docs, JSON endpoints, OpenAPI, and the hosted promo MCP do not require authentication. Local operations use the user's MCP client configuration. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to an absolute path to \`local-ydb.config.json\`, or pass an absolute per-tool \`configPath\` where supported. Explicit missing, unreadable, oversized, or invalid files fail closed instead of using defaults. Auth-enabled profiles may reference \`rootPasswordFile\`, \`authConfigPath\`, and \`dynamicNodeAuthTokenFile\`; those files stay on the user's local or SSH target host.
 
 OAuth and browser account flows are not part of v1.
 
@@ -394,7 +394,7 @@ ${MCP_NPX_INSTALL.configSnippet}
 
 ## 4. Claim
 
-The MCP client claims access by supplying local configuration only. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to a \`local-ydb.config.json\` file, or pass \`configPath\` to profile-based tools that support per-call config loading.
+The MCP client claims access by supplying local configuration only. Set \`LOCAL_YDB_TOOLKIT_CONFIG\` to the absolute path of a \`local-ydb.config.json\` file, or pass an absolute per-tool \`configPath\` where supported. If neither path is set, the server falls back to \`local-ydb.config.json\` in the current working directory. An explicit path fails closed when its file is missing, unreadable, oversized, or invalid; it does not fall back to defaults.
 
 Auth-enabled profiles can reference these local file paths:
 
@@ -408,7 +408,8 @@ Use credentials only from the local MCP process, local shell, CI runner, or SSH 
 
 ## 6. Errors
 
-- Missing \`LOCAL_YDB_TOOLKIT_CONFIG\`: the local MCP server falls back to \`local-ydb.config.json\` in the current working directory.
+- Unset config path: the local MCP server falls back to \`local-ydb.config.json\` in the current working directory.
+- Invalid explicit config path: a missing, unreadable, oversized, or invalid file fails closed instead of using defaults.
 - Unknown profile: choose a configured profile name or update the local config file.
 - Missing password file: create or rotate the local \`rootPasswordFile\`, then rerun the tool.
 - OAuth metadata 404: expected in v1 because OAuth and agent-auth registration are intentionally deferred.

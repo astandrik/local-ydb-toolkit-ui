@@ -11,12 +11,12 @@ describe("read-only promo MCP tools", () => {
     });
     expect(result.structuredContent.toolkitRelease).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.18.0",
+      version: "0.18.2",
       toolCount: 39,
-      checkedAt: "2026-08-21",
+      checkedAt: "2026-09-07",
     });
     expect(result.content[0]?.text).toContain("Docker-based local-ydb");
-    expect(result.content[0]?.text).toContain("0.18.0 with 39 tools");
+    expect(result.content[0]?.text).toContain("0.18.2 with 39 tools");
   });
 
   it("returns all compatible install options including the repository Agent Plugin", async () => {
@@ -139,7 +139,7 @@ describe("read-only promo MCP tools", () => {
           includeInSameAs: true,
           confirmedClaims: expect.any(Array),
           limitations: expect.any(Array),
-          lastChecked: "2026-08-21",
+          lastChecked: "2026-09-07",
           note: expect.any(String),
         }),
         expect.objectContaining({
@@ -159,6 +159,16 @@ describe("read-only promo MCP tools", () => {
           lastChecked: "2026-08-21",
           featured: false,
           includeInSameAs: false,
+        }),
+        expect.objectContaining({
+          id: "verifymcp",
+          href: "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
+          lastChecked: "2026-09-07",
+        }),
+        expect.objectContaining({
+          id: "agent-plugins-directory",
+          href: "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
+          lastChecked: "2026-09-07",
         }),
       ]),
     });
