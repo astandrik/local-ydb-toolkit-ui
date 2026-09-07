@@ -13,10 +13,10 @@ describe("homepage agent mode", () => {
     expect(html).toContain("Authentication");
     expect(html).toContain("LOCAL_YDB_TOOLKIT_CONFIG");
     expect(html).toContain("confirm: true");
-    expect(html).toContain("0.18.0");
+    expect(html).toContain("0.18.2");
     expect(html).toContain("39 tools");
     expect(html).toContain(
-      "Reviewed toolkit snapshot: @astandrik/local-ydb-mcp 0.18.0, 39 tools, checked 2026-08-21.",
+      "Reviewed toolkit snapshot: @astandrik/local-ydb-mcp 0.18.2, 39 tools, checked 2026-09-07.",
     );
     expect(html).toContain("dynamicNodeCount");
     expect(html).toContain("0-99 while running");

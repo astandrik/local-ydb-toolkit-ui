@@ -84,7 +84,9 @@ export type McpRegistryLink = {
     | "unyly"
     | "manifold"
     | "forge"
-    | "vibehackers";
+    | "vibehackers"
+    | "verifymcp"
+    | "agent-plugins-directory";
   label: string;
   href: string;
   category: McpRegistryCategory;
@@ -167,6 +169,10 @@ export const PUBLIC_LINKS = {
   forge:
     "https://forgeregistry.com/registry/io.github.astandrik%2Flocal-ydb-mcp",
   vibehackers: "https://vibehackers.io/mcp/local-ydb-mcp",
+  verifyMcp:
+    "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
+  agentPluginsDirectory:
+    "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
 } as const;
 
 export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
@@ -185,7 +191,7 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
 ];
 
 const MCP_REGISTRY_REVIEW_DATE = "2026-08-21";
-const CURRENT_TOOLKIT_VERSION = "0.18.0";
+const CURRENT_TOOLKIT_VERSION = "0.18.2";
 
 function reviewedRegistryLink(
   link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
@@ -251,13 +257,14 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Confirm the server ID, npm package, and canonical repository before installing.",
     confirmedClaims: [
       "The published server ID is io.github.astandrik/local-ydb-mcp.",
-      "Version 0.18.0 points to @astandrik/local-ydb-mcp and the canonical GitHub repository.",
+      "Version 0.18.2 points to @astandrik/local-ydb-mcp and the canonical GitHub repository.",
     ],
     limitations: [
       "Registry publication confirms identity metadata; it does not verify runtime behavior or security.",
     ],
     featured: true,
     includeInSameAs: true,
+    lastChecked: "2026-09-07",
   }),
   reviewedRegistryLink({
     id: "modelscope",
@@ -757,6 +764,51 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     featured: false,
     includeInSameAs: false,
   }),
+  reviewedRegistryLink({
+    id: "verifymcp",
+    label: "VerifyMCP",
+    href: PUBLIC_LINKS.verifyMcp,
+    category: "audit",
+    status: "current automated artifact and schema analysis",
+    description: "Dated third-party analysis of the published npm artifact and MCP schema.",
+    sourceType: "automated",
+    accuracy: "current",
+    purpose: "independent-analysis",
+    userValue: "Inspect independent provenance and MCP schema checks for the current published package.",
+    confirmedClaims: [
+      "VerifyMCP reports that it analyzed version 0.18.2 on 2026-09-07 and verified the published npm artifact and source provenance.",
+      "VerifyMCP reports that its bounded automatic MCP schema checks completed for that artifact.",
+    ],
+    limitations: [
+      "VerifyMCP is beta and its findings are bounded automatic checks.",
+      "The scan does not verify operational safety on a configured Docker/YDB deployment.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-07",
+  }),
+  reviewedRegistryLink({
+    id: "agent-plugins-directory",
+    label: "AgentPluginsDirectory.com",
+    href: PUBLIC_LINKS.agentPluginsDirectory,
+    category: "directory",
+    status: "current automated manifest validation",
+    description: "Dated directory record for the repository Agent Plugin manifest.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "installation-discovery",
+    userValue: "Discover the repository plugin and inspect its declared skill and MCP server.",
+    confirmedClaims: [
+      "AgentPluginsDirectory.com reports that it checked the manifest against Agent Plugins 1.0.0 on 2026-09-07.",
+      "The checked manifest declares 1 skill and 1 MCP server.",
+    ],
+    limitations: [
+      "Manifest validation is not runtime testing or proof of client marketplace availability.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-07",
+  }),
 ];
 
 export const GUIDE_LINKS: GuideLink[] = [
@@ -843,7 +895,7 @@ export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
   version: CURRENT_TOOLKIT_VERSION,
   toolCount: 39,
-  checkedAt: "2026-08-21",
+  checkedAt: "2026-09-07",
 } as const;
 
 export const AGENT_BOUNDARIES = {

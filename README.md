@@ -27,7 +27,8 @@ Future MCP release updates are reviewed manually:
 - Confirm that the GitHub Release, npm package, and Official MCP Registry publish the same version and canonical repository.
 - Read the release changelog and identify user-visible behavior changes.
 - Compare tool and prompt names, descriptions, schemas, annotations, and other public contracts.
-- Recheck every retained external listing, record the common audit date, and preserve stale or unavailable observations with explicit limitations.
+- For a full catalog audit, recheck every retained external listing, record the common audit date, and preserve stale or unavailable observations with explicit limitations.
+- For a focused listing update, change dates only on the sources checked in that update; preserve the historical dates and observations for all other records.
 - Update exact tool fixtures, workflow coverage, listing classifications, and agent-readable route assertions before running the full check chain.
 
 ## Notes
