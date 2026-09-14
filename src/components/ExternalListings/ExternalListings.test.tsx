@@ -105,10 +105,19 @@ describe("homepage and external listing pages", () => {
   it("renders every retained listing exactly once in five purpose groups", () => {
     const html = renderToStaticMarkup(<ListingsPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(28);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(30);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);
+    }
+    for (const listing of MCP_REGISTRY_LINKS.filter(({ id }) =>
+      ["tashan", "roninforge"].includes(id),
+    )) {
+      const card = html.split(`data-listing-id="${listing.id}"`)[1].split("</article>")[0];
+      expect(card).toContain('<time dateTime="2026-09-14">2026-09-14</time>');
+      for (const text of [...listing.confirmedClaims, ...listing.limitations]) {
+        expect(card).toContain(text);
+      }
     }
     expect(html).toContain(">MCP Conformance Census</h3>");
     for (const heading of [

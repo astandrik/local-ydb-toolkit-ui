@@ -86,7 +86,9 @@ export type McpRegistryLink = {
     | "forge"
     | "vibehackers"
     | "verifymcp"
-    | "agent-plugins-directory";
+    | "agent-plugins-directory"
+    | "tashan"
+    | "roninforge";
   label: string;
   href: string;
   category: McpRegistryCategory;
@@ -173,6 +175,9 @@ export const PUBLIC_LINKS = {
     "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
   agentPluginsDirectory:
     "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
+  tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
+  roninforge:
+    "https://roninforge.org/data/state-of-mcp/servers/io.github.astandrik/local-ydb-mcp/",
 } as const;
 
 export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
@@ -808,6 +813,52 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     featured: false,
     includeInSameAs: false,
     lastChecked: "2026-09-07",
+  }),
+  reviewedRegistryLink({
+    id: "tashan",
+    label: "Tashan",
+    href: PUBLIC_LINKS.tashan,
+    category: "audit",
+    status: "dated automated package and documentation analysis",
+    description: "Third-party package, provenance, and documentation observations.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "independent-analysis",
+    userValue: "Inspect the package scan, documentation assessment, and published scoring methodology.",
+    confirmedClaims: [
+      "Tashan reports no known OSV advisories for version 0.18.2 in its 2026-09-12 scan and signed build provenance.",
+      "Its documentation assessment covers tool descriptions, worked examples, setup, authentication, and stated limitations.",
+    ],
+    limitations: [
+      "The OSV lookup covers this package, not its dependency tree; dependency-based access analysis does not see built-in APIs.",
+      "Tashan does not test runtime behavior or operational safety on a configured Docker/YDB deployment; its score measures adoption and upkeep, not security.",
+      "Release-history dates can differ from npm publication dates: Tashan lists 0.18.2 on 2026-09-13, while npm records publication on 2026-08-26.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-14",
+  }),
+  reviewedRegistryLink({
+    id: "roninforge",
+    label: "RoninForge / State of MCP",
+    href: PUBLIC_LINKS.roninforge,
+    category: "audit",
+    status: "dated automated registry and package census",
+    description: "Third-party registry, manifest, and package availability checks.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "independent-analysis",
+    userValue: "Inspect dated registry and package checks with the individual probe results.",
+    confirmedClaims: [
+      "RoninForge reports an active registry entry, a schema-valid server.json, and published npm package version 0.18.2 in its 2026-09-13 census.",
+    ],
+    limitations: [
+      "The repository probe reports an HTTP/2 error: response body closed. This probe error does not establish a defect in the package.",
+      "RoninForge provides no runtime readiness verdict for this package-only server with no declared remote endpoint; metadata checks do not verify Docker/YDB operations.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-14",
   }),
 ];
 

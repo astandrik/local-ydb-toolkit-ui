@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { callPromoToolForTest } from "@/lib/mcp-server";
+import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
 
 describe("read-only promo MCP tools", () => {
   it("returns the product overview as structured content", async () => {
@@ -95,6 +96,9 @@ describe("read-only promo MCP tools", () => {
     );
 
     const result = await callPromoToolForTest("get_public_links", {});
+
+    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 30);
+    expect(result.structuredContent.links).toHaveProperty("mcpRegistries", MCP_REGISTRY_LINKS);
 
     expect(result.structuredContent.links).toMatchObject({
       site: "https://local-ydb-toolkit.ydb-qdrant.tech/",
