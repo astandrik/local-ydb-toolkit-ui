@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { describe, expect, it, vi } from "vitest";
 
+import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
+
 describe("agent discovery routes", () => {
   it.each([
     {
@@ -290,7 +292,12 @@ describe("agent discovery routes", () => {
         }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(28);
+    expect(body.mcpRegistryLinks).toHaveLength(30);
+    expect(body.mcpRegistryLinks).toEqual(MCP_REGISTRY_LINKS);
+    expect(body.links).toMatchObject({
+      tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
+      roninforge: "https://roninforge.org/data/state-of-mcp/servers/io.github.astandrik/local-ydb-mcp/",
+    });
     expect(
       body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured),
     ).toHaveLength(3);

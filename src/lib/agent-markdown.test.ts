@@ -162,7 +162,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(28);
+    expect(body.match(/^### \[/gm)).toHaveLength(30);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
@@ -177,6 +177,15 @@ describe("agent-readable markdown", () => {
     expect(body).toContain(
       `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,
     );
+    for (const listing of MCP_REGISTRY_LINKS.filter(({ id }) =>
+      ["tashan", "roninforge"].includes(id),
+    )) {
+      const card = body.split(`### [${listing.label}](${listing.href})`)[1].split("\n### ")[0];
+      expect(card).toContain("Checked: 2026-09-14");
+      for (const text of [...listing.confirmedClaims, ...listing.limitations]) {
+        expect(card).toContain(text);
+      }
+    }
     expect(body).not.toContain("automated source");
     expect(body).not.toContain("unverified accuracy");
   });

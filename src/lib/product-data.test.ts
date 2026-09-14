@@ -292,10 +292,10 @@ describe("local-ydb-toolkit product data", () => {
     expect(mcpindex?.confirmedClaims.join(" ")).toContain("2026-07-08");
   });
 
-  it("keeps all 28 audited ids unique with the extended and legacy contracts", () => {
+  it("keeps all 30 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
-    expect(ids).toHaveLength(28);
+    expect(ids).toHaveLength(30);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every(
@@ -378,17 +378,21 @@ describe("local-ydb-toolkit product data", () => {
       vibehackers: "stale",
       verifymcp: "current",
       "agent-plugins-directory": "partial",
+      tashan: "partial",
+      roninforge: "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21", "2026-09-07"]),
+      new Set(["2026-08-21", "2026-09-07", "2026-09-14"]),
     );
     expect(
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
     ).toHaveLength(25);
-    const refreshedIds = new Set([
-      "official-mcp-registry",
-      "verifymcp",
-      "agent-plugins-directory",
+    const reviewDates = new Map([
+      ["official-mcp-registry", "2026-09-07"],
+      ["verifymcp", "2026-09-07"],
+      ["agent-plugins-directory", "2026-09-07"],
+      ["tashan", "2026-09-14"],
+      ["roninforge", "2026-09-14"],
     ]);
     expect(
       Object.fromEntries(
@@ -398,7 +402,7 @@ describe("local-ydb-toolkit product data", () => {
       Object.fromEntries(
         MCP_REGISTRY_LINKS.map(({ id }) => [
           id,
-          refreshedIds.has(id) ? "2026-09-07" : "2026-08-21",
+          reviewDates.get(id) ?? "2026-08-21",
         ]),
       ),
     );
@@ -496,6 +500,44 @@ describe("local-ydb-toolkit product data", () => {
     );
   });
 
+  it.each([
+    {
+      id: "tashan",
+      label: "Tashan",
+      href: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
+      claims: ["0.18.2", "2026-09-12", "build provenance", "documentation"],
+      limitations: ["dependency tree", "built-in APIs", "runtime", "2026-09-13", "2026-08-26"],
+    },
+    {
+      id: "roninforge",
+      label: "RoninForge / State of MCP",
+      href: "https://roninforge.org/data/state-of-mcp/servers/io.github.astandrik/local-ydb-mcp/",
+      claims: ["2026-09-13", "registry", "server.json", "0.18.2"],
+      limitations: ["HTTP/2", "response body closed", "runtime", "remote endpoint"],
+    },
+  ])("publishes bounded, dated evidence for $label", ({ id, label, href, claims, limitations }) => {
+    const listing = MCP_REGISTRY_LINKS.find((candidate) => candidate.id === id);
+
+    expect(listing).toMatchObject({
+      label,
+      href,
+      category: "audit",
+      sourceType: "automated",
+      accuracy: "partial",
+      purpose: "independent-analysis",
+      featured: false,
+      includeInSameAs: false,
+      lastChecked: "2026-09-14",
+    });
+    for (const claim of claims) {
+      expect(listing?.confirmedClaims.join(" ")).toContain(claim);
+    }
+    for (const limitation of limitations) {
+      expect(listing?.limitations.join(" ")).toContain(limitation);
+    }
+    expect(listing?.href).not.toContain("utm_");
+  });
+
   it("assigns the requested purpose groups and exactly three sameAs listings", () => {
     const idsFor = (purpose: (typeof MCP_LISTING_PURPOSES)[number]["id"]) =>
       MCP_REGISTRY_LINKS.filter((link) => link.purpose === purpose).map(
@@ -535,6 +577,8 @@ describe("local-ydb-toolkit product data", () => {
       "manifold",
       "forge",
       "verifymcp",
+      "tashan",
+      "roninforge",
     ]);
 
     const featured = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
