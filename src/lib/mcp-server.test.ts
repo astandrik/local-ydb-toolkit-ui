@@ -97,7 +97,7 @@ describe("read-only promo MCP tools", () => {
 
     const result = await callPromoToolForTest("get_public_links", {});
 
-    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 30);
+    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 33);
     expect(result.structuredContent.links).toHaveProperty("mcpRegistries", MCP_REGISTRY_LINKS);
 
     expect(result.structuredContent.links).toMatchObject({
@@ -173,6 +173,26 @@ describe("read-only promo MCP tools", () => {
           id: "agent-plugins-directory",
           href: "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
           lastChecked: "2026-09-07",
+        }),
+        expect.objectContaining({
+          id: "gilde",
+          accuracy: "partial",
+          lastChecked: "2026-09-28",
+        }),
+        expect.objectContaining({
+          id: "skillfoxx",
+          href: "https://skillfoxx.ru/en/plugins/local-ydb-toolkit",
+          lastChecked: "2026-09-28",
+        }),
+        expect.objectContaining({
+          id: "mcpnav",
+          href: "https://mcpnav.net/server/local-ydb-mcp/",
+          lastChecked: "2026-09-28",
+        }),
+        expect.objectContaining({
+          id: "agentrank",
+          href: "https://agentrank-ai.com/tool/astandrik--local-ydb-toolkit/",
+          lastChecked: "2026-09-28",
         }),
       ]),
     });

@@ -292,11 +292,14 @@ describe("agent discovery routes", () => {
         }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(30);
+    expect(body.mcpRegistryLinks).toHaveLength(33);
     expect(body.mcpRegistryLinks).toEqual(MCP_REGISTRY_LINKS);
     expect(body.links).toMatchObject({
       tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
       roninforge: "https://roninforge.org/data/state-of-mcp/servers/io.github.astandrik/local-ydb-mcp/",
+      skillFoxx: "https://skillfoxx.ru/en/plugins/local-ydb-toolkit",
+      mcpNav: "https://mcpnav.net/server/local-ydb-mcp/",
+      agentRank: "https://agentrank-ai.com/tool/astandrik--local-ydb-toolkit/",
     });
     expect(
       body.mcpRegistryLinks.filter((link: { featured: boolean }) => link.featured),

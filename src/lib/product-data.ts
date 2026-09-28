@@ -88,7 +88,10 @@ export type McpRegistryLink = {
     | "verifymcp"
     | "agent-plugins-directory"
     | "tashan"
-    | "roninforge";
+    | "roninforge"
+    | "skillfoxx"
+    | "mcpnav"
+    | "agentrank";
   label: string;
   href: string;
   category: McpRegistryCategory;
@@ -178,6 +181,9 @@ export const PUBLIC_LINKS = {
   tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
   roninforge:
     "https://roninforge.org/data/state-of-mcp/servers/io.github.astandrik/local-ydb-mcp/",
+  skillFoxx: "https://skillfoxx.ru/en/plugins/local-ydb-toolkit",
+  mcpNav: "https://mcpnav.net/server/local-ydb-mcp/",
+  agentRank: "https://agentrank-ai.com/tool/astandrik--local-ydb-toolkit/",
 } as const;
 
 export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
@@ -297,22 +303,23 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Gilde",
     href: PUBLIC_LINKS.gilde,
     category: "directory",
-    status: "stale versioned catalog record",
-    description: "Versioned community manifest imported from an older Official MCP Registry release.",
+    status: "versioned catalog record for the latest release",
+    description: "Versioned community manifest imported from the Official MCP Registry.",
     sourceType: "automated",
-    accuracy: "stale",
+    accuracy: "partial",
     purpose: "version-metadata",
     userValue: "Inspect a versioned manifest with package integrity and runtime metadata.",
     confirmedClaims: [
-      "The newest retained artifact is version 0.16.1 for the canonical repository and npm package.",
-      "Its tarball SHA-256 matches the npm 0.16.1 artifact.",
+      "The catalog added a 0.18.2 manifest on 2026-09-16 next to the retained 0.16.1 record.",
+      "Its 0.18.2 tarball SHA-256 matches the npm 0.18.2 artifact.",
     ],
     limitations: [
-      "The version manifest exposes an empty tools array.",
-      "Versions 0.17.0 and 0.18.0 are absent, and the page provides no independent runtime or security audit.",
+      "Both version manifests expose an empty tools array.",
+      "Versions 0.17.0, 0.18.0, and 0.18.1 are absent, and the page provides no independent runtime or security audit.",
     ],
     featured: false,
     includeInSameAs: false,
+    lastChecked: "2026-09-28",
   }),
   reviewedRegistryLink({
     id: "mcpindex",
@@ -859,6 +866,75 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     featured: false,
     includeInSameAs: false,
     lastChecked: "2026-09-14",
+  }),
+  reviewedRegistryLink({
+    id: "skillfoxx",
+    label: "SkillFoxx",
+    href: PUBLIC_LINKS.skillFoxx,
+    category: "trust",
+    status: "curated plugin profile with heuristic risk level",
+    description: "Curated catalog card with install commands, fit guidance, and a heuristic risk rating.",
+    sourceType: "community",
+    accuracy: "partial",
+    purpose: "installation-discovery",
+    userValue: "Find Codex plugin and Gemini CLI install commands, fit guidance, and the comparison with the official ydb-mcp server.",
+    confirmedClaims: [
+      "SkillFoxx lists the plugin since 2026-09-23 with Codex plugin and Gemini CLI install commands that match the README.",
+      "Its medium risk level cites Docker container control and DDL or restore mutations that run only after confirm: true.",
+    ],
+    limitations: [
+      "The risk level is a heuristic category for tools that run code, make network calls, or read project files, not a code audit.",
+      "The card shows no package version and notes that Claude Community and Gemini gallery publication were not complete at review time.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-28",
+  }),
+  reviewedRegistryLink({
+    id: "mcpnav",
+    label: "MCPNav",
+    href: PUBLIC_LINKS.mcpNav,
+    category: "directory",
+    status: "registry-derived install profile",
+    description: "Registry-derived directory card with the npm install command and a generic client configuration.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "installation-discovery",
+    userValue: "Copy the npx install command and a starting client configuration for the current npm package.",
+    confirmedClaims: [
+      "MCPNav shows version 0.18.2, the npx -y @astandrik/local-ydb-mcp command, and links to the canonical repository and website.",
+      "The page states that its server data comes from the public MCP Registry and community sources.",
+    ],
+    limitations: [
+      "The generic client configuration omits LOCAL_YDB_TOOLKIT_CONFIG, so profile-based tools still need the README configuration step.",
+      "The card shows no crawl date or tool list and provides no independent runtime or security audit.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-28",
+  }),
+  reviewedRegistryLink({
+    id: "agentrank",
+    label: "AgentRank",
+    href: PUBLIC_LINKS.agentRank,
+    category: "trust",
+    status: "repository-metadata score",
+    description: "Automated score built from GitHub stars, commit freshness, issue health, contributors, and dependents.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "independent-analysis",
+    userValue: "Inspect the repository activity signals behind the score and the published scoring methodology.",
+    confirmedClaims: [
+      "AgentRank scored the canonical repository on 2026-09-28 from GitHub stars, commit freshness, issue health, contributors, and dependents, and it links the repository and methodology pages.",
+      "The page reports no npm download data for the package.",
+    ],
+    limitations: [
+      "The score measures repository metadata, not security, provenance, or runtime behavior, and the page files the project under Agent Framework rather than MCP server or skill.",
+      "The score is recomputed daily and the page shows two different weight sets for it, so no numeric value is recorded here.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-09-28",
   }),
 ];
 

@@ -162,7 +162,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(30);
+    expect(body.match(/^### \[/gm)).toHaveLength(33);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
@@ -182,6 +182,15 @@ describe("agent-readable markdown", () => {
     )) {
       const card = body.split(`### [${listing.label}](${listing.href})`)[1].split("\n### ")[0];
       expect(card).toContain("Checked: 2026-09-14");
+      for (const text of [...listing.confirmedClaims, ...listing.limitations]) {
+        expect(card).toContain(text);
+      }
+    }
+    for (const listing of MCP_REGISTRY_LINKS.filter(({ id }) =>
+      ["gilde", "skillfoxx", "mcpnav", "agentrank"].includes(id),
+    )) {
+      const card = body.split(`### [${listing.label}](${listing.href})`)[1].split("\n### ")[0];
+      expect(card).toContain("Checked: 2026-09-28");
       for (const text of [...listing.confirmedClaims, ...listing.limitations]) {
         expect(card).toContain(text);
       }

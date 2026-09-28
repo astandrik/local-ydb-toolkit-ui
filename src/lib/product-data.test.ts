@@ -238,6 +238,13 @@ describe("local-ydb-toolkit product data", () => {
     expect(PUBLIC_LINKS.agentPluginsDirectory).toBe(
       "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
     );
+    expect(PUBLIC_LINKS.skillFoxx).toBe(
+      "https://skillfoxx.ru/en/plugins/local-ydb-toolkit",
+    );
+    expect(PUBLIC_LINKS.mcpNav).toBe("https://mcpnav.net/server/local-ydb-mcp/");
+    expect(PUBLIC_LINKS.agentRank).toBe(
+      "https://agentrank-ai.com/tool/astandrik--local-ydb-toolkit/",
+    );
   });
 
   it("publishes only the three selected featured and sameAs listings", () => {
@@ -273,12 +280,14 @@ describe("local-ydb-toolkit product data", () => {
     expect(gilde).toMatchObject({
       href: PUBLIC_LINKS.gilde,
       purpose: "version-metadata",
-      accuracy: "stale",
+      accuracy: "partial",
       featured: false,
       includeInSameAs: false,
-      lastChecked: "2026-08-21",
+      lastChecked: "2026-09-28",
     });
     expect(gilde?.confirmedClaims.join(" ")).toContain("tarball SHA-256");
+    expect(gilde?.confirmedClaims.join(" ")).toContain("0.18.2");
+    expect(gilde?.confirmedClaims.join(" ")).toContain("2026-09-16");
     expect(gilde?.confirmedClaims.join(" ")).toContain("0.16.1");
     expect(mcpindex).toMatchObject({
       href: PUBLIC_LINKS.mcpIndex,
@@ -292,10 +301,10 @@ describe("local-ydb-toolkit product data", () => {
     expect(mcpindex?.confirmedClaims.join(" ")).toContain("2026-07-08");
   });
 
-  it("keeps all 30 audited ids unique with the extended and legacy contracts", () => {
+  it("keeps all 33 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
-    expect(ids).toHaveLength(30);
+    expect(ids).toHaveLength(33);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every(
@@ -352,7 +361,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(accuracyById).toEqual({
       "official-mcp-registry": "current",
       modelscope: "partial",
-      gilde: "stale",
+      gilde: "partial",
       mcpindex: "stale",
       "curated-mcp": "partial",
       glama: "partial",
@@ -380,19 +389,29 @@ describe("local-ydb-toolkit product data", () => {
       "agent-plugins-directory": "partial",
       tashan: "partial",
       roninforge: "partial",
+      skillfoxx: "partial",
+      mcpnav: "partial",
+      agentrank: "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21", "2026-09-07", "2026-09-14"]),
+      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28"]),
     );
     expect(
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
-    ).toHaveLength(25);
+    ).toHaveLength(24);
+    expect(
+      MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-09-28"),
+    ).toHaveLength(4);
     const reviewDates = new Map([
       ["official-mcp-registry", "2026-09-07"],
       ["verifymcp", "2026-09-07"],
       ["agent-plugins-directory", "2026-09-07"],
       ["tashan", "2026-09-14"],
       ["roninforge", "2026-09-14"],
+      ["gilde", "2026-09-28"],
+      ["skillfoxx", "2026-09-28"],
+      ["mcpnav", "2026-09-28"],
+      ["agentrank", "2026-09-28"],
     ]);
     expect(
       Object.fromEntries(
@@ -416,6 +435,7 @@ describe("local-ydb-toolkit product data", () => {
     };
 
     expect(textFor("gilde")).toContain("0.16.1");
+    expect(textFor("gilde")).toContain("0.18.2");
     expect(textFor("mcpindex")).toContain("0.17.0");
     expect(textFor("mcp-store")).toContain("0.17.0");
     expect(textFor("unyly")).toContain("0.15.4");
@@ -538,6 +558,66 @@ describe("local-ydb-toolkit product data", () => {
     expect(listing?.href).not.toContain("utm_");
   });
 
+  it.each([
+    {
+      id: "skillfoxx",
+      label: "SkillFoxx",
+      href: "https://skillfoxx.ru/en/plugins/local-ydb-toolkit",
+      category: "trust",
+      sourceType: "community",
+      accuracy: "partial",
+      purpose: "installation-discovery",
+      claims: ["2026-09-23", "Codex plugin", "Gemini CLI", "confirm: true"],
+      limitations: ["heuristic", "not a code audit", "no package version"],
+    },
+    {
+      id: "mcpnav",
+      label: "MCPNav",
+      href: "https://mcpnav.net/server/local-ydb-mcp/",
+      category: "directory",
+      sourceType: "automated",
+      accuracy: "partial",
+      purpose: "installation-discovery",
+      claims: ["0.18.2", "npx -y @astandrik/local-ydb-mcp", "public MCP Registry"],
+      limitations: ["LOCAL_YDB_TOOLKIT_CONFIG", "no crawl date", "security audit"],
+    },
+    {
+      id: "agentrank",
+      label: "AgentRank",
+      href: "https://agentrank-ai.com/tool/astandrik--local-ydb-toolkit/",
+      category: "trust",
+      sourceType: "automated",
+      accuracy: "partial",
+      purpose: "independent-analysis",
+      claims: ["2026-09-28", "GitHub stars", "methodology", "no npm download data"],
+      limitations: ["repository metadata", "Agent Framework", "recomputed daily", "no numeric value"],
+    },
+  ])(
+    "publishes dated 2026-09-28 evidence for $label",
+    ({ id, label, href, category, sourceType, accuracy, purpose, claims, limitations }) => {
+      const listing = MCP_REGISTRY_LINKS.find((candidate) => candidate.id === id);
+
+      expect(listing).toMatchObject({
+        label,
+        href,
+        category,
+        sourceType,
+        accuracy,
+        purpose,
+        featured: false,
+        includeInSameAs: false,
+        lastChecked: "2026-09-28",
+      });
+      for (const claim of claims) {
+        expect(listing?.confirmedClaims.join(" ")).toContain(claim);
+      }
+      for (const limitation of limitations) {
+        expect(listing?.limitations.join(" ")).toContain(limitation);
+      }
+      expect(listing?.href).not.toContain("utm_");
+    },
+  );
+
   it("assigns the requested purpose groups and exactly three sameAs listings", () => {
     const idsFor = (purpose: (typeof MCP_LISTING_PURPOSES)[number]["id"]) =>
       MCP_REGISTRY_LINKS.filter((link) => link.purpose === purpose).map(
@@ -557,6 +637,8 @@ describe("local-ydb-toolkit product data", () => {
       "unyly",
       "vibehackers",
       "agent-plugins-directory",
+      "skillfoxx",
+      "mcpnav",
     ]);
     expect(idsFor("version-metadata")).toEqual([
       "gilde",
@@ -579,6 +661,7 @@ describe("local-ydb-toolkit product data", () => {
       "verifymcp",
       "tashan",
       "roninforge",
+      "agentrank",
     ]);
 
     const featured = MCP_REGISTRY_LINKS.filter((link) => link.featured).map(
