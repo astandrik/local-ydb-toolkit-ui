@@ -162,7 +162,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(33);
+    expect(body.match(/^### \[/gm)).toHaveLength(34);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
@@ -174,6 +174,11 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Checked: 2026-08-21");
     expect(body).toContain("does not classify as a failure");
     expect(body).toContain(`### [VerifyMCP](${PUBLIC_LINKS.verifyMcp})`);
+    const clawHubCard = body.split(`### [ClawHub](${PUBLIC_LINKS.clawHub})`)[1].split("\n### ")[0];
+    expect(clawHubCard).toContain("skill version 1.0.0");
+    expect(clawHubCard).toContain("Outcome: Review");
+    expect(clawHubCard).toContain("Checked: 2026-10-05");
+    expect(clawHubCard).toContain(`[Security audit](${PUBLIC_LINKS.clawHubAudit})`);
     expect(body).toContain(
       `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,
     );

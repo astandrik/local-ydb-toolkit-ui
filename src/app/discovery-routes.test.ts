@@ -292,7 +292,14 @@ describe("agent discovery routes", () => {
         }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(33);
+    expect(body.mcpRegistryLinks).toHaveLength(34);
+    expect(body.mcpRegistryLinks).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "clawhub",
+        auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+        lastChecked: "2026-10-05",
+      }),
+    ]));
     expect(body.mcpRegistryLinks).toEqual(MCP_REGISTRY_LINKS);
     expect(body.links).toMatchObject({
       tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",

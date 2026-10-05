@@ -301,10 +301,10 @@ describe("local-ydb-toolkit product data", () => {
     expect(mcpindex?.confirmedClaims.join(" ")).toContain("2026-07-08");
   });
 
-  it("keeps all 33 audited ids unique with the extended and legacy contracts", () => {
+  it("keeps all 34 audited ids unique with the extended and legacy contracts", () => {
     const ids = MCP_REGISTRY_LINKS.map((link) => link.id);
 
-    expect(ids).toHaveLength(33);
+    expect(ids).toHaveLength(34);
     expect(new Set(ids).size).toBe(ids.length);
     expect(
       MCP_REGISTRY_LINKS.every(
@@ -386,6 +386,7 @@ describe("local-ydb-toolkit product data", () => {
       forge: "unverified",
       vibehackers: "stale",
       verifymcp: "current",
+      clawhub: "partial",
       "agent-plugins-directory": "partial",
       tashan: "partial",
       roninforge: "partial",
@@ -394,7 +395,7 @@ describe("local-ydb-toolkit product data", () => {
       agentrank: "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28"]),
+      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28", "2026-10-05"]),
     );
     expect(
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
@@ -405,6 +406,7 @@ describe("local-ydb-toolkit product data", () => {
     const reviewDates = new Map([
       ["official-mcp-registry", "2026-09-07"],
       ["verifymcp", "2026-09-07"],
+      ["clawhub", "2026-10-05"],
       ["agent-plugins-directory", "2026-09-07"],
       ["tashan", "2026-09-14"],
       ["roninforge", "2026-09-14"],
@@ -518,6 +520,26 @@ describe("local-ydb-toolkit product data", () => {
     expect(agentPluginsDirectory?.limitations.join(" ")).toContain(
       "client marketplace availability",
     );
+  });
+
+  it("keeps the ClawHub skill audit distinct from MCP and deployment verification", () => {
+    const listing = MCP_REGISTRY_LINKS.find(({ id }) => id === "clawhub");
+    expect(listing).toMatchObject({
+      href: PUBLIC_LINKS.clawHub,
+      auditHref: PUBLIC_LINKS.clawHubAudit,
+      category: "audit",
+      sourceType: "automated",
+      accuracy: "partial",
+      purpose: "independent-analysis",
+      featured: false,
+      includeInSameAs: false,
+      lastChecked: "2026-10-05",
+    });
+    expect(listing?.confirmedClaims.join(" ")).toContain("skill version 1.0.0");
+    expect(listing?.confirmedClaims.join(" ")).toContain("Outcome: Review");
+    expect(listing?.limitations.join(" ")).toContain("card shows Pass");
+    expect(listing?.limitations.join(" ")).toContain("not the npm MCP server");
+    expect(listing?.limitations.join(" ")).toContain("not a security certification");
   });
 
   it.each([
@@ -659,6 +681,7 @@ describe("local-ydb-toolkit product data", () => {
       "manifold",
       "forge",
       "verifymcp",
+      "clawhub",
       "tashan",
       "roninforge",
       "agentrank",

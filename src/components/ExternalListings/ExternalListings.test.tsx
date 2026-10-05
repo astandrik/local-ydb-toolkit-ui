@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import ListingsPage from "@/app/listings/page";
 import { PromoPage } from "@/components/PromoPage/PromoPage";
-import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
+import { MCP_REGISTRY_LINKS, PUBLIC_LINKS } from "@/lib/product-data";
 
 vi.mock("@/components/AskAI/AskAIPanel", () => ({
   AskAIPanel: () => <div data-testid="ask-ai" />,
@@ -105,7 +105,14 @@ describe("homepage and external listing pages", () => {
   it("renders every retained listing exactly once in five purpose groups", () => {
     const html = renderToStaticMarkup(<ListingsPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(33);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(34);
+    const clawHubCard = html.split('data-listing-id="clawhub"')[1].split("</article>")[0];
+    expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHub}"`);
+    expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHubAudit}"`);
+    expect(clawHubCard).toContain("Read security audit");
+    expect(clawHubCard).toContain("Outcome: Review");
+    expect(clawHubCard).toContain("card shows Pass");
+    expect(clawHubCard).toContain('<time dateTime="2026-10-05">2026-10-05</time>');
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);

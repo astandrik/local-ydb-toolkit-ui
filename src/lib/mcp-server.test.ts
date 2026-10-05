@@ -97,8 +97,21 @@ describe("read-only promo MCP tools", () => {
 
     const result = await callPromoToolForTest("get_public_links", {});
 
-    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 33);
+    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 34);
     expect(result.structuredContent.links).toHaveProperty("mcpRegistries", MCP_REGISTRY_LINKS);
+    expect(result.structuredContent).toMatchObject({
+      links: {
+        mcpRegistries: expect.arrayContaining([
+          expect.objectContaining({
+            id: "clawhub",
+            auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+            accuracy: "partial",
+            featured: false,
+            includeInSameAs: false,
+          }),
+        ]),
+      },
+    });
 
     expect(result.structuredContent.links).toMatchObject({
       site: "https://local-ydb-toolkit.ydb-qdrant.tech/",
