@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { callPromoToolForTest } from "@/lib/mcp-server";
-import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.1.json";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
 import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
 
 describe("read-only promo MCP tools", () => {
@@ -108,7 +108,7 @@ describe("read-only promo MCP tools", () => {
             auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
             lastChecked: "2026-10-06",
             confirmedClaims: expect.arrayContaining([
-              expect.stringContaining("skill version 1.0.1"),
+              expect.stringContaining(`skill version ${clawHubAudit.version}`),
               expect.stringContaining(clawHubAudit.auditTime),
               expect.stringContaining(clawHubAudit.skillspector.recommendation),
               expect.stringContaining(`VirusTotal reports ${clawHubAudit.virustotal.status}`),

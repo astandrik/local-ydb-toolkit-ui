@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.1.json";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
 import {
   AGENT_BOUNDARIES,
   GUIDE_LINKS,
@@ -536,7 +536,7 @@ describe("local-ydb-toolkit product data", () => {
       includeInSameAs: false,
       lastChecked: "2026-10-06",
     });
-    expect(listing?.confirmedClaims.join(" ")).toContain("skill version 1.0.1");
+    expect(listing?.confirmedClaims.join(" ")).toContain(`skill version ${clawHubAudit.version}`);
     expect(listing?.confirmedClaims.join(" ")).toContain("2026-10-06");
     expect(listing?.confirmedClaims.join(" ")).toContain("clean / benign");
     expect(listing?.confirmedClaims.join(" ")).toContain("Outcome: Review");
@@ -551,7 +551,8 @@ describe("local-ydb-toolkit product data", () => {
     expect(claims).toContain(`VirusTotal reports ${clawHubAudit.virustotal.status}`);
     expect(claims).toContain(`${clawHubAudit.virustotal.malicious} malicious, ${clawHubAudit.virustotal.suspicious} suspicious and ${clawHubAudit.virustotal.undetected} undetected`);
     expect(listing?.limitations.join(" ")).toContain(`${clawHubAudit.skillspector.exportedFindings} of ${clawHubAudit.skillspector.reportedFindings} reported finding descriptions`);
-    expect(listing?.limitations.join(" ")).toContain("does not explicitly require rotating");
+    expect(claims).toContain("requires verified root-password rotation");
+    expect(listing?.limitations.join(" ")).not.toContain("does not explicitly require rotating");
     expect(listing?.limitations.join(" ")).not.toContain("results are absent");
     expect(listing?.limitations.join(" ")).toContain("not the npm MCP server");
     expect(listing?.limitations.join(" ")).toContain("not a security certification");
