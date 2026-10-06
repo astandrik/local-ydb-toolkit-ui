@@ -21,6 +21,7 @@ import {
   buildWebhooksMarkdown,
   buildYdbSchemaDdlMcpGuideMarkdown,
 } from "@/lib/agent-markdown";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.1.json";
 import { MCP_REGISTRY_LINKS, PUBLIC_LINKS } from "@/lib/product-data";
 
 describe("agent-readable markdown", () => {
@@ -180,7 +181,12 @@ describe("agent-readable markdown", () => {
     expect(clawHubCard).toContain("Outcome: Review");
     expect(clawHubCard).toContain("Checked: 2026-10-06");
     expect(clawHubCard).toContain("Critical hardcoded-secret finding");
-    expect(clawHubCard).toContain("SkillSpector and VirusTotal results are absent");
+    expect(clawHubCard).toContain(clawHubAudit.auditTime);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.recommendation);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.severity);
+    expect(clawHubCard).toContain(`VirusTotal reports ${clawHubAudit.virustotal.status}`);
+    expect(clawHubCard).toContain(`${clawHubAudit.skillspector.exportedFindings} of ${clawHubAudit.skillspector.reportedFindings} reported finding descriptions`);
+    expect(clawHubCard).not.toContain("results are absent");
     expect(clawHubCard).toContain(`[Security audit](${PUBLIC_LINKS.clawHubAudit})`);
     expect(body).toContain(
       `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,

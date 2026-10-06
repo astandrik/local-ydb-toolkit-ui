@@ -817,12 +817,15 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     userValue: "Discover the installable skill and inspect its credential-handling and administrative-risk findings.",
     confirmedClaims: [
       "ClawHub lists local-ydb skill version 1.0.1 under astandrik.",
-      "The 2026-10-06 audit records ClawScan as clean / benign, while the detailed page reports Outcome: Review.",
+      "The 2026-10-06 11:19 UTC audit records ClawScan as clean / benign, while the detailed page reports Outcome: Review.",
+      "SkillSpector reports 30 findings: CRITICAL severity, DO_NOT_INSTALL recommendation.",
+      "VirusTotal reports clean, with 0 malicious, 0 suspicious and 65 undetected results.",
     ],
     limitations: [
       "The card shows Pass while the detailed audit reports Review; read the detailed findings before installing.",
       "The static scan flags references/verification.md:43 as a Critical hardcoded-secret finding. The checked line reads the configured password file and does not embed a secret.",
-      "SkillSpector and VirusTotal results are absent from the downloaded 1.0.1 report; absence is not a clean scan result.",
+      "The SkillSpector export includes 25 of 30 reported finding descriptions; the remaining 5 could not be individually checked.",
+      "Source review confirmed a documentation gap: the hardening sequence does not explicitly require rotating the documented weak default root password before shared or exposed use.",
       "The audit covers the submitted skill artifact, not the npm MCP server or operational safety on a configured Docker/YDB deployment.",
       "Automated findings require source-level triage; a Pass label is not a security certification.",
     ],

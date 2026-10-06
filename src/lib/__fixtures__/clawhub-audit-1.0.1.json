@@ -1,0 +1,24 @@
+{
+  "source": "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+  "version": "1.0.1",
+  "artifactSha256": "5c2c9a8846d446865848bb559a16f940b7922202df466a3d56408eee7e3a176d",
+  "auditTime": "2026-10-06 11:19 UTC",
+  "outcome": "Review",
+  "cardOutcome": "Pass",
+  "clawscan": {
+    "status": "clean",
+    "verdict": "benign"
+  },
+  "skillspector": {
+    "severity": "CRITICAL",
+    "recommendation": "DO_NOT_INSTALL",
+    "reportedFindings": 30,
+    "exportedFindings": 25
+  },
+  "virustotal": {
+    "status": "clean",
+    "malicious": 0,
+    "suspicious": 0,
+    "undetected": 65
+  }
+}
