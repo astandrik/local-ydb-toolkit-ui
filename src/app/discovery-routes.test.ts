@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { describe, expect, it, vi } from "vitest";
 
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
 import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
 
 describe("agent discovery routes", () => {
@@ -292,7 +293,20 @@ describe("agent discovery routes", () => {
         }),
       ]),
     );
-    expect(body.mcpRegistryLinks).toHaveLength(33);
+    expect(body.mcpRegistryLinks).toHaveLength(34);
+    expect(body.mcpRegistryLinks).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "clawhub",
+        auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+        lastChecked: "2026-10-06",
+        confirmedClaims: expect.arrayContaining([
+          expect.stringContaining(`skill version ${clawHubAudit.version}`),
+          expect.stringContaining(clawHubAudit.auditTime),
+          expect.stringContaining(clawHubAudit.skillspector.recommendation),
+          expect.stringContaining(`VirusTotal reports ${clawHubAudit.virustotal.status}`),
+        ]),
+      }),
+    ]));
     expect(body.mcpRegistryLinks).toEqual(MCP_REGISTRY_LINKS);
     expect(body.links).toMatchObject({
       tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",

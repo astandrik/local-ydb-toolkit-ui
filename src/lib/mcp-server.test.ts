@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { callPromoToolForTest } from "@/lib/mcp-server";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
 import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
 
 describe("read-only promo MCP tools", () => {
@@ -97,8 +98,29 @@ describe("read-only promo MCP tools", () => {
 
     const result = await callPromoToolForTest("get_public_links", {});
 
-    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 33);
+    expect(result.structuredContent.links).toHaveProperty("mcpRegistries.length", 34);
     expect(result.structuredContent.links).toHaveProperty("mcpRegistries", MCP_REGISTRY_LINKS);
+    expect(result.structuredContent).toMatchObject({
+      links: {
+        mcpRegistries: expect.arrayContaining([
+          expect.objectContaining({
+            id: "clawhub",
+            auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+            lastChecked: "2026-10-06",
+            confirmedClaims: expect.arrayContaining([
+              expect.stringContaining(`skill version ${clawHubAudit.version}`),
+              expect.stringContaining(clawHubAudit.auditTime),
+              expect.stringContaining(clawHubAudit.skillspector.recommendation),
+              expect.stringContaining(`VirusTotal reports ${clawHubAudit.virustotal.status}`),
+              expect.stringContaining("clean / benign"),
+            ]),
+            accuracy: "partial",
+            featured: false,
+            includeInSameAs: false,
+          }),
+        ]),
+      },
+    });
 
     expect(result.structuredContent.links).toMatchObject({
       site: "https://local-ydb-toolkit.ydb-qdrant.tech/",

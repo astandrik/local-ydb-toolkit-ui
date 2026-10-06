@@ -39,7 +39,7 @@ export function buildListingsMarkdown(): string {
 - Useful for: ${listing.userValue}
 - Confirmed: ${listing.confirmedClaims.join(" ")}
 - Limitations: ${listing.limitations.join(" ")}
-- Checked: ${listing.lastChecked ?? "date not recorded"}`,
+- Checked: ${listing.lastChecked ?? "date not recorded"}${listing.auditHref ? `\n- [Security audit](${listing.auditHref})` : ""}`,
       )
       .join("\n\n");
 

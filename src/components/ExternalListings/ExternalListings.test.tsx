@@ -4,7 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import ListingsPage from "@/app/listings/page";
 import { PromoPage } from "@/components/PromoPage/PromoPage";
-import { MCP_REGISTRY_LINKS } from "@/lib/product-data";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
+import { MCP_REGISTRY_LINKS, PUBLIC_LINKS } from "@/lib/product-data";
 
 vi.mock("@/components/AskAI/AskAIPanel", () => ({
   AskAIPanel: () => <div data-testid="ask-ai" />,
@@ -105,7 +106,24 @@ describe("homepage and external listing pages", () => {
   it("renders every retained listing exactly once in five purpose groups", () => {
     const html = renderToStaticMarkup(<ListingsPage />);
 
-    expect(html.match(/data-listing-id=/g)).toHaveLength(33);
+    expect(html.match(/data-listing-id=/g)).toHaveLength(34);
+    const clawHubCard = html.split('data-listing-id="clawhub"')[1].split("</article>")[0];
+    expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHub}"`);
+    expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHubAudit}"`);
+    expect(clawHubCard).toContain("Read security audit");
+    expect(clawHubCard).toContain(`skill version ${clawHubAudit.version}`);
+    expect(clawHubCard).toContain("Outcome: Review");
+    expect(clawHubCard).toContain("card shows Pass");
+    expect(clawHubCard).toContain("Critical hardcoded-secret finding");
+    expect(clawHubCard).toContain(clawHubAudit.auditTime);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.recommendation);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.severity);
+    expect(clawHubCard).toContain(`VirusTotal reports ${clawHubAudit.virustotal.status}`);
+    expect(clawHubCard).toContain(`${clawHubAudit.skillspector.exportedFindings} of ${clawHubAudit.skillspector.reportedFindings} reported finding descriptions`);
+    expect(clawHubCard).not.toContain("results are absent");
+    expect(clawHubCard).toContain("requires verified root-password rotation");
+    expect(clawHubCard).not.toContain("does not explicitly require rotating");
+    expect(clawHubCard).toContain('<time dateTime="2026-10-06">2026-10-06</time>');
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);

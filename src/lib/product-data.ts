@@ -86,6 +86,7 @@ export type McpRegistryLink = {
     | "forge"
     | "vibehackers"
     | "verifymcp"
+    | "clawhub"
     | "agent-plugins-directory"
     | "tashan"
     | "roninforge"
@@ -95,6 +96,7 @@ export type McpRegistryLink = {
   label: string;
   href: string;
   category: McpRegistryCategory;
+  auditHref?: string;
   status: string;
   description: string;
   sourceType: McpRegistrySourceType;
@@ -176,6 +178,8 @@ export const PUBLIC_LINKS = {
   vibehackers: "https://vibehackers.io/mcp/local-ydb-mcp",
   verifyMcp:
     "https://verifymcp.io/servers/astandrik-local-ydb-mcp/astandrik-local-ydb-mcp",
+  clawHub: "https://clawhub.ai/astandrik/skills/local-ydb",
+  clawHubAudit: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
   agentPluginsDirectory:
     "https://agentpluginsdirectory.com/plugins/local-ydb-toolkit",
   tashan: "https://tashan.sh/capability/pkg-astandrik-local-ydb-mcp",
@@ -798,6 +802,36 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     featured: false,
     includeInSameAs: false,
     lastChecked: "2026-09-07",
+  }),
+  reviewedRegistryLink({
+    id: "clawhub",
+    label: "ClawHub",
+    href: PUBLIC_LINKS.clawHub,
+    auditHref: PUBLIC_LINKS.clawHubAudit,
+    category: "audit",
+    status: "skill audit requires review",
+    description: "Versioned automated security analysis of the published local-ydb skill.",
+    sourceType: "automated",
+    accuracy: "partial",
+    purpose: "independent-analysis",
+    userValue: "Discover the installable skill and inspect its credential-handling and administrative-risk findings.",
+    confirmedClaims: [
+      "ClawHub lists local-ydb skill version 1.0.2 under astandrik.",
+      "The 2026-10-06 15:00 UTC audit records ClawScan as clean / benign, while the detailed page reports Outcome: Review.",
+      "SkillSpector reports 28 findings: CRITICAL severity, DO_NOT_INSTALL recommendation.",
+      "VirusTotal reports clean, with 0 malicious, 0 suspicious and 65 undetected results.",
+      "The published runbook requires verified root-password rotation before shared or exposed use.",
+    ],
+    limitations: [
+      "The card shows Pass while the detailed audit reports Review; read the detailed findings before installing.",
+      "The static scan flags references/verification.md:43 as a Critical hardcoded-secret finding. The checked line reads the configured password file and does not embed a secret.",
+      "The SkillSpector export includes 25 of 28 reported finding descriptions; the remaining 3 could not be individually checked.",
+      "The audit covers the submitted skill artifact, not the npm MCP server or operational safety on a configured Docker/YDB deployment.",
+      "Automated findings require source-level triage; a Pass label is not a security certification.",
+    ],
+    featured: false,
+    includeInSameAs: false,
+    lastChecked: "2026-10-06",
   }),
   reviewedRegistryLink({
     id: "agent-plugins-directory",

@@ -51,6 +51,12 @@ export function ExternalListingCard({ listing }: ExternalListingCardProps) {
             "date not recorded"
           )}
         </span>
+        {listing.auditHref && (
+          <a href={listing.auditHref} target="_blank" rel="noopener noreferrer">
+            Read security audit
+            <ArrowRight />
+          </a>
+        )}
         <a href={listing.href} target="_blank" rel="noopener noreferrer">
           Open external listing
           <ArrowRight />

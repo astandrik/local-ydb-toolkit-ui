@@ -21,6 +21,7 @@ import {
   buildWebhooksMarkdown,
   buildYdbSchemaDdlMcpGuideMarkdown,
 } from "@/lib/agent-markdown";
+import clawHubAudit from "@/lib/__fixtures__/clawhub-audit-1.0.2.json";
 import { MCP_REGISTRY_LINKS, PUBLIC_LINKS } from "@/lib/product-data";
 
 describe("agent-readable markdown", () => {
@@ -162,7 +163,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("## Version metadata");
     expect(body).toContain("## Change monitoring");
     expect(body).toContain("## Independent analysis");
-    expect(body.match(/^### \[/gm)).toHaveLength(33);
+    expect(body.match(/^### \[/gm)).toHaveLength(34);
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(body.split(`### [${listing.label}](${listing.href})`)).toHaveLength(
         2,
@@ -174,6 +175,21 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("Checked: 2026-08-21");
     expect(body).toContain("does not classify as a failure");
     expect(body).toContain(`### [VerifyMCP](${PUBLIC_LINKS.verifyMcp})`);
+    const clawHubCard = body.split(`### [ClawHub](${PUBLIC_LINKS.clawHub})`)[1].split("\n### ")[0];
+    expect(clawHubCard).toContain(`skill version ${clawHubAudit.version}`);
+    expect(clawHubCard).toContain("clean / benign");
+    expect(clawHubCard).toContain("Outcome: Review");
+    expect(clawHubCard).toContain("Checked: 2026-10-06");
+    expect(clawHubCard).toContain("Critical hardcoded-secret finding");
+    expect(clawHubCard).toContain(clawHubAudit.auditTime);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.recommendation);
+    expect(clawHubCard).toContain(clawHubAudit.skillspector.severity);
+    expect(clawHubCard).toContain(`VirusTotal reports ${clawHubAudit.virustotal.status}`);
+    expect(clawHubCard).toContain(`${clawHubAudit.skillspector.exportedFindings} of ${clawHubAudit.skillspector.reportedFindings} reported finding descriptions`);
+    expect(clawHubCard).not.toContain("results are absent");
+    expect(clawHubCard).toContain("requires verified root-password rotation");
+    expect(clawHubCard).not.toContain("does not explicitly require rotating");
+    expect(clawHubCard).toContain(`[Security audit](${PUBLIC_LINKS.clawHubAudit})`);
     expect(body).toContain(
       `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,
     );
