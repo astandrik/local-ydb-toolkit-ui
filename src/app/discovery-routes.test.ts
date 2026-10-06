@@ -297,7 +297,10 @@ describe("agent discovery routes", () => {
       expect.objectContaining({
         id: "clawhub",
         auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
-        lastChecked: "2026-10-05",
+        lastChecked: "2026-10-06",
+        confirmedClaims: expect.arrayContaining([
+          expect.stringContaining("skill version 1.0.1"),
+        ]),
       }),
     ]));
     expect(body.mcpRegistryLinks).toEqual(MCP_REGISTRY_LINKS);

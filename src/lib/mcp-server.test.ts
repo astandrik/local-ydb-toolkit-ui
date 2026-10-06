@@ -105,6 +105,11 @@ describe("read-only promo MCP tools", () => {
           expect.objectContaining({
             id: "clawhub",
             auditHref: "https://clawhub.ai/astandrik/skills/local-ydb/security-audit",
+            lastChecked: "2026-10-06",
+            confirmedClaims: expect.arrayContaining([
+              expect.stringContaining("skill version 1.0.1"),
+              expect.stringContaining("clean / benign"),
+            ]),
             accuracy: "partial",
             featured: false,
             includeInSameAs: false,

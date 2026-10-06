@@ -175,9 +175,12 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("does not classify as a failure");
     expect(body).toContain(`### [VerifyMCP](${PUBLIC_LINKS.verifyMcp})`);
     const clawHubCard = body.split(`### [ClawHub](${PUBLIC_LINKS.clawHub})`)[1].split("\n### ")[0];
-    expect(clawHubCard).toContain("skill version 1.0.0");
+    expect(clawHubCard).toContain("skill version 1.0.1");
+    expect(clawHubCard).toContain("clean / benign");
     expect(clawHubCard).toContain("Outcome: Review");
-    expect(clawHubCard).toContain("Checked: 2026-10-05");
+    expect(clawHubCard).toContain("Checked: 2026-10-06");
+    expect(clawHubCard).toContain("Critical hardcoded-secret finding");
+    expect(clawHubCard).toContain("SkillSpector and VirusTotal results are absent");
     expect(clawHubCard).toContain(`[Security audit](${PUBLIC_LINKS.clawHubAudit})`);
     expect(body).toContain(
       `### [AgentPluginsDirectory.com](${PUBLIC_LINKS.agentPluginsDirectory})`,

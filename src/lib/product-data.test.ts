@@ -395,7 +395,7 @@ describe("local-ydb-toolkit product data", () => {
       agentrank: "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28", "2026-10-05"]),
+      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28", "2026-10-06"]),
     );
     expect(
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
@@ -406,7 +406,7 @@ describe("local-ydb-toolkit product data", () => {
     const reviewDates = new Map([
       ["official-mcp-registry", "2026-09-07"],
       ["verifymcp", "2026-09-07"],
-      ["clawhub", "2026-10-05"],
+      ["clawhub", "2026-10-06"],
       ["agent-plugins-directory", "2026-09-07"],
       ["tashan", "2026-09-14"],
       ["roninforge", "2026-09-14"],
@@ -533,11 +533,16 @@ describe("local-ydb-toolkit product data", () => {
       purpose: "independent-analysis",
       featured: false,
       includeInSameAs: false,
-      lastChecked: "2026-10-05",
+      lastChecked: "2026-10-06",
     });
-    expect(listing?.confirmedClaims.join(" ")).toContain("skill version 1.0.0");
+    expect(listing?.confirmedClaims.join(" ")).toContain("skill version 1.0.1");
+    expect(listing?.confirmedClaims.join(" ")).toContain("2026-10-06");
+    expect(listing?.confirmedClaims.join(" ")).toContain("clean / benign");
     expect(listing?.confirmedClaims.join(" ")).toContain("Outcome: Review");
     expect(listing?.limitations.join(" ")).toContain("card shows Pass");
+    expect(listing?.limitations.join(" ")).toContain("Critical hardcoded-secret finding");
+    expect(listing?.limitations.join(" ")).toContain("does not embed a secret");
+    expect(listing?.limitations.join(" ")).toContain("SkillSpector and VirusTotal results are absent");
     expect(listing?.limitations.join(" ")).toContain("not the npm MCP server");
     expect(listing?.limitations.join(" ")).toContain("not a security certification");
   });

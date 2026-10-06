@@ -110,9 +110,12 @@ describe("homepage and external listing pages", () => {
     expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHub}"`);
     expect(clawHubCard).toContain(`href="${PUBLIC_LINKS.clawHubAudit}"`);
     expect(clawHubCard).toContain("Read security audit");
+    expect(clawHubCard).toContain("skill version 1.0.1");
     expect(clawHubCard).toContain("Outcome: Review");
     expect(clawHubCard).toContain("card shows Pass");
-    expect(clawHubCard).toContain('<time dateTime="2026-10-05">2026-10-05</time>');
+    expect(clawHubCard).toContain("Critical hardcoded-secret finding");
+    expect(clawHubCard).toContain("SkillSpector and VirusTotal results are absent");
+    expect(clawHubCard).toContain('<time dateTime="2026-10-06">2026-10-06</time>');
     for (const listing of MCP_REGISTRY_LINKS) {
       expect(html.split(`data-listing-id="${listing.id}"`)).toHaveLength(2);
       expect(html).toContain(`href="${listing.href.replaceAll("&", "&amp;")}"`);

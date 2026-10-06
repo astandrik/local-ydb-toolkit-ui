@@ -816,17 +816,19 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     purpose: "independent-analysis",
     userValue: "Discover the installable skill and inspect its credential-handling and administrative-risk findings.",
     confirmedClaims: [
-      "ClawHub lists local-ydb skill version 1.0.0 under astandrik.",
-      "The detailed audit dated 2026-09-16 reports Outcome: Review, including a credential-handling finding in references/verification.md.",
+      "ClawHub lists local-ydb skill version 1.0.1 under astandrik.",
+      "The 2026-10-06 audit records ClawScan as clean / benign, while the detailed page reports Outcome: Review.",
     ],
     limitations: [
       "The card shows Pass while the detailed audit reports Review; read the detailed findings before installing.",
+      "The static scan flags references/verification.md:43 as a Critical hardcoded-secret finding. The checked line reads the configured password file and does not embed a secret.",
+      "SkillSpector and VirusTotal results are absent from the downloaded 1.0.1 report; absence is not a clean scan result.",
       "The audit covers the submitted skill artifact, not the npm MCP server or operational safety on a configured Docker/YDB deployment.",
       "Automated findings require source-level triage; a Pass label is not a security certification.",
     ],
     featured: false,
     includeInSameAs: false,
-    lastChecked: "2026-10-05",
+    lastChecked: "2026-10-06",
   }),
   reviewedRegistryLink({
     id: "agent-plugins-directory",
