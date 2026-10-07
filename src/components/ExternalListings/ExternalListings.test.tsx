@@ -44,7 +44,7 @@ describe("homepage and external listing pages", () => {
   it("uses a neutral local target badge instead of the official YDB wordmark", () => {
     const html = renderToStaticMarkup(<PromoPage />);
 
-    expect(html).toContain("0.18.2 · 39 tools");
+    expect(html).toContain("0.19.0 · 39 tools");
     expect(html).toContain("Local YDB target");
     expect(html).toContain("Docker target stays on your machine");
     expect(html).not.toContain("/assets/ydb-icon.svg");

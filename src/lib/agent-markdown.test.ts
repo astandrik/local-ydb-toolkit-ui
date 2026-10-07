@@ -44,7 +44,7 @@ describe("agent-readable markdown", () => {
     expect(body).toContain("/docs/webhooks");
     expect(body).toContain("/guides");
     expect(body).toContain("@astandrik/local-ydb-mcp@latest");
-    expect(body).toContain("0.18.2, 39 tools");
+    expect(body).toContain("0.19.0, 39 tools");
     expect(body).toContain(`[Security policy](${PUBLIC_LINKS.security})`);
     expect(body).toContain("confirm: true");
     expect(body).toContain("## Featured external listings");

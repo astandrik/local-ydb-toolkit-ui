@@ -72,9 +72,9 @@ describe("local-ydb-toolkit product data", () => {
   it("publishes the reviewed toolkit release snapshot", () => {
     expect(TOOLKIT_RELEASE).toEqual({
       package: "@astandrik/local-ydb-mcp",
-      version: "0.18.2",
+      version: "0.19.0",
       toolCount: 39,
-      checkedAt: "2026-09-07",
+      checkedAt: "2026-10-07",
     });
   });
 
@@ -189,7 +189,7 @@ describe("local-ydb-toolkit product data", () => {
     expect(descriptions.upgrade).toContain("not byte progress");
   });
 
-  it("covers every local-ydb-toolkit 0.18.2 tool exactly once", () => {
+  it("covers every current toolkit tool exactly once", () => {
     const workflowTools = WORKFLOWS.flatMap((workflow) => workflow.tools);
 
     expect(new Set(workflowTools).size).toBe(workflowTools.length);
@@ -260,9 +260,9 @@ describe("local-ydb-toolkit product data", () => {
       purpose: "identity",
       featured: true,
       includeInSameAs: true,
-      lastChecked: "2026-09-07",
+      lastChecked: "2026-10-07",
     });
-    expect(official?.confirmedClaims.join(" ")).toContain("0.18.2");
+    expect(official?.confirmedClaims.join(" ")).toContain("0.19.0");
     expect(official?.confirmedClaims.join(" ")).not.toContain("0.15.2");
     expect(modelScope).toMatchObject({
       href: "https://modelscope.cn/mcp/servers/astandrik/local-ydb-mcp",
@@ -385,7 +385,7 @@ describe("local-ydb-toolkit product data", () => {
       manifold: "stale",
       forge: "unverified",
       vibehackers: "stale",
-      verifymcp: "current",
+      verifymcp: "stale",
       "agent-plugins-directory": "partial",
       tashan: "partial",
       roninforge: "partial",
@@ -394,7 +394,7 @@ describe("local-ydb-toolkit product data", () => {
       agentrank: "partial",
     });
     expect(new Set(MCP_REGISTRY_LINKS.map(({ lastChecked }) => lastChecked))).toEqual(
-      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28"]),
+      new Set(["2026-08-21", "2026-09-07", "2026-09-14", "2026-09-28", "2026-10-07"]),
     );
     expect(
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-08-21"),
@@ -403,7 +403,7 @@ describe("local-ydb-toolkit product data", () => {
       MCP_REGISTRY_LINKS.filter(({ lastChecked }) => lastChecked === "2026-09-28"),
     ).toHaveLength(4);
     const reviewDates = new Map([
-      ["official-mcp-registry", "2026-09-07"],
+      ["official-mcp-registry", "2026-10-07"],
       ["verifymcp", "2026-09-07"],
       ["agent-plugins-directory", "2026-09-07"],
       ["tashan", "2026-09-14"],
@@ -485,7 +485,7 @@ describe("local-ydb-toolkit product data", () => {
       href: PUBLIC_LINKS.verifyMcp,
       category: "audit",
       sourceType: "automated",
-      accuracy: "current",
+      accuracy: "stale",
       purpose: "independent-analysis",
       featured: false,
       includeInSameAs: false,
@@ -497,6 +497,8 @@ describe("local-ydb-toolkit product data", () => {
     expect(verifyMcp?.limitations.join(" ")).toContain("beta");
     expect(verifyMcp?.limitations.join(" ")).toContain("bounded automatic checks");
     expect(verifyMcp?.limitations.join(" ")).toContain("configured Docker/YDB deployment");
+
+    expect(verifyMcp?.limitations.join(" ")).toContain(`current toolkit version is ${TOOLKIT_RELEASE.version}`);
 
     expect(agentPluginsDirectory).toMatchObject({
       label: "AgentPluginsDirectory.com",
