@@ -202,7 +202,7 @@ export const PROJECTS_USING_LOCAL_YDB: ProjectUsingLocalYdb[] = [
 ];
 
 const MCP_REGISTRY_REVIEW_DATE = "2026-08-21";
-const CURRENT_TOOLKIT_VERSION = "0.18.2";
+const CURRENT_TOOLKIT_VERSION = "0.19.0";
 
 function reviewedRegistryLink(
   link: Omit<McpRegistryLink, "lastChecked" | "note"> & {
@@ -275,7 +275,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     ],
     featured: true,
     includeInSameAs: true,
-    lastChecked: "2026-09-07",
+    lastChecked: "2026-10-07",
   }),
   reviewedRegistryLink({
     id: "modelscope",
@@ -781,17 +781,18 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "VerifyMCP",
     href: PUBLIC_LINKS.verifyMcp,
     category: "audit",
-    status: "current automated artifact and schema analysis",
+    status: "versioned automated artifact and schema analysis",
     description: "Dated third-party analysis of the published npm artifact and MCP schema.",
     sourceType: "automated",
-    accuracy: "current",
+    accuracy: "stale",
     purpose: "independent-analysis",
-    userValue: "Inspect independent provenance and MCP schema checks for the current published package.",
+    userValue: "Inspect independent provenance and MCP schema checks for the recorded package version.",
     confirmedClaims: [
       "VerifyMCP reports that it analyzed version 0.18.2 on 2026-09-07 and verified the published npm artifact and source provenance.",
       "VerifyMCP reports that its bounded automatic MCP schema checks completed for that artifact.",
     ],
     limitations: [
+      `The retained scan covers 0.18.2; the current toolkit version is ${CURRENT_TOOLKIT_VERSION}.`,
       "VerifyMCP is beta and its findings are bounded automatic checks.",
       "The scan does not verify operational safety on a configured Docker/YDB deployment.",
     ],
@@ -804,7 +805,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "AgentPluginsDirectory.com",
     href: PUBLIC_LINKS.agentPluginsDirectory,
     category: "directory",
-    status: "current automated manifest validation",
+    status: "dated automated manifest validation",
     description: "Dated directory record for the repository Agent Plugin manifest.",
     sourceType: "automated",
     accuracy: "partial",
@@ -1022,7 +1023,7 @@ export const TOOLKIT_RELEASE = {
   package: "@astandrik/local-ydb-mcp",
   version: CURRENT_TOOLKIT_VERSION,
   toolCount: 39,
-  checkedAt: "2026-09-07",
+  checkedAt: "2026-10-07",
 } as const;
 
 export const AGENT_BOUNDARIES = {
