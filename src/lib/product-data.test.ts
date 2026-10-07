@@ -285,6 +285,10 @@ describe("local-ydb-toolkit product data", () => {
       includeInSameAs: false,
       lastChecked: "2026-09-28",
     });
+    expect(gilde?.status).not.toMatch(/latest|current/);
+    expect(gilde?.limitations.join(" ")).toContain(
+      `does not establish coverage of current version ${TOOLKIT_RELEASE.version}`,
+    );
     expect(gilde?.confirmedClaims.join(" ")).toContain("tarball SHA-256");
     expect(gilde?.confirmedClaims.join(" ")).toContain("0.18.2");
     expect(gilde?.confirmedClaims.join(" ")).toContain("2026-09-16");
