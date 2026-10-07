@@ -303,7 +303,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     label: "Gilde",
     href: PUBLIC_LINKS.gilde,
     category: "directory",
-    status: "versioned catalog record for the latest release",
+    status: "dated catalog snapshot of prior releases",
     description: "Versioned community manifest imported from the Official MCP Registry.",
     sourceType: "automated",
     accuracy: "partial",
@@ -315,7 +315,7 @@ export const MCP_REGISTRY_LINKS: McpRegistryLink[] = [
     ],
     limitations: [
       "Both version manifests expose an empty tools array.",
-      "Versions 0.17.0, 0.18.0, and 0.18.1 are absent, and the page provides no independent runtime or security audit.",
+      `The retained review records missing 0.17.0, 0.18.0 and 0.18.1 manifests and does not establish coverage of current version ${CURRENT_TOOLKIT_VERSION}; it provides no independent runtime or security audit.`,
     ],
     featured: false,
     includeInSameAs: false,
